@@ -1,0 +1,19 @@
+{
+  "name" : "b3k/phalcon-mvc",
+  "description" : "Phalcon MVC Framework",
+  "version" : "0.0.1",
+  "require" : {
+    "php" : ">=5.3.9",
+    "ext-phalcon" : ">=1.2.4",
+    "swiftmailer/swiftmailer" : "5.0.*",
+    "amazonwebservices/aws-sdk-for-php" : "~1.0"
+  },
+  "authors" : [ {
+    "name" : "Bartosz Pietrzak",
+    "email" : "b3k@b3k.pl"
+  }],
+  "keywords" : ["phalcon", "framework", "mvc" ],
+  "type" : "library",
+  "license" : "Apache",
+  "homepage" : "http://github.com/b3k/phalcon-mvc"
+}

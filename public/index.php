@@ -24,7 +24,7 @@ try {
     /**
      * Read the configuration
      */
-    $config = require_once APP_ROOT_DIR . '/config/config.php';
+    
 
     /**
      * Exception and error handler
@@ -32,24 +32,13 @@ try {
     require_once APP_ROOT_DIR . '/config/exception.php';
 
     /**
-     * Read auto-loader
-     */
-    require_once APP_ROOT_DIR . '/config/loader.php';
-
-    /**
-     * Read services
-     */
-    require_once APP_ROOT_DIR . '/config/services.php';
-
-    /**
      * Handle the request
      */
     if (php_sapi_name() !== 'cli') {
-        $application = new \ExtPhal\Config\Initializers\Application($di);
+        $application = new \Config\Application();
     } else {
-        $application = new \ExtPhal\Config\Initializers\ApplicationCli($di);
+        $application = new \Config\ApplicationCli();
     }
-    //echo $application->handle()->getContent();
     $application->run();
     echo $application->getOutput();
 } catch (Exception $e) {

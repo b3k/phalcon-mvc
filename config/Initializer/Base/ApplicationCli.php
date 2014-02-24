@@ -1,6 +1,6 @@
 <?php
 
-namespace \Config\Initializers;
+namespace \Config\Initializer\Base;
 
 use Phalcon\Loader;
 use Phalcon\Cache\Frontend\Data as CacheData;
@@ -9,15 +9,10 @@ use Phalcon\Db\Adapter;
 use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Db\Profiler as DatabaseProfiler;
 use Phalcon\DI;
-use Phalcon\Events\Manager;
-use Phalcon\Mvc\Application as PhalconApplication;
 
-class Application extends BaseInitializer {
+class ApplicationCli extends Initializer {
 
-    public function initialize() {
-        $this->di = new FactoryDefault();
-        $this->application = new PhalconApplication();
-        $this->di->setShared('application', $this);
+    public function initialize(Phalcon\DI $di) {
         
     }
 

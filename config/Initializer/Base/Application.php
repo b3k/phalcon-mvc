@@ -1,18 +1,8 @@
 <?php
 
-namespace \Config\Initializers;
+namespace \Config\Initializer\Base;
 
-use Phalcon\Loader;
-use Phalcon\Cache\Frontend\Data as CacheData;
-use Phalcon\Cache\Frontend\Output as CacheOutput;
-use Phalcon\Db\Adapter;
-use Phalcon\Db\Adapter\Pdo;
-use Phalcon\Db\Profiler as DatabaseProfiler;
-use Phalcon\DI;
-use Phalcon\Events\Manager;
-use Config\Exception;
-
-class BaseApplication extends \Phalcon\Mvc\Application {
+class Application extends \Phalcon\Mvc\Application {
 
     protected $di;
     protected $config;

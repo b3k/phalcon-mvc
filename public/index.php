@@ -22,14 +22,9 @@ try {
     define('APP_PUBLIC_DIR', BASE_DIR . '/public');
 
     /**
-     * Read the configuration
-     */
-    
-
-    /**
      * Exception and error handler
      */
-    require_once APP_ROOT_DIR . '/config/exception.php';
+    require_once APP_ROOT_DIR . '/Config/Exception.php';
 
     /**
      * Handle the request
@@ -42,6 +37,6 @@ try {
     $application->run();
     echo $application->getOutput();
 } catch (Exception $e) {
-    echo $e->getMessage(), '<br>';
+    echo $e->getMessage(), '<br />';
     echo nl2br(htmlentities($e->getTraceAsString()));
 }

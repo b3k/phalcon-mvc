@@ -1,6 +1,6 @@
 <?php
 
-namespace \Config\Initializer\Base;
+namespace Config\Initializer\Base;
 
 class Application extends \Phalcon\Mvc\Application {
 
@@ -23,38 +23,50 @@ class Application extends \Phalcon\Mvc\Application {
         'session',
         'eventsManager',
         'db',
-        'security',
         'crypt',
-        'tag',
-        'escaper',
-        'annotations',
-        'modelsManager',
         'modelsMetadata',
-        'transactionManager',
         'modelsCache',
-        'viewsCache'
+        'viewCache'
     );
 
     public function __construct() {
-        $this->config = require_once APP_ROOT_DIR . '/config/config.php';
-        $this->routing = require_once APP_ROOT_DIR . '/config/routing.php';
+        $this->config = require_once APP_ROOT_DIR . '/config/Config.php';
+        $this->routing = require_once APP_ROOT_DIR . '/config/Router.php';
 
-        date_default_timezone_set($this->config->app->timezone);
+        date_default_timezone_set($this->config->application->timezone);
 
         $this->di = new \Phalcon\DI\FactoryDefault();
+
+        $this->loadServices();
+
         $this->di->set('app', $this);
+
         parent::setDI($this->di);
     }
 
-    protected function initServices() {
+    public function run() {
+        return $this->handle();
+    }
+
+    protected function loadServices() {
         foreach (self::$services as $service) {
-            static::{'init' . ucfirst($service)}();
+            $method = 'init' . ucfirst($service);
+            if (method_exists($this, $method)) {
+                $this->$method();
+            }
         }
     }
 
-    protected function initViewsCache() {
-        $this->di->set('viewsCache', function() {
-            
+    protected function initViewCache() {
+        $config = $this->config;
+        $this->di->set('viewsCache', function() use ($config) {
+            $frontCache = new \Phalcon\Cache\Frontend\Output(array(
+                "lifetime" => 86400
+            ));
+            $cache = new Phalcon\Cache\Backend\File($frontCache, array(
+                "cacheDir" => APP_ROOT_DIR . '/tmp/'
+            ));
+            return $cache;
         });
     }
 
@@ -132,14 +144,25 @@ class Application extends \Phalcon\Mvc\Application {
     }
 
     protected function initSession() {
-        $this->di->set('session', function() {
-            
+        $config = $this->config;
+        $this->di->set('session', function() use ($config) {
+            $session = new \Phalcon\Session\Adapter\Files();
+            $session->start();
+            return $session;
         });
     }
 
     protected function initFlash() {
-        $this->di->set('flash', function() {
-            
+        $config = $this->config;
+        $this->di->set('flash', function() use ($config) {
+            $flash = new \Phalcon\Flash\Session(array(
+                'warning' => 'alert alert-warning',
+                'notice' => 'alert alert-info',
+                'success' => 'alert alert-success',
+                'error' => 'alert alert-danger',
+                'dismissable' => 'alert alert-dismissable',
+            ));
+            return $flash;
         });
     }
 

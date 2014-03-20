@@ -1,7 +1,4 @@
 <?php
-
-namespace \Config\Exception;
-
 class WarningException extends ErrorException {
     
 }

@@ -2,18 +2,12 @@
 
 namespace \Config\Initializers;
 
-use Phalcon\Loader;
-use Phalcon\Cache\Frontend\Data as CacheData;
-use Phalcon\Cache\Frontend\Output as CacheOutput;
-use Phalcon\Db\Adapter;
-use Phalcon\Db\Adapter\Pdo;
-use Phalcon\Db\Profiler as DatabaseProfiler;
-use Phalcon\DI;
+use \Config\Initializer\Base\Application as BaseApplication;
 
-class ApplicationCli extends Initializer {
+class ApplicationCli extends BaseApplication {
 
-    public function initialize(Phalcon\DI $di) {
-        $this->di = new FactoryDefault();
+    public function __construct() {
+        parent::__construct();
     }
 
 }

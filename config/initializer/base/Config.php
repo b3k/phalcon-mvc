@@ -22,12 +22,13 @@ class Config extends PhalconConfig {
     protected $loadable_config_groups = array(
         'database', 'application', 'models', 'common', 'mailer'
     );
+    protected $config_cache_file = 'cache/config.php';
 
-    public function __construct($env) {
-        $this->env = $env;
-        $this->base_path = APP_ROOT_DIR . DS . 'config' . DS . 'environment' . DS . strtolower($env) . DS;
-        if (is_readable(self::CONFIG_CACHE_FILE)) {
-            return parent::__construct(require(self::CONFIG_CACHE_FILE));
+    public function __construct() {
+        $this->env = APP_ENV;
+        $this->base_path = APP_ROOT_DIR . DS . 'config' . DS . 'environment' . DS . strtolower($this->env) . DS;
+        if (is_readable($this->config_cache_file)) {
+            return parent::__construct(require(APP_TMP_DIR . DS . $this->config_cache_file));
         }
         $config = array();
 
@@ -46,8 +47,8 @@ class Config extends PhalconConfig {
         return parent::__construct($config);
     }
 
-    public function warmupCache() {
-        file_put_contents(APP_ROOT_DIR . self::CONFIG_CACHE_FILE, $this->dumpAsString());
+    public function warmupCache($config) {
+        file_put_contents(APP_TMP_DIR . DS . $this->config_cache_file, $this->dumpAsString($config));
     }
 
     protected function dumpAsString($array) {

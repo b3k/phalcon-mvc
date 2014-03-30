@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
+    
+    <table name="channel" idMethod="native" phpName="Channel">
+        <column name="id_channel" phpName="IdChannel" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="channel_class" phpName="ChannelClass" type="VARCHAR" size="50" required="true"/>
+        <column name="channel_name" phpName="ChannelName" type="VARCHAR" size="100" required="true" primaryString="true" />
+        <column name="channel_description" phpName="ChannelDescription" type="LONGVARCHAR"/>
+        <column name="channel_active" phpName="ChannelActive" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+        <behavior name="sluggable" />
+    </table>
+    
+    <table name="channel_out" idMethod="native" phpName="ChannelOut">
+        <column name="id_alert_out" phpName="IdAlertOut" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="channel_id" phpName="ChannelId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="target_id" phpName="TargetId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="channel_out_params" phpName="ChannelOutParams" type="LONGVARCHAR" required="true"/>
+        <column name="channel_out_status" phpName="ChannelOutStatus" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="channel_out_priority" phpName="ChannelOutPriority" type="BOOLEAN" size="1" sqlType="tinyint(1) unsigned" required="true" defaultValue="false"/>
+        <foreign-key foreignTable="channel" name="channel_out_ibfk_1" onDelete="CASCADE">
+            <reference local="channel_id" foreign="id_channel"/>
+        </foreign-key>
+        <foreign-key foreignTable="target" name="channel_out_ibfk_2" onDelete="CASCADE">
+            <reference local="target_id" foreign="id_target"/>
+        </foreign-key>
+        <index name="channel_id">
+            <index-column name="channel_id" size="10"/>
+        </index>
+        <index name="target_id">
+            <index-column name="target_id" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="cron_task" idMethod="native" phpName="CronTask">
+        <column name="id_cron_task" phpName="IdCronTask" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="cron_task_code" phpName="CronTaskCode" type="VARCHAR" size="100" required="true"/>
+        <column name="cron_task_interval" phpName="CronTaskInterval" type="INTEGER" size="5" sqlType="int(5) unsigned" required="true" defaultValue="600"/>
+        <column name="cron_task_params" phpName="CronTaskParams" type="LONGVARCHAR" required="true"/>
+        <column name="cron_task_active" phpName="CronTaskActive" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="cron_task_state" phpName="CronTaskState" type="CHAR" sqlType="enum('running','scheduled','executed')" required="true" defaultValue="scheduled"/>
+        <column name="cron_task_run_at" phpName="CronTaskRunAt" type="TIMESTAMP" required="true"/>
+        <column name="cron_task_executed_at" phpName="CronTaskExecutedAt" type="TIMESTAMP" required="true"/>
+        <index name="cron_task_state">
+            <index-column name="cron_task_state"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="stack_test_result_fail" idMethod="native" phpName="StackTestResultFail">
+        <column name="id_test_result_fail" phpName="IdTestResultFail" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="target_id" phpName="TargetId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="target_group_id" phpName="TargetGroupId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="target_type_id" phpName="TargetTypeId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="stack_test_result_fail_info" phpName="StackTestResultFailInfo" type="LONGVARCHAR" required="true"/>
+        <column name="stack_test_result_fail_priority" phpName="StackTestResultFailPriority" type="BOOLEAN" size="1" sqlType="tinyint(1) unsigned" required="true" defaultValue="false"/>
+        <foreign-key foreignTable="target" name="stack_test_result_fail_ibfk_1">
+            <reference local="target_id" foreign="id_target"/>
+        </foreign-key>
+        <foreign-key foreignTable="target" name="stack_test_result_fail_ibfk_2">
+            <reference local="target_group_id" foreign="target_group_id"/>
+        </foreign-key>
+        <foreign-key foreignTable="target" name="stack_test_result_fail_ibfk_3">
+            <reference local="target_type_id" foreign="target_type_id"/>
+        </foreign-key>
+        <index name="target_id">
+            <index-column name="target_id" size="10"/>
+        </index>
+        <index name="target_group_id">
+            <index-column name="target_group_id" size="10"/>
+        </index>
+        <index name="target_type_id">
+            <index-column name="target_type_id" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="stack_test_result_pass" idMethod="native" phpName="StackTestResultPass">
+        <column name="id_test_result_pass" phpName="IdTestResultPass" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="target_id" phpName="TargetId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="target_group_id" phpName="TargetGroupId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="target_type_id" phpName="TargetTypeId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="stack_test_result_pass_info" phpName="StackTestResultPassInfo" type="LONGVARCHAR" required="true"/>
+        <column name="stack_test_result_pass_priority" phpName="StackTestResultPassPriority" type="BOOLEAN" size="1" sqlType="tinyint(1) unsigned" required="true" defaultValue="false"/>
+        <foreign-key foreignTable="target" name="stack_test_result_pass_ibfk_1">
+            <reference local="target_id" foreign="id_target"/>
+        </foreign-key>
+        <foreign-key foreignTable="target_group" name="stack_test_result_pass_ibfk_2">
+            <reference local="target_group_id" foreign="id_target_group"/>
+        </foreign-key>
+        <foreign-key foreignTable="target_type" name="stack_test_result_pass_ibfk_3">
+            <reference local="target_type_id" foreign="id_target_type"/>
+        </foreign-key>
+        <index name="target_id">
+            <index-column name="target_id" size="10"/>
+        </index>
+        <index name="target_group_id">
+            <index-column name="target_group_id" size="10"/>
+        </index>
+        <index name="target_type_id">
+            <index-column name="target_type_id" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="subscription_plan" idMethod="native" phpName="SubscriptionPlan">
+        <column name="id_subscription_plan" phpName="IdSubscriptionPlan" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="subscription_plan_name" phpName="SubscriptionPlanName" type="VARCHAR" size="50" required="true" primaryString="true" />
+        <column name="subscription_plan_description" phpName="SubscriptionPlanDescription" type="LONGVARCHAR"/>
+        <column name="subscription_plan_price" phpName="SubscriptionPlanPrice" type="DECIMAL" size="7" scale="2"/>
+        <column name="subscription_plan_period" phpName="SubscriptionPlanPeriod" type="INTEGER" size="12" sqlType="int(12) unsigned"/>
+        <column name="subscription_plan_code" phpName="SubscriptionPlanCode" type="VARCHAR" size="10" required="true"/>
+        <column name="subscription_plan_max_target" phpName="SubscriptionPlanMaxTarget" type="INTEGER" size="5" sqlType="int(5) unsigned" required="true" defaultValue="1"/>
+        <column name="subscription_plan_check_interval" phpName="SubscriptionPlanCheckInterval" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true" defaultValue="600"/>
+        <column name="subscription_plan_max_localizations" phpName="SubscriptionPlanMaxLocalizations" type="INTEGER" size="5" sqlType="int(5) unsigned" required="true" defaultValue="1"/>
+        <column name="subscription_plan_rss" phpName="SubscriptionPlanRss" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="subscription_plan_max_sub_accounts" phpName="SubscriptionPlanMaxSubAccounts" type="INTEGER" size="5" sqlType="int(5) unsigned" required="true" defaultValue="1"/>
+        <column name="subscription_plan_max_alert_receivers" phpName="SubscriptionPlanMaxAlertReceivers" type="INTEGER" size="5" sqlType="int(5) unsigned" required="true" defaultValue="1"/>
+        <column name="subscription_plan_max_trigger" phpName="SubscriptionPlanMaxTrigger" type="INTEGER" size="5" sqlType="int(5) unsigned" required="true" defaultValue="1"/>
+        <column name="subscription_plan_sms_in_period" phpName="SubscriptionPlanSmsInPeriod" type="INTEGER" size="5" sqlType="int(5) unsigned" required="true" defaultValue="0"/>
+        <index name="subscription_plan_code">
+            <index-column name="subscription_plan_code" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+        <behavior name="sluggable" />
+    </table>
+    
+    <table name="subscription_plan_channel" idMethod="native" phpName="SubscriptionPlanChannel">
+        <column name="id_subscription_plan" phpName="IdSubscriptionPlan" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" required="true"/>
+        <column name="id_channel" phpName="IdChannel" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" required="true"/>
+        <foreign-key foreignTable="channel" name="subscription_plan_channel_ibfk_1" onDelete="CASCADE">
+            <reference local="id_channel" foreign="id_channel"/>
+        </foreign-key>
+        <foreign-key foreignTable="subscription_plan" name="subscription_plan_channel_ibfk_2" onDelete="CASCADE">
+            <reference local="id_subscription_plan" foreign="id_subscription_plan"/>
+        </foreign-key>
+        <index name="subscription_plan_channel_ibfk_1">
+            <index-column name="id_channel" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+    
+    <table name="target" idMethod="native" phpName="Target">
+        <column name="id_target" phpName="IdTarget" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="target_type_id" phpName="TargetTypeId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="target_group_id" phpName="TargetGroupId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="target_target" phpName="TargetTarget" type="LONGVARCHAR" required="true"/>
+        <foreign-key foreignTable="target_type" name="target_ibfk_1">
+            <reference local="target_type_id" foreign="id_target_type"/>
+        </foreign-key>
+        <foreign-key foreignTable="target_group" name="target_ibfk_2">
+            <reference local="target_group_id" foreign="id_target_group"/>
+        </foreign-key>
+        <index name="target_group_id">
+            <index-column name="target_group_id" size="10"/>
+        </index>
+        <index name="target_type_id">
+            <index-column name="target_type_id" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="target_group" idMethod="native" phpName="TargetGroup">
+        <column name="id_target_group" phpName="IdTargetGroup" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="target_group_name" phpName="TargetGroupName" type="VARCHAR" size="100" required="true" primaryString="true"/>
+        <column name="target_group_active" phpName="TargetGroupActive" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="target_type" idMethod="native" phpName="TargetType">
+        <column name="id_target_type" phpName="IdTargetType" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="target_type_class" phpName="TargetTypeClass" type="VARCHAR" size="255" required="true"/>
+        <column name="target_type_name" phpName="TargetTypeName" type="VARCHAR" size="255" required="true" primaryString="true"/>
+        <column name="target_type_description" phpName="TargetTypeDescription" type="LONGVARCHAR"/>
+        <column name="target_type_active" phpName="TargetTypeActive" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="trigger" idMethod="native" phpName="Trigger">
+        <column name="id_trigger" phpName="IdTrigger" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="target_id" phpName="TargetId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="user_id" phpName="UserId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="trigger_type_id" phpName="TriggerTypeId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="trigger_params" phpName="TriggerParams" type="LONGVARCHAR" required="true"/>
+        <column name="trigger_invoke_on" phpName="TriggerInvokeOn" type="CHAR" required="true" defaultValue="TEST_FALSE"/>
+        <column name="trigger_name" phpName="TriggerName" type="VARCHAR" size="100" required="true" primaryString="true"/>
+        <column name="trigger_active" phpName="TriggerActive" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="trigger_last_executed_at" phpName="TriggerLastExecutedAt" type="TIMESTAMP"/>
+        <column name="trigger_last_executed_result" phpName="TriggerLastExecutedResult" type="VARCHAR" size="50"/>
+        <foreign-key foreignTable="target" name="trigger_ibfk_1">
+            <reference local="target_id" foreign="id_target"/>
+        </foreign-key>
+        <foreign-key foreignTable="user" name="trigger_ibfk_2">
+            <reference local="user_id" foreign="id_user"/>
+        </foreign-key>
+        <foreign-key foreignTable="trigger_type" name="trigger_ibfk_3">
+            <reference local="trigger_type_id" foreign="id_trigger_type"/>
+        </foreign-key>
+        <index name="target_id">
+            <index-column name="target_id" size="10"/>
+        </index>
+        <index name="user_id">
+            <index-column name="user_id" size="10"/>
+        </index>
+        <index name="trigger_type_id">
+            <index-column name="trigger_type_id" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="trigger_log" idMethod="native" phpName="TriggerLog">
+        <column name="id_trigger_log" phpName="IdTriggerLog" type="INTEGER" size="15" sqlType="int(15) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="trigger_id" phpName="TriggerId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="trigger_log_executed_on" phpName="TriggerLogExecutedOn" type="VARCHAR" size="30" required="true"/>
+        <column name="trigger_log_result" phpName="TriggerLogResult" type="VARCHAR" size="30" required="true"/>
+        <column name="executed_at" phpName="ExecutedAt" type="TIMESTAMP" required="true"/>
+        <foreign-key foreignTable="trigger" name="trigger_log_ibfk_1" onDelete="CASCADE">
+            <reference local="trigger_id" foreign="id_trigger"/>
+        </foreign-key>
+        <index name="trigger_id">
+            <index-column name="trigger_id" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+    
+    <table name="trigger_type" idMethod="native" phpName="TriggerType">
+        <column name="id_trigger_type" phpName="IdTriggerType" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="channel_id" phpName="ChannelId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="trigger_type_class" phpName="TriggerTypeClass" type="VARCHAR" size="255" required="true"/>
+        <column name="trigger_type_name" phpName="TriggerTypeName" type="VARCHAR" size="255" required="true" primaryString="true"/>
+        <column name="trigger_type_description" phpName="TriggerTypeDescription" type="LONGVARCHAR"/>
+        <column name="trigger_type_active" phpName="TriggerTypeActive" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <foreign-key foreignTable="channel" name="trigger_type_ibfk_1">
+            <reference local="channel_id" foreign="id_channel"/>
+        </foreign-key>
+        <index name="channel_id">
+            <index-column name="channel_id" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="user" idMethod="native" phpName="User">
+        <column name="id_user" phpName="IdUser" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="user_username" phpName="UserUsername" type="VARCHAR" size="32" required="true" primaryString="true"/>
+        <column name="user_password" phpName="UserPassword" type="CHAR" size="64" required="true"/>
+        <column name="user_salt" phpName="UserSalt" type="CHAR" size="15" required="true"/>
+        <column name="user_firstname" phpName="UserFirstname" type="VARCHAR" size="100"/>
+        <column name="user_lastname" phpName="UserLastname" type="VARCHAR" size="100"/>
+        <column name="user_email" phpName="UserEmail" type="VARCHAR" size="70" required="true"/>
+        <column name="user_active" phpName="UserActive" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="user_roles" phpName="UserRoles" type="CHAR" required="true" defaultValue="ROLE_USER"/>
+        <column name="user_expire_at" phpName="UserExpireAt" type="TIMESTAMP"/>
+        <column name="user_expired" phpName="UserExpired" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <index name="user_username">
+            <index-column name="user_username" size="32"/>
+        </index>
+        <index name="user_email">
+            <index-column name="user_email" size="70"/>
+        </index>
+        <index name="user_username_2">
+            <index-column name="user_username" size="32"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="user_log" idMethod="native" phpName="UserLog">
+        <column name="id_user_log" phpName="IdUserLog" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="user_id" phpName="UserId" type="INTEGER" size="10" required="true"/>
+        <column name="user_log_action" phpName="UserLogAction" type="VARCHAR" size="25" required="true"/>
+        <column name="user_log_params" phpName="UserLogParams" type="LONGVARCHAR" required="true"/>
+        <index name="user_id">
+            <index-column name="user_id" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+    
+    <table name="user_target_group" idMethod="native" phpName="UserTargetGroup">
+        <column name="id_target_group" phpName="IdTargetGroup" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <column name="id_user" phpName="IdUser" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <foreign-key foreignTable="target_group" name="user_target_group_ibfk_1" onDelete="CASCADE">
+            <reference local="id_target_group" foreign="id_target_group"/>
+        </foreign-key>
+        <foreign-key foreignTable="user" name="user_target_group_ibfk_2" onDelete="CASCADE">
+            <reference local="id_user" foreign="id_user"/>
+        </foreign-key>
+        <index name="id_target_group">
+            <index-column name="id_target_group" size="10"/>
+            <index-column name="id_user" size="10"/>
+        </index>
+        <index name="user_target_group_ibfk_2">
+            <index-column name="id_user" size="10"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable" />
+    </table>
+</database>

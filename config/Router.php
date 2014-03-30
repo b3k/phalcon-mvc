@@ -6,7 +6,7 @@ require_once(APP_ROOT_DIR . '/config/initializer/base/Router.php');
 
 use Config\Initializer\Base\Router as BaseRouter;
 
-class Routing extends BaseRouter {
+class Router extends BaseRouter {
 
     protected $default_controller = 'index';
     protected $default_action = 'index';
@@ -18,3 +18,5 @@ class Routing extends BaseRouter {
     }
 
 }
+
+return new Router;

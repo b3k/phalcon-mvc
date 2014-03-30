@@ -8,7 +8,7 @@ use \Config\Initializer\Base\Config as BaseConfig;
 
 class Config extends BaseConfig {
 
-    const CONFIG_CACHE_FILE = '/tmp/cache/config.php';
+    protected $config_cache_file = 'cache/config.php';
 
     protected $default_config_values = array(
         'database' => array(

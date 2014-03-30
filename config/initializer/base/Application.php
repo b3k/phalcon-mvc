@@ -9,6 +9,7 @@ class Application extends \Phalcon\Mvc\Application {
     protected $routing;
     protected static $services = array(
         'config',
+        'loader',
         'errorHandler',
         'exceptionHandler',
         'dispatcher',
@@ -26,7 +27,8 @@ class Application extends \Phalcon\Mvc\Application {
         'crypt',
         'modelsMetadata',
         'modelsCache',
-        'viewCache'
+        'viewCache',
+        'view'
     );
 
     public function __construct() {
@@ -55,6 +57,16 @@ class Application extends \Phalcon\Mvc\Application {
                 $this->$method();
             }
         }
+    }
+
+    protected function initView() {
+        $config = $this->config;
+        $this->di->set('view', function() use ($config) {
+            $view = new \Phalcon\Mvc\View();
+            $view->setViewsDir(APP_ROOT_DIR . DS . 'views' . DS);
+            $view->registerEngines(array('.volt' => 'Phalcon\Mvc\View\Engine\Volt'));
+            return $view;
+        });
     }
 
     protected function initViewCache() {
@@ -88,16 +100,14 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initAnnotations() {
-        $this->di->set('annotations', function() {
-            
-        });
-    }
-
     protected function initLoader() {
         $loader = new \Phalcon\Loader();
         $loader->registerNamespaces(array(
-            'App\Models' => APP_ROOT_DIR . ''
+            'App\Controllers' => APP_ROOT_DIR . DS . 'controllers' . DS,
+            'App\Models' => APP_ROOT_DIR . DS . 'models' . DS,
+            'App\Forms' => APP_ROOT_DIR . DS . 'forms' . DS,
+            'App\Library' => APP_ROOT_DIR . DS . 'library' . DS,
+            'App\Config' => APP_ROOT_DIR . DS . 'config' . DS,
         ))->register();
     }
 
@@ -115,30 +125,6 @@ class Application extends \Phalcon\Mvc\Application {
 
     protected function initCrypt() {
         $this->di->set('crypt', function() {
-            
-        });
-    }
-
-    protected function initDb() {
-        $this->di->set('db', function() {
-            
-        });
-    }
-
-    protected function initSecurity() {
-        $this->di->set('security', function() {
-            
-        });
-    }
-
-    protected function initFlashSession() {
-        $this->di->set('flashSession', function() {
-            
-        });
-    }
-
-    protected function initEventsManager() {
-        $this->di->set('eventsManager', function() {
             
         });
     }
@@ -166,24 +152,6 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initCookies() {
-        $this->di->set('cookies', function() {
-            
-        });
-    }
-
-    protected function initFilter() {
-        $this->di->set('filter', function() {
-            
-        });
-    }
-
-    protected function initResponse() {
-        $this->di->set('url', function() {
-            
-        });
-    }
-
     protected function initUrl() {
         $config = $this->config;
         $this->di->set('url', function() use ($config) {
@@ -200,12 +168,6 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initDispatcher() {
-        $this->di->set('dispatcher', function() {
-            
-        });
-    }
-
     protected function initRouter() {
         $routing = $this->routing;
         $this->di->set('router', function() use ($routing) {
@@ -219,21 +181,21 @@ class Application extends \Phalcon\Mvc\Application {
                 return false;
             }
             switch ($err_severity) {
-                case \E_ERROR: throw new ErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_WARNING: throw new WarningException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_PARSE: throw new ParseException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_NOTICE: throw new NoticeException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_CORE_ERROR: throw new CoreErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_CORE_WARNING: throw new CoreWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_COMPILE_ERROR: throw new CompileErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_COMPILE_WARNING: throw new CoreWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_USER_ERROR: throw new UserErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_USER_WARNING: throw new UserWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_USER_NOTICE: throw new UserNoticeException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_STRICT: throw new StrictException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_RECOVERABLE_ERROR: throw new RecoverableErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_DEPRECATED: throw new DeprecatedException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_USER_DEPRECATED: throw new UserDeprecatedException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_ERROR: throw new \ErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_WARNING: throw new \WarningException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_PARSE: throw new \ParseException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_NOTICE: throw new \NoticeException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_CORE_ERROR: throw new \CoreErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_CORE_WARNING: throw new \CoreWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_COMPILE_ERROR: throw new \CompileErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_COMPILE_WARNING: throw new \CoreWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_USER_ERROR: throw new \UserErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_USER_WARNING: throw new \UserWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_USER_NOTICE: throw new \UserNoticeException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_STRICT: throw new \StrictException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_RECOVERABLE_ERROR: throw new \RecoverableErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_DEPRECATED: throw new \DeprecatedException($err_msg, 0, $err_severity, $err_file, $err_line);
+                case \E_USER_DEPRECATED: throw new \UserDeprecatedException($err_msg, 0, $err_severity, $err_file, $err_line);
             }
         });
     }
@@ -246,6 +208,41 @@ class Application extends \Phalcon\Mvc\Application {
 
     protected function initConfig() {
         $this->di->set('config', $this->config);
+    }
+
+    public function request($location, $data = null) {
+        $dispatcher = clone $this->getDI()->get('dispatcher');
+
+        if (isset($location['controller'])) {
+            $dispatcher->setControllerName($location['controller']);
+        } else {
+            $dispatcher->setControllerName('index');
+        }
+
+        if (isset($location['action'])) {
+            $dispatcher->setActionName($location['action']);
+        } else {
+            $dispatcher->setActionName('index');
+        }
+
+        if (isset($location['params'])) {
+            if (is_array($location['params'])) {
+                $dispatcher->setParams($location['params']);
+            } else {
+                $dispatcher->setParams((array) $location['params']);
+            }
+        } else {
+            $dispatcher->setParams(array());
+        }
+
+        $dispatcher->dispatch();
+
+        $response = $dispatcher->getReturnedValue();
+        if ($response instanceof ResponseInterface) {
+            return $response->getContent();
+        }
+
+        return $response;
     }
 
 }

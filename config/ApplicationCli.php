@@ -1,8 +1,9 @@
 <?php
+namespace Config;
 
-namespace \Config\Initializers;
+require_once(APP_ROOT_DIR . '/config/initializer/base/Application.php');
 
-use \Config\Initializer\Base\Application as BaseApplication;
+use \Config\Initializer\Base\ApplicationCli as BaseApplication;
 
 class ApplicationCli extends BaseApplication {
 
@@ -11,10 +12,3 @@ class ApplicationCli extends BaseApplication {
     }
 
 }
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-

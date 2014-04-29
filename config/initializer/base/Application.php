@@ -12,7 +12,6 @@ class Application extends \Phalcon\Mvc\Application {
         'loader',
         'errorHandler',
         'exceptionHandler',
-        'dispatcher',
         'router',
         'url',
         'request',
@@ -23,27 +22,24 @@ class Application extends \Phalcon\Mvc\Application {
         'flashSession',
         'session',
         'eventsManager',
-        'db',
         'crypt',
-        'modelsMetadata',
-        'modelsCache',
         'viewCache',
         'view'
     );
 
-    public function __construct() {
+    public function __construct($di = null) {
         $this->config = require_once APP_ROOT_DIR . '/config/Config.php';
         $this->routing = require_once APP_ROOT_DIR . '/config/Router.php';
 
         date_default_timezone_set($this->config->application->timezone);
 
-        $this->di = new \Phalcon\DI\FactoryDefault();
+        $this->di = $di ? $di : new \Phalcon\DI\FactoryDefault();
 
         $this->loadServices();
 
         $this->di->set('app', $this);
 
-        parent::setDI($this->di);
+        parent::__construct($this->di);
     }
 
     public function run() {
@@ -82,24 +78,6 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initTransactionManager() {
-        $this->di->set('transactionManager', function() {
-            
-        });
-    }
-
-    protected function initModelsCache() {
-        $this->di->set('modelsCache', function() {
-            
-        });
-    }
-
-    protected function initModelsMetadata() {
-        $this->di->set('modelsMetadata', function() {
-            
-        });
-    }
-
     protected function initLoader() {
         $loader = new \Phalcon\Loader();
         $loader->registerNamespaces(array(
@@ -107,25 +85,17 @@ class Application extends \Phalcon\Mvc\Application {
             'App\Models' => APP_ROOT_DIR . DS . 'models' . DS,
             'App\Forms' => APP_ROOT_DIR . DS . 'forms' . DS,
             'App\Library' => APP_ROOT_DIR . DS . 'library' . DS,
+            'App\Tasks' => APP_ROOT_DIR . DS . 'tasks' . DS,
             'App\Config' => APP_ROOT_DIR . DS . 'config' . DS,
         ))->register();
     }
 
-    protected function initEscaper() {
-        $this->di->set('escaper', function() {
-            
-        });
-    }
-
-    protected function initTag() {
-        $this->di->set('tag', function() {
-            
-        });
-    }
-
     protected function initCrypt() {
-        $this->di->set('crypt', function() {
-            
+        $config = $this->config;
+        $this->di->set('crypt', function() use ($config) {
+            $crypt = new \Phalcon\Crypt();
+            $crypt->setKey($config->crypt->key);
+            return $crypt;
         });
     }
 
@@ -141,6 +111,20 @@ class Application extends \Phalcon\Mvc\Application {
     protected function initFlash() {
         $config = $this->config;
         $this->di->set('flash', function() use ($config) {
+            $flash = new \Phalcon\Flash\Direct(array(
+                'warning' => 'alert alert-warning',
+                'notice' => 'alert alert-info',
+                'success' => 'alert alert-success',
+                'error' => 'alert alert-danger',
+                'dismissable' => 'alert alert-dismissable',
+            ));
+            return $flash;
+        });
+    }
+
+    protected function initFlashSession() {
+        $config = $this->config;
+        $this->di->set('flashSession', function() use ($config) {
             $flash = new \Phalcon\Flash\Session(array(
                 'warning' => 'alert alert-warning',
                 'notice' => 'alert alert-info',
@@ -165,6 +149,13 @@ class Application extends \Phalcon\Mvc\Application {
     protected function initRequest() {
         $this->di->set('request', function() {
             return new \Phalcon\Http\Request();
+        });
+    }
+
+    protected function initCookies() {
+        $this->di->set('cookies', function() {
+            $cookies = new \Phalcon\Http\Response\Cookies();
+            return $cookies;
         });
     }
 
@@ -246,10 +237,3 @@ class Application extends \Phalcon\Mvc\Application {
     }
 
 }
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-

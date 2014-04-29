@@ -26,9 +26,6 @@ class Config extends BaseConfig {
             'libraryDir' => '/../app/libs/',
             'baseUri' => '/'
         ),
-        'models' => array(
-            'metadata.adapter' => 'Memmory'
-        ),
         'mailer' => array(
             'username' => '',
             'password' => ''
@@ -43,7 +40,7 @@ class Config extends BaseConfig {
      * @var array
      */
     protected $force_config_values = array(
-        'database' => array('adapter' => 'Mysql')
+        //'database' => array('adapter' => 'Mysql')
     );
     
 }

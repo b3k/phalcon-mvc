@@ -1,37 +1,24 @@
 <?php
-return new \Phalcon\Config(array(
-    'database' => array(
-        'adapter' => 'Mysql',
-        'host' => '127.0.0.1',
-        'username' => 'root',
-        'password' => '',
-        'dbname' => 'vokuro'
+
+return array(
+    'baseUri' => '/',
+    'staticBaseUri' => '/',
+    'timezone' => 'Europe/Warsaw',
+    'publicUrl' => 'upcheck.net',
+    'security' => array(
+        'key' => 'IOjscifo9e080123nsdkk'
     ),
-    'application' => array(
-        'controllersDir' => APP_DIR . '/controllers/',
-        'modelsDir' => APP_DIR . '/models/',
-        'formsDir' => APP_DIR . '/forms/',
-        'viewsDir' => APP_DIR . '/views/',
-        'libraryDir' => APP_DIR . '/library/',
-        'pluginsDir' => APP_DIR . '/plugins/',
-        'cacheDir' => APP_DIR . '/cache/',
-        'baseUri' => '/',
-        'publicUrl' => 'vokuro.phalconphp.com',
-        'cryptSalt' => 'eEAfR|_&G&f,+vU]:jFr!!A&+71w1Ms9~8_4L!<@[N@DyaIP_2My|:+.u>/6m,$D'
+    'crypt' => array(
+        'key' => 'UKneuif8923jhsnkKHal-__sdsdad',
+        'cipher' => 'tripledes',
+        'mode' => 'cbc',
+        'padding' => \Phalcon\Crypt::PADDING_DEFAULT
     ),
-    'mail' => array(
-        'fromName' => 'Vokuro',
-        'fromEmail' => 'phosphorum@phalconphp.com',
-        'smtp' => array(
-            'server' => 'smtp.gmail.com',
-            'port' => 587,
-            'security' => 'tls',
-            'username' => '',
-            'password' => ''
-        )
+    'cookies' => array(
+        'encrypt' => TRUE
     ),
     'amazon' => array(
         'AWSAccessKeyId' => '',
         'AWSSecretKey' => ''
     )
-));
+);

@@ -14,10 +14,8 @@ class Application extends \Phalcon\Mvc\Application {
         'exceptionHandler',
         'router',
         'url',
-        'request',
-        'response',
+        'security',
         'cookies',
-        'filter',
         'flash',
         'flashSession',
         'session',
@@ -65,17 +63,32 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
+    protected function initSecurity() {
+        $config = $this->config;
+        $this->di->set('security', function() use ($config) {
+            $Security = new \Phalcon\Security();
+            $Security->setDefaultHash($config->application->security->key);
+            return $Security;
+        });
+    }
+
     protected function initViewCache() {
         $config = $this->config;
-        $this->di->set('viewsCache', function() use ($config) {
-            $frontCache = new \Phalcon\Cache\Frontend\Output(array(
-                "lifetime" => 86400
-            ));
-            $cache = new Phalcon\Cache\Backend\File($frontCache, array(
-                "cacheDir" => APP_ROOT_DIR . '/tmp/'
-            ));
-            return $cache;
-        });
+        foreach (array('viewsCache', 'cache') as $service) {
+            $this->di->set($service, function() use ($config) {
+                $frontendAdapter = $config->cache->{$service}->frontend_adapter;
+                $backendAdapter = $config->cache->{$service}->backend_adapter;
+
+                $FrontCache = new $frontendAdapter(array(
+                    $config->cache->{$service}->frontend_options->toArray()
+                ));
+                $BackendCache = new $backendAdapter($FrontCache, array(
+                    $config->cache->{$service}->backend_options->toArray()
+                        )
+                );
+                return $BackendCache;
+            });
+        }
     }
 
     protected function initLoader() {
@@ -94,7 +107,10 @@ class Application extends \Phalcon\Mvc\Application {
         $config = $this->config;
         $this->di->set('crypt', function() use ($config) {
             $crypt = new \Phalcon\Crypt();
-            $crypt->setKey($config->crypt->key);
+            $crypt->setKey($config->application->crypt->key);
+            $crypt->setCipher($config->application->crypt->cipher);
+            $crypt->setMode($config->application->crypt->mode);
+            $crypt->setPadding($config->application->crypt->mode);
             return $crypt;
         });
     }
@@ -103,6 +119,7 @@ class Application extends \Phalcon\Mvc\Application {
         $config = $this->config;
         $this->di->set('session', function() use ($config) {
             $session = new \Phalcon\Session\Adapter\Files();
+            $session->setOptions(array('uniqueId' => $config->application->session->uniqueId));
             $session->start();
             return $session;
         });
@@ -140,22 +157,18 @@ class Application extends \Phalcon\Mvc\Application {
         $config = $this->config;
         $this->di->set('url', function() use ($config) {
             $url = new \Phalcon\Mvc\Url();
-            $url->setBaseUri($config->app->base_uri);
-            $url->setStaticBaseUri($config->app->static_base_uri);
+            $url->setBaseUri($config->application->baseUri);
+            $url->setStaticBaseUri($config->application->staticBaseUri);
             return $url;
         });
     }
 
-    protected function initRequest() {
-        $this->di->set('request', function() {
-            return new \Phalcon\Http\Request();
-        });
-    }
-
     protected function initCookies() {
-        $this->di->set('cookies', function() {
-            $cookies = new \Phalcon\Http\Response\Cookies();
-            return $cookies;
+        $config = $this->config;
+        $this->di->set('cookies', function() use ($config) {
+            $Cookies = new \Phalcon\Http\Response\Cookies();
+            $Cookies->useEncryption($config->application->cookies->encrypt);
+            return $Cookies;
         });
     }
 

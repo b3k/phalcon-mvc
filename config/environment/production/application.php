@@ -1,11 +1,22 @@
 <?php
 
 return array(
-    'cacheDir' => APP_ROOT_DIR . '/tmp/',
     'baseUri' => '/',
+    'staticBaseUri' => '/',
     'timezone' => 'Europe/Warsaw',
     'publicUrl' => 'upcheck.net',
-    'cryptSalt' => 'eEAfrt9guj3849jf0e8sjf0sd',
+    'security' => array(
+        'key' => 'IOjscifo9e080123nsdkk'
+    ),
+    'crypt' => array(
+        'key' => 'UKneuif8923jhsnkKHal-__sdsdad',
+        'cipher' => 'tripledes',
+        'mode' => 'cbc',
+        'padding' => \Phalcon\Crypt::PADDING_DEFAULT
+    ),
+    'cookies' => array(
+        'encrypt' => TRUE
+    ),
     'amazon' => array(
         'AWSAccessKeyId' => '',
         'AWSSecretKey' => ''

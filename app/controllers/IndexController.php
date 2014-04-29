@@ -1,5 +1,5 @@
 <?php
-namespace Vokuro\Controllers;
+namespace App\Controllers;
 
 /**
  * Display the default index page.

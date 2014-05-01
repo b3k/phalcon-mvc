@@ -5,10 +5,9 @@ namespace App\Controllers;
 /**
  * Display the default index page.
  */
-class IndexController extends ControllerBase
+class ErrorController extends ControllerBase
 {
-
-    public function indexAction()
+    public function error404Action()
     {
         $this->view->setTemplateBefore('public');
     }

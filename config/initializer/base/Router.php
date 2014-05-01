@@ -19,9 +19,11 @@ class Router extends PhalconRouter {
 
     protected $default_controller = 'index';
     protected $default_action = 'index';
-    protected $not_found_controller = 'index';
-    protected $not_found_action = 'error404';
     protected $default_index_action = 'index';
+    
+    protected $not_found_controller = 'error';
+    protected $not_found_action = 'error404';
+
 
     public function __construct() {
         parent::__construct();

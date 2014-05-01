@@ -2,32 +2,83 @@
 
 namespace Config\Initializer\Base;
 
-class Application extends \Phalcon\Mvc\Application {
+class Application extends \Phalcon\Mvc\Application
+{
+
+    const SERVICE_CONFIG = 'config';
+    const SERVICE_VIEW = 'view';
+    const SERVICE_LOADER = 'loader';
+    const SERVICE_ROUTER = 'router';
+    const SERVICE_COOKIES = 'cookies';
+    const SERVICE_URL = 'url';
+    const SERVICE_SECURITY = 'security';
+    const SERVICE_FLASH = 'flash';
+    const SERVICE_FLASH_SESSION = 'flashSession';
+    const SERVICE_SESSION = 'flashSession';
+    const SERVICE_DISPATCHER = 'dispatcher';
+    const SERVICE_VIEWS_CACHE = 'viewCache';
+    const SERVICE_CACHE = 'cache';
+    const SERVICE_CRYPT = 'crypt';
+    const SERVICE_ACL = 'acl';
 
     protected $di;
     protected $config;
+
+    /**
+     * @var array
+     */
     protected $routing;
-    protected static $services = array(
-        'config',
+
+    /**
+     *
+     * @var array
+     */
+    protected $base_acl_list = array(
+        'default' => Phalcon\Acl::DENY,
+        'list' => array(
+            'index' => array(
+                'index' => '*',
+            ),
+            'user' => array(
+                'login' => '*',
+                'recoverPassword' => '*',
+            ),
+            'error' => array(
+                'error404' => '*',
+                'error500' => '*'
+            )
+        ),
+        'roles' => array(
+            'guest', 'user', 'admin'
+        )
+    );
+
+    /**
+     * @var array
+     */
+    protected static $used_services = array(
+        self::SERVICE_CONFIG,
         'loader',
         'errorHandler',
         'exceptionHandler',
-        'router',
-        'url',
-        'security',
-        'cookies',
-        'flash',
-        'flashSession',
-        'session',
-        'eventsManager',
-        'crypt',
-        'viewCache',
-        'view'
+        self::SERVICE_DISPATCHER,
+        self::SERVICE_SECURITY,
+        self::SERVICE_URL,
+        self::SERVICE_COOKIES,
+        self::SERVICE_SESSION,
+        self::SERVICE_FLASH,
+        self::SERVICE_FLASH_SESSION,
+        self::SERVICE_CRYPT,
+        self::SERVICE_VIEWS_CACHE,
+        self::SERVICE_VIEW,
+        self::SERVICE_ROUTER,
+        self::SERVICE_ACL,
     );
 
-    public function __construct($di = null) {
-        $this->config = require_once APP_ROOT_DIR . '/config/Config.php';
-        $this->routing = require_once APP_ROOT_DIR . '/config/Router.php';
+    public function __construct($di = null)
+    {
+        $this->config = require_once APP_CONFIG_DIR . DS . 'Config.php';
+        $this->routing = require_once APP_CONFIG_DIR . DS . 'Router.php';
 
         date_default_timezone_set($this->config->application->timezone);
 
@@ -40,12 +91,14 @@ class Application extends \Phalcon\Mvc\Application {
         parent::__construct($this->di);
     }
 
-    public function run() {
+    public function run()
+    {
         return $this->handle();
     }
 
-    protected function loadServices() {
-        foreach (self::$services as $service) {
+    protected function loadServices()
+    {
+        foreach (self::$used_services as $service) {
             $method = 'init' . ucfirst($service);
             if (method_exists($this, $method)) {
                 $this->$method();
@@ -53,28 +106,82 @@ class Application extends \Phalcon\Mvc\Application {
         }
     }
 
-    protected function initView() {
+    protected function initConfig()
+    {
+        $this->di->set(self::SERVICE_CONFIG, $this->config);
+    }
+
+    protected function initAcl()
+    {
         $config = $this->config;
-        $this->di->set('view', function() use ($config) {
+        $this->di->set(self::SERVICE_ACL, function() use ($config) {
+            $Acl = new \App\Library\Acl();
+            $AclList = array_merge_recursive(
+                    $this->base_acl_list, (file_exists(APP_CONFIG_DIR . '/environment/' . APP_ENV . '/acl.php') ? require_once(APP_CONFIG_DIR_DIR . '/environment/' . APP_ENV . '/acl.php') : array())
+            );
+            $Acl->buildFromArray($AclList);
+            return $Acl;
+        });
+    }
+
+    protected function initView()
+    {
+        $config = $this->config;
+        $this->di->set(self::SERVICE_VIEW, function() use ($config) {
             $view = new \Phalcon\Mvc\View();
-            $view->setViewsDir(APP_ROOT_DIR . DS . 'views' . DS);
-            $view->registerEngines(array('.volt' => 'Phalcon\Mvc\View\Engine\Volt'));
+            $view->setViewsDir(APP_VIEWS_DIR . DS);
+            $view->registerEngines(
+                    array(
+                        '.volt' => 'Phalcon\Mvc\View\Engine\Volt',
+                        '.php' => 'Phalcon\Mvc\View\Engine\Php'
+                    )
+            );
             return $view;
         });
     }
 
-    protected function initSecurity() {
+    protected function initDispatcher()
+    {
         $config = $this->config;
-        $this->di->set('security', function() use ($config) {
+        $this->di->set(self::SERVICE_DISPATCHER, function() use ($config) {
+            $EventsManager = new \Phalcon\Events\Manager();
+            $EventsManager->attach("dispatch", function($event, $dispatcher, $exception) {
+                if ($event->getType() == 'beforeException') {
+                    switch ($exception->getCode()) {
+                        case \Phalcon\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
+                        case \Phalcon\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
+                            var_dump($dispatcher->getNamespaceName());
+                            var_dump($dispatcher->getActionName());
+                            $dispatcher->forward(array(
+                                'controller' => 'error',
+                                'action' => 'error404'
+                            ));
+                            return FALSE;
+                    }
+                }
+            });
+
+            $Dispatcher = new \Phalcon\Mvc\Dispatcher();
+            $Dispatcher->setDefaultNamespace('App\Controllers');
+            $Dispatcher->setEventsManager($EventsManager);
+            return $Dispatcher;
+        });
+    }
+
+    protected function initSecurity()
+    {
+        $config = $this->config;
+        $this->di->set(self::SERVICE_SECURITY, function() use ($config) {
             $Security = new \Phalcon\Security();
             $Security->setDefaultHash($config->application->security->key);
             return $Security;
         });
     }
 
-    protected function initViewCache() {
+    protected function initViewCache()
+    {
         $config = $this->config;
-        foreach (array('viewsCache', 'cache') as $service) {
+        foreach (array(self::SERVICE_VIEWS_CACHE, self::SERVICE_CACHE) as $service) {
             $this->di->set($service, function() use ($config) {
                 $frontendAdapter = $config->cache->{$service}->frontend_adapter;
                 $backendAdapter = $config->cache->{$service}->backend_adapter;
@@ -91,21 +198,23 @@ class Application extends \Phalcon\Mvc\Application {
         }
     }
 
-    protected function initLoader() {
+    protected function initLoader()
+    {
         $loader = new \Phalcon\Loader();
         $loader->registerNamespaces(array(
-            'App\Controllers' => APP_ROOT_DIR . DS . 'controllers' . DS,
-            'App\Models' => APP_ROOT_DIR . DS . 'models' . DS,
-            'App\Forms' => APP_ROOT_DIR . DS . 'forms' . DS,
-            'App\Library' => APP_ROOT_DIR . DS . 'library' . DS,
-            'App\Tasks' => APP_ROOT_DIR . DS . 'tasks' . DS,
-            'App\Config' => APP_ROOT_DIR . DS . 'config' . DS,
+            'App\Controllers' => APP_APPLICATION_DIR . DS . 'controllers' . DS,
+            'App\Models' => APP_APPLICATION_DIR . DS . 'models' . DS,
+            'App\Forms' => APP_APPLICATION_DIR . DS . 'forms' . DS,
+            'App\Library' => APP_APPLICATION_DIR . DS . 'library' . DS,
+            'App\Tasks' => APP_APPLICATION_DIR . DS . 'tasks' . DS,
+            'App\Config' => APP_APPLICATION_DIR . DS . 'config' . DS,
         ))->register();
     }
 
-    protected function initCrypt() {
+    protected function initCrypt()
+    {
         $config = $this->config;
-        $this->di->set('crypt', function() use ($config) {
+        $this->di->set(self::SERVICE_CRYPT, function() use ($config) {
             $crypt = new \Phalcon\Crypt();
             $crypt->setKey($config->application->crypt->key);
             $crypt->setCipher($config->application->crypt->cipher);
@@ -115,9 +224,10 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initSession() {
+    protected function initSession()
+    {
         $config = $this->config;
-        $this->di->set('session', function() use ($config) {
+        $this->di->set(self::SERVICE_SESSION, function() use ($config) {
             $session = new \Phalcon\Session\Adapter\Files();
             $session->setOptions(array('uniqueId' => $config->application->session->uniqueId));
             $session->start();
@@ -125,9 +235,10 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initFlash() {
+    protected function initFlash()
+    {
         $config = $this->config;
-        $this->di->set('flash', function() use ($config) {
+        $this->di->set(self::SERVICE_FLASH, function() use ($config) {
             $flash = new \Phalcon\Flash\Direct(array(
                 'warning' => 'alert alert-warning',
                 'notice' => 'alert alert-info',
@@ -139,9 +250,10 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initFlashSession() {
+    protected function initFlashSession()
+    {
         $config = $this->config;
-        $this->di->set('flashSession', function() use ($config) {
+        $this->di->set(self::SERVICE_FLASH_SESSION, function() use ($config) {
             $flash = new \Phalcon\Flash\Session(array(
                 'warning' => 'alert alert-warning',
                 'notice' => 'alert alert-info',
@@ -153,9 +265,10 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initUrl() {
+    protected function initUrl()
+    {
         $config = $this->config;
-        $this->di->set('url', function() use ($config) {
+        $this->di->set(self::SERVICE_URL, function() use ($config) {
             $url = new \Phalcon\Mvc\Url();
             $url->setBaseUri($config->application->baseUri);
             $url->setStaticBaseUri($config->application->staticBaseUri);
@@ -163,23 +276,26 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initCookies() {
+    protected function initCookies()
+    {
         $config = $this->config;
-        $this->di->set('cookies', function() use ($config) {
+        $this->di->set(self::SERVICE_COOKIES, function() use ($config) {
             $Cookies = new \Phalcon\Http\Response\Cookies();
             $Cookies->useEncryption($config->application->cookies->encrypt);
             return $Cookies;
         });
     }
 
-    protected function initRouter() {
+    protected function initRouter()
+    {
         $routing = $this->routing;
-        $this->di->set('router', function() use ($routing) {
+        $this->di->set(self::SERVICE_ROUTER, function() use ($routing) {
             return $routing;
         });
     }
 
-    protected function initErrorHandler() {
+    protected function initErrorHandler()
+    {
         set_error_handler(function ($err_severity, $err_msg, $err_file, $err_line, array $err_context) {
             if (0 === error_reporting()) {
                 return false;
@@ -204,17 +320,15 @@ class Application extends \Phalcon\Mvc\Application {
         });
     }
 
-    protected function initExceptionHandler() {
+    protected function initExceptionHandler()
+    {
         set_exception_handler(function($exception) {
             echo 'Exception throwed: ' . $exception->getMessage();
         });
     }
 
-    protected function initConfig() {
-        $this->di->set('config', $this->config);
-    }
-
-    public function request($location, $data = null) {
+    public function request($location, $data = null)
+    {
         $dispatcher = clone $this->getDI()->get('dispatcher');
 
         if (isset($location['controller'])) {

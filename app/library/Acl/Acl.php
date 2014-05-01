@@ -1,37 +1,18 @@
 <?php
-namespace Vokuro\Acl;
+
+namespace App\Library\Acl;
 
 use Phalcon\Mvc\User\Component;
 use Phalcon\Acl\Adapter\Memory as AclMemory;
 use Phalcon\Acl\Role as AclRole;
 use Phalcon\Acl\Resource as AclResource;
-use Vokuro\Models\Profiles;
 
-/**
- * Vokuro\Acl\Acl
- */
 class Acl extends Component
 {
 
-    /**
-     * The ACL Object
-     *
-     * @var \Phalcon\Acl\Adapter\Memory
-     */
     private $acl;
-
-    /**
-     * The filepath of the ACL cache file from APP_DIR
-     *
-     * @var string
-     */
-    private $filePath = '/cache/acl/data.txt';
-
-    /**
-     * Define the resources that are considered "private". These controller => actions require authentication.
-     *
-     * @var array
-     */
+    private $filePath = 'acl.txt';
+    private $default_allow = FALSE;
     private $privateResources = array(
         'users' => array(
             'index',
@@ -66,6 +47,37 @@ class Acl extends Component
         'delete' => 'Delete',
         'changePassword' => 'Change password'
     );
+
+    public function buildFromArray($list)
+    {
+        $acl = new AclMemory();
+
+        $acl->setDefaultAction(isset($list['default']) ? $list['default'] : Phalcon\Acl::DENY);
+
+        if (isset($list['roles'])) {
+            foreach ($list['roles'] as $role) {
+                $acl->addRole(new AclRole($role));
+            }
+        }
+        foreach ($list['list'] as $controller => $action) {
+            $Ref = new ReflectionClass('\App\Controllers\\'.ucfirst(strtolower($controller)).'Controller');
+            $methods = $Ref->getMethods(ReflectionMethod::IS_PUBLIC);
+            $actions = array();
+            foreach ($methods as $method) {
+                $actions[] = str_replace('action', '', strtolower($method->getName()));
+            }
+            $acl->addResource(new AclResource($controller), $action);
+        }
+        
+        foreach ($list['list'] as $controller => $action) {
+            if (is_array($action)) {
+                foreach ($action as $ac) {
+                    
+                }
+                $acl->allow(new AclResource($controller), $action);
+            } 
+        }
+    }
 
     /**
      * Checks if a controller is private or not
@@ -177,9 +189,7 @@ class Acl extends Component
      */
     public function rebuild()
     {
-        $acl = new AclMemory();
 
-        $acl->setDefaultAction(\Phalcon\Acl::DENY);
 
         // Register roles
         $profiles = Profiles::find('active = "Y"');
@@ -214,10 +224,11 @@ class Acl extends Component
             }
         } else {
             $this->flash->error(
-                'The user does not have write permissions to create the ACL list at ' . APP_DIR . $this->filePath
+                    'The user does not have write permissions to create the ACL list at ' . APP_DIR . $this->filePath
             );
         }
 
         return $acl;
     }
+
 }

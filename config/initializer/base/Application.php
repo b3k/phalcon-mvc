@@ -2,8 +2,10 @@
 
 namespace Config\Initializer\Base;
 
-class Application extends \Phalcon\Mvc\Application
-{
+/**
+ * 
+ */
+class Application extends \Phalcon\Mvc\Application {
 
     const SERVICE_CONFIG = 'config';
     const SERVICE_VIEW = 'view';
@@ -34,14 +36,15 @@ class Application extends \Phalcon\Mvc\Application
      * @var array
      */
     protected $base_acl_list = array(
-        'default' => Phalcon\Acl::DENY,
+        'default' => \Phalcon\Acl::DENY,
         'list' => array(
             'index' => array(
                 'index' => '*',
             ),
             'user' => array(
+                'logout' => '*',
                 'login' => '*',
-                'recoverPassword' => '*',
+                'resetPassword' => '*',
             ),
             'error' => array(
                 'error404' => '*',
@@ -52,13 +55,13 @@ class Application extends \Phalcon\Mvc\Application
             'guest', 'user', 'admin'
         )
     );
+    protected $response;
 
     /**
      * @var array
      */
     protected static $used_services = array(
         self::SERVICE_CONFIG,
-        'loader',
         'errorHandler',
         'exceptionHandler',
         self::SERVICE_DISPATCHER,
@@ -75,8 +78,7 @@ class Application extends \Phalcon\Mvc\Application
         self::SERVICE_ACL,
     );
 
-    public function __construct($di = null)
-    {
+    public function __construct($di = null) {
         $this->config = require_once APP_CONFIG_DIR . DS . 'Config.php';
         $this->routing = require_once APP_CONFIG_DIR . DS . 'Router.php';
 
@@ -91,13 +93,7 @@ class Application extends \Phalcon\Mvc\Application
         parent::__construct($this->di);
     }
 
-    public function run()
-    {
-        return $this->handle();
-    }
-
-    protected function loadServices()
-    {
+    protected function loadServices() {
         foreach (self::$used_services as $service) {
             $method = 'init' . ucfirst($service);
             if (method_exists($this, $method)) {
@@ -106,33 +102,39 @@ class Application extends \Phalcon\Mvc\Application
         }
     }
 
-    protected function initConfig()
-    {
+    public function getBaseAclList() {
+        return $this->base_acl_list;
+    }
+
+    protected function initConfig() {
         $this->di->set(self::SERVICE_CONFIG, $this->config);
     }
 
-    protected function initAcl()
-    {
+    protected function initAcl() {
         $config = $this->config;
         $this->di->set(self::SERVICE_ACL, function() use ($config) {
-            $Acl = new \App\Library\Acl();
-            $AclList = array_merge_recursive(
-                    $this->base_acl_list, (file_exists(APP_CONFIG_DIR . '/environment/' . APP_ENV . '/acl.php') ? require_once(APP_CONFIG_DIR_DIR . '/environment/' . APP_ENV . '/acl.php') : array())
-            );
-            $Acl->buildFromArray($AclList);
+            $Acl = new \App\Library\User\Acl\Acl();
             return $Acl;
         });
     }
 
-    protected function initView()
-    {
+    protected function initView() {
         $config = $this->config;
         $this->di->set(self::SERVICE_VIEW, function() use ($config) {
             $view = new \Phalcon\Mvc\View();
             $view->setViewsDir(APP_VIEWS_DIR . DS);
             $view->registerEngines(
                     array(
-                        '.volt' => 'Phalcon\Mvc\View\Engine\Volt',
+                        '.volt' => function($view, $di) {
+                    $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
+
+                    $volt->setOptions(array(
+                        "compiledPath" => APP_TMP_DIR . DS . 'volt' . DS,
+                        "compiledExtension" => ".compiled"
+                    ));
+
+                    return $volt;
+                },
                         '.php' => 'Phalcon\Mvc\View\Engine\Php'
                     )
             );
@@ -140,8 +142,7 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initDispatcher()
-    {
+    protected function initDispatcher() {
         $config = $this->config;
         $this->di->set(self::SERVICE_DISPATCHER, function() use ($config) {
             $EventsManager = new \Phalcon\Events\Manager();
@@ -150,8 +151,8 @@ class Application extends \Phalcon\Mvc\Application
                     switch ($exception->getCode()) {
                         case \Phalcon\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
                         case \Phalcon\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
-                            var_dump($dispatcher->getNamespaceName());
-                            var_dump($dispatcher->getActionName());
+                            //var_dump($dispatcher->getNamespaceName());
+                            //var_dump($dispatcher->getActionName());
                             $dispatcher->forward(array(
                                 'controller' => 'error',
                                 'action' => 'error404'
@@ -168,8 +169,7 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initSecurity()
-    {
+    protected function initSecurity() {
         $config = $this->config;
         $this->di->set(self::SERVICE_SECURITY, function() use ($config) {
             $Security = new \Phalcon\Security();
@@ -178,8 +178,7 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initViewCache()
-    {
+    protected function initViewCache() {
         $config = $this->config;
         foreach (array(self::SERVICE_VIEWS_CACHE, self::SERVICE_CACHE) as $service) {
             $this->di->set($service, function() use ($config) {
@@ -198,8 +197,29 @@ class Application extends \Phalcon\Mvc\Application
         }
     }
 
-    protected function initLoader()
-    {
+    protected function generateClassMap() {
+        $Finder = new \Symfony\Component\Finder\Finder();
+        $Finder->files()->in(APP_APPLICATION_DIR)->notPath(APP_VIEWS_DIR)->name('*.php');
+        $result = array();
+        foreach ($Finder as $file) {
+            $path = explode('/', $file->getRelativePathname());
+            $path = array_map(function($path) {
+                return ucfirst(strtolower($path));
+            }, $path);
+            $result['App\\' . str_replace('.php', '', implode('\\', $path))] = $file->getRealpath();
+        }
+        //var_dump($result);
+    }
+
+    /**
+     * We use composer autoloader
+     */
+    protected function initLoader() {
+
+        /* if (!file_exists(APP_TMP_DIR . DS . 'classmap.php')) {
+          $this->generateClassMap();
+          } */
+
         $loader = new \Phalcon\Loader();
         $loader->registerNamespaces(array(
             'App\Controllers' => APP_APPLICATION_DIR . DS . 'controllers' . DS,
@@ -211,8 +231,7 @@ class Application extends \Phalcon\Mvc\Application
         ))->register();
     }
 
-    protected function initCrypt()
-    {
+    protected function initCrypt() {
         $config = $this->config;
         $this->di->set(self::SERVICE_CRYPT, function() use ($config) {
             $crypt = new \Phalcon\Crypt();
@@ -224,8 +243,7 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initSession()
-    {
+    protected function initSession() {
         $config = $this->config;
         $this->di->set(self::SERVICE_SESSION, function() use ($config) {
             $session = new \Phalcon\Session\Adapter\Files();
@@ -235,8 +253,7 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initFlash()
-    {
+    protected function initFlash() {
         $config = $this->config;
         $this->di->set(self::SERVICE_FLASH, function() use ($config) {
             $flash = new \Phalcon\Flash\Direct(array(
@@ -250,8 +267,7 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initFlashSession()
-    {
+    protected function initFlashSession() {
         $config = $this->config;
         $this->di->set(self::SERVICE_FLASH_SESSION, function() use ($config) {
             $flash = new \Phalcon\Flash\Session(array(
@@ -265,8 +281,7 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initUrl()
-    {
+    protected function initUrl() {
         $config = $this->config;
         $this->di->set(self::SERVICE_URL, function() use ($config) {
             $url = new \Phalcon\Mvc\Url();
@@ -276,8 +291,7 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initCookies()
-    {
+    protected function initCookies() {
         $config = $this->config;
         $this->di->set(self::SERVICE_COOKIES, function() use ($config) {
             $Cookies = new \Phalcon\Http\Response\Cookies();
@@ -286,16 +300,14 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initRouter()
-    {
+    protected function initRouter() {
         $routing = $this->routing;
         $this->di->set(self::SERVICE_ROUTER, function() use ($routing) {
             return $routing;
         });
     }
 
-    protected function initErrorHandler()
-    {
+    protected function initErrorHandler() {
         set_error_handler(function ($err_severity, $err_msg, $err_file, $err_line, array $err_context) {
             if (0 === error_reporting()) {
                 return false;
@@ -320,15 +332,13 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initExceptionHandler()
-    {
+    protected function initExceptionHandler() {
         set_exception_handler(function($exception) {
             echo 'Exception throwed: ' . $exception->getMessage();
         });
     }
 
-    public function request($location, $data = null)
-    {
+    public function request($location, $data = null) {
         $dispatcher = clone $this->getDI()->get('dispatcher');
 
         if (isset($location['controller'])) {

@@ -1,31 +1,30 @@
 <?php
-namespace Vokuro\Controllers;
+
+namespace App\Controllers;
 
 use Phalcon\Tag;
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
-use Vokuro\Forms\ChangePasswordForm;
-use Vokuro\Forms\UsersForm;
-use Vokuro\Models\Users;
-use Vokuro\Models\PasswordChanges;
+
+/* use Vokuro\Forms\ChangePasswordForm;
+  use Vokuro\Forms\UsersForm;
+  use Vokuro\Models\Users;
+  use Vokuro\Models\PasswordChanges; */
 
 /**
  * Vokuro\Controllers\UsersController
  * CRUD to manage users
  */
-class UsersController extends ControllerBase
-{
+class UserController extends ControllerBase {
 
-    public function initialize()
-    {
+    public function initialize() {
         $this->view->setTemplateBefore('private');
     }
 
     /**
      * Default action, shows the search form
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->persistent->conditions = null;
         $this->view->form = new UsersForm();
     }
@@ -33,8 +32,7 @@ class UsersController extends ControllerBase
     /**
      * Searches for users
      */
-    public function searchAction()
-    {
+    public function searchAction() {
         $numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, 'Vokuro\Models\Users', $this->request->getPost());
@@ -52,7 +50,7 @@ class UsersController extends ControllerBase
         if (count($users) == 0) {
             $this->flash->notice("The search did not find any users");
             return $this->dispatcher->forward(array(
-                "action" => "index"
+                        "action" => "index"
             ));
         }
 
@@ -68,8 +66,7 @@ class UsersController extends ControllerBase
     /**
      * Creates a User
      */
-    public function createAction()
-    {
+    public function createAction() {
         if ($this->request->isPost()) {
 
             $user = new Users();
@@ -96,13 +93,12 @@ class UsersController extends ControllerBase
     /**
      * Saves the user from the 'edit' action
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         $user = Users::findFirstById($id);
         if (!$user) {
             $this->flash->error("User was not found");
             return $this->dispatcher->forward(array(
-                'action' => 'index'
+                        'action' => 'index'
             ));
         }
 
@@ -139,13 +135,12 @@ class UsersController extends ControllerBase
      *
      * @param int $id
      */
-    public function deleteAction($id)
-    {
+    public function deleteAction($id) {
         $user = Users::findFirstById($id);
         if (!$user) {
             $this->flash->error("User was not found");
             return $this->dispatcher->forward(array(
-                'action' => 'index'
+                        'action' => 'index'
             ));
         }
 
@@ -156,15 +151,71 @@ class UsersController extends ControllerBase
         }
 
         return $this->dispatcher->forward(array(
-            'action' => 'index'
+                    'action' => 'index'
         ));
+    }
+
+    public function logoutAction() {
+        
+    }
+
+    public function resetPasswordAction() {
+        $code = $this->dispatcher->getParam('code');
+
+        $resetPassword = ResetPasswords::findFirstByCode($code);
+
+        if (!$resetPassword) {
+            return $this->dispatcher->forward(array(
+                        'controller' => 'index',
+                        'action' => 'index'
+            ));
+        }
+
+        if ($resetPassword->reset != 'N') {
+            return $this->dispatcher->forward(array(
+                        'controller' => 'session',
+                        'action' => 'login'
+            ));
+        }
+
+        $resetPassword->reset = 'Y';
+
+        /**
+         * Change the confirmation to 'reset'
+         */
+        if (!$resetPassword->save()) {
+
+            foreach ($resetPassword->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                        'controller' => 'index',
+                        'action' => 'index'
+            ));
+        }
+
+        /**
+         * Identify the user in the application
+         */
+        $this->auth->authUserById($resetPassword->usersId);
+
+        $this->flash->success('Please reset your password');
+
+        return $this->dispatcher->forward(array(
+                    'controller' => 'users',
+                    'action' => 'changePassword'
+        ));
+    }
+
+    public function loginAction() {
+        
     }
 
     /**
      * Users must use this action to change its password
      */
-    public function changePasswordAction()
-    {
+    public function changePasswordAction() {
         $form = new ChangePasswordForm();
 
         if ($this->request->isPost()) {
@@ -199,4 +250,5 @@ class UsersController extends ControllerBase
 
         $this->view->form = $form;
     }
+
 }

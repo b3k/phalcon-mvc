@@ -7,7 +7,9 @@ return array(
     'list' => array(
         'index' => array(
             'index' => '*',
-            'logout' => array('user', 'moderator', 'admin')
+        ),
+        'user' => array(
+            'logout' => array('user', 'admin')
         ),
         'error' => array(
             'error404' => '*',

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "86e34f707a7cdb48227e7afa63a3352f",
+    "hash": "12d2eb67673d0461271238b34e908bb3",
     "packages": [
         {
             "name": "propel/propel",

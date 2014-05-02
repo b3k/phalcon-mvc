@@ -3,24 +3,43 @@
 namespace App\Library\User\Acl;
 
 use Phalcon\Mvc\User\Component;
-use Phalcon\Acl\Adapter\Memory as AclMemory;
-use Phalcon\Acl\Role as AclRole;
-use Phalcon\Acl\Resource as AclResource;
 
-class Acl extends Component {
+class Acl extends Component
+{
 
     const CACHE_KEY = 'application_acl_data';
 
+    /**
+     *
+     * @var \Phalcon\Acl\Adapter\Memory
+     */
     private $acl;
+    
+    /**
+     *
+     * @var boolean
+     */
+    private $use_apc;
 
-    public function buildFromArray($list) {
-        $acl = new AclMemory();
+    public function __construct()
+    {
+        $this->use_apc = function_exists('apc_store') && function_exists('apc_fetch');
+    }
 
-        $acl->setDefaultAction(isset($list['default']) ? $list['default'] : Phalcon\Acl::DENY);
+    /**
+     * 
+     * @param array $list
+     * @return \Phalcon\Acl\Adapter\Memory
+     */
+    public function buildFromArray($list)
+    {
+        $this->acl = new \Phalcon\Acl\Adapter\Memory();
+
+        $this->acl->setDefaultAction(isset($list['default']) ? $list['default'] : Phalcon\Acl::DENY);
 
         if (isset($list['roles'])) {
             foreach ($list['roles'] as $role) {
-                $acl->addRole(new AclRole($role));
+                $this->acl->addRole(new \Phalcon\Acl\Role($role));
             }
         }
 
@@ -33,7 +52,7 @@ class Acl extends Component {
                     $actions[] = substr(strtolower($method->getName()), 0, -6);
                 }
             }
-            $acl->addResource(new AclResource(strtolower($controller)), $actions);
+            $this->acl->addResource(new \Phalcon\Acl\Resource(strtolower($controller)), $actions);
         }
 
         foreach ($list['list'] as $controller => $actions) {
@@ -43,22 +62,20 @@ class Acl extends Component {
                     $action = strtolower($action);
                     if (is_array($roles)) {
                         foreach ($roles as $role) {
-                            $acl->allow(strtolower($role), $controller, $action);
+                            $this->acl->allow(strtolower($role), $controller, $action);
                         }
                     } else {
-                        $acl->allow(strtolower($roles), $controller, $action);
+                        $this->acl->allow(strtolower($roles), $controller, $action);
                     }
                 }
             }
         }
 
-        file_put_contents(APP_TMP_DIR . DS . self::CACHE_KEY, serialize($acl));
+        file_put_contents(APP_TMP_DIR . DS . self::CACHE_KEY, serialize($this->acl));
 
-        if (function_exists('apc_store')) {
-            apc_store(APP_ENV . '_' . self::CACHE_KEY, $acl);
+        if ($this->use_apc) {
+            apc_store(APP_ENV . '_' . self::CACHE_KEY, $this->acl);
         }
-
-        $this->acl = $acl;
 
         return $this->acl;
     }
@@ -71,11 +88,13 @@ class Acl extends Component {
      * @param string $action
      * @return boolean
      */
-    public function isAllowed($profile, $controller, $action) {
+    public function isAllowed($profile, $controller, $action)
+    {
         return $this->getAcl()->isAllowed($profile, $controller, $action);
     }
-    
-    public function isPrivate() {
+
+    public function isPrivate()
+    {
         return TRUE;
     }
 
@@ -84,12 +103,13 @@ class Acl extends Component {
      *
      * @return Phalcon\Acl\Adapter\Memory
      */
-    public function getAcl() {
+    public function getAcl()
+    {
         if (is_object($this->acl)) {
             return $this->acl;
         }
 
-        if (function_exists('apc_fetch')) {
+        if ($this->use_apc) {
             $acl = apc_fetch(APP_ENV . '_' . self::CACHE_KEY);
             if (is_object($acl)) {
                 $this->acl = $acl;
@@ -100,7 +120,7 @@ class Acl extends Component {
         if (file_exists(APP_TMP_DIR . DS . self::CACHE_KEY)) {
             $data = file_get_contents(APP_TMP_DIR . DS . self::CACHE_KEY);
             $this->acl = unserialize($data);
-            if (function_exists('apc_store')) {
+            if ($this->use_apc) {
                 apc_store(APP_ENV . '_' . self::CACHE_KEY, $this->acl);
             }
         } else {

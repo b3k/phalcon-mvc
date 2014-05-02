@@ -22,6 +22,7 @@ class Application extends \Phalcon\Mvc\Application {
     const SERVICE_CACHE = 'cache';
     const SERVICE_CRYPT = 'crypt';
     const SERVICE_ACL = 'acl';
+    const SERVICE_AUTH = 'auth';
 
     protected $di;
     protected $config;
@@ -76,6 +77,7 @@ class Application extends \Phalcon\Mvc\Application {
         self::SERVICE_VIEW,
         self::SERVICE_ROUTER,
         self::SERVICE_ACL,
+        self::SERVICE_AUTH,
     );
 
     public function __construct($di = null) {
@@ -111,10 +113,16 @@ class Application extends \Phalcon\Mvc\Application {
     }
 
     protected function initAcl() {
-        $config = $this->config;
-        $this->di->set(self::SERVICE_ACL, function() use ($config) {
+        $this->di->set(self::SERVICE_ACL, function() {
             $Acl = new \App\Library\User\Acl\Acl();
             return $Acl;
+        });
+    }
+    
+    protected function initAuth() {
+        $this->di->set(self::SERVICE_AUTH, function() {
+            $Auth = new \App\Library\User\Auth\Auth();
+            return $Auth;
         });
     }
 

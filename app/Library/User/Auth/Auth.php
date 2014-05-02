@@ -1,11 +1,7 @@
 <?php
-namespace Vokuro\Auth;
+namespace App\Library\User\Auth;
 
 use Phalcon\Mvc\User\Component;
-use Vokuro\Models\Users;
-use Vokuro\Models\RememberTokens;
-use Vokuro\Models\SuccessLogins;
-use Vokuro\Models\FailedLogins;
 
 /**
  * Vokuro\Auth\Auth

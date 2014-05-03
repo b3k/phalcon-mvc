@@ -1,8 +1,9 @@
 <?php
 
-namespace app\Model;
+namespace App\Model;
 
 use App\Model\Base\SubscriptionPlanChannelQuery as BaseSubscriptionPlanChannelQuery;
+
 
 /**
  * Skeleton subclass for performing query and update operations on the 'subscription_plan_channel' table.

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Model\Base;
+namespace App\Model\Base;
 
 use \DateTime;
 use \Exception;
@@ -36,6 +36,7 @@ abstract class Trigger implements ActiveRecordInterface
      * TableMap class name
      */
     const TABLE_MAP = '\\App\\Model\\Map\\TriggerTableMap';
+
 
     /**
      * attribute to determine if this object has previously been saved.
@@ -510,8 +511,8 @@ abstract class Trigger implements ActiveRecordInterface
      * Get the [optionally formatted] temporal [trigger_last_executed_at] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *                       If format is NULL, then the raw \DateTime object will be returned.
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
      *
      * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
@@ -540,8 +541,8 @@ abstract class Trigger implements ActiveRecordInterface
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *                       If format is NULL, then the raw \DateTime object will be returned.
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
      *
      * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
@@ -560,8 +561,8 @@ abstract class Trigger implements ActiveRecordInterface
      * Get the [optionally formatted] temporal [updated_at] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *                       If format is NULL, then the raw \DateTime object will be returned.
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
      *
      * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
@@ -705,7 +706,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Set the value of [id_trigger] column.
      *
-     * @param  int                      $v new value
+     * @param  int $v new value
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setIdTrigger($v)
@@ -725,7 +726,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Set the value of [target_id] column.
      *
-     * @param  int                      $v new value
+     * @param  int $v new value
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setTargetId($v)
@@ -749,7 +750,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Set the value of [user_id] column.
      *
-     * @param  int                      $v new value
+     * @param  int $v new value
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setUserId($v)
@@ -773,7 +774,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Set the value of [trigger_type_id] column.
      *
-     * @param  int                      $v new value
+     * @param  int $v new value
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setTriggerTypeId($v)
@@ -797,7 +798,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Set the value of [trigger_params] column.
      *
-     * @param  string                   $v new value
+     * @param  string $v new value
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setTriggerParams($v)
@@ -817,7 +818,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Set the value of [trigger_invoke_on] column.
      *
-     * @param  array                    $v new value
+     * @param  array $v new value
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setTriggerInvokeOn($v)
@@ -834,7 +835,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Set the value of [trigger_name] column.
      *
-     * @param  string                   $v new value
+     * @param  string $v new value
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setTriggerName($v)
@@ -858,7 +859,7 @@ abstract class Trigger implements ActiveRecordInterface
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      *
-     * @param  boolean|integer|string   $v The new value
+     * @param  boolean|integer|string $v The new value
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setTriggerActive($v)
@@ -882,8 +883,8 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Sets the value of [trigger_last_executed_at] column to a normalized version of the date/time value specified.
      *
-     * @param  mixed                    $v string, integer (timestamp), or \DateTime value.
-     *                                     Empty strings are treated as NULL.
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setTriggerLastExecutedAt($v)
@@ -902,7 +903,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Set the value of [trigger_last_executed_result] column.
      *
-     * @param  string                   $v new value
+     * @param  string $v new value
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setTriggerLastExecutedResult($v)
@@ -922,8 +923,8 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
-     * @param  mixed                    $v string, integer (timestamp), or \DateTime value.
-     *                                     Empty strings are treated as NULL.
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setCreatedAt($v)
@@ -942,8 +943,8 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
      *
-     * @param  mixed                    $v string, integer (timestamp), or \DateTime value.
-     *                                     Empty strings are treated as NULL.
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function setUpdatedAt($v)
@@ -964,10 +965,10 @@ abstract class Trigger implements ActiveRecordInterface
      *
      * This will only work if the object has been saved and has a valid primary key set.
      *
-     * @param  boolean             $deep (optional) Whether to also de-associated any related objects.
-     * @param  ConnectionInterface $con  (optional) The ConnectionInterface connection to use.
+     * @param      boolean $deep (optional) Whether to also de-associated any related objects.
+     * @param      ConnectionInterface $con (optional) The ConnectionInterface connection to use.
      * @return void
-     * @throws PropelException     - if this object is deleted, unsaved or doesn't have pk match in db
+     * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
     public function reload($deep = false, ConnectionInterface $con = null)
     {
@@ -1007,7 +1008,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Removes this object from datastore and sets delete attribute.
      *
-     * @param  ConnectionInterface $con
+     * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
      * @see Trigger::setDeleted()
@@ -1043,8 +1044,8 @@ abstract class Trigger implements ActiveRecordInterface
      * method.  This method wraps all precipitate database operations in a
      * single transaction.
      *
-     * @param  ConnectionInterface $con
-     * @return int                 The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @param      ConnectionInterface $con
+     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
      * @throws PropelException
      * @see doSave()
      */
@@ -1101,8 +1102,8 @@ abstract class Trigger implements ActiveRecordInterface
      * If the object is new, it inserts it; otherwise an update is performed.
      * All related objects are also updated in this method.
      *
-     * @param  ConnectionInterface $con
-     * @return int                 The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @param      ConnectionInterface $con
+     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
      * @throws PropelException
      * @see save()
      */
@@ -1176,7 +1177,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Insert the row in the database.
      *
-     * @param ConnectionInterface $con
+     * @param      ConnectionInterface $con
      *
      * @throws PropelException
      * @see doSave()
@@ -1296,7 +1297,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Update the row in the database.
      *
-     * @param ConnectionInterface $con
+     * @param      ConnectionInterface $con
      *
      * @return Integer Number of updated rows
      * @see doSave()
@@ -1312,12 +1313,12 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Retrieves a field from the object by name passed in as a string.
      *
-     * @param  string $name name
-     * @param  string $type The type of fieldname the $name is of:
-     *                      one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                      TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                      Defaults to TableMap::TYPE_PHPNAME.
-     * @return mixed  Value of field.
+     * @param      string $name name
+     * @param      string $type The type of fieldname the $name is of:
+     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                     Defaults to TableMap::TYPE_PHPNAME.
+     * @return mixed Value of field.
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
@@ -1331,7 +1332,7 @@ abstract class Trigger implements ActiveRecordInterface
      * Retrieves a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param  int   $pos position in xml schema
+     * @param      int $pos position in xml schema
      * @return mixed Value of field at $pos
      */
     public function getByPosition($pos)
@@ -1385,12 +1386,12 @@ abstract class Trigger implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param string  $keyType                (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
-     *                                        TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                                        Defaults to TableMap::TYPE_PHPNAME.
-     * @param boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
-     * @param array   $alreadyDumpedObjects   List of objects to skip to avoid recursion
-     * @param boolean $includeForeignObjects  (optional) Whether to include hydrated related objects. Default to FALSE.
+     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                    Defaults to TableMap::TYPE_PHPNAME.
+     * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+     * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
@@ -1441,12 +1442,12 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Sets a field from the object by name passed in as a string.
      *
-     * @param  string                   $name
-     * @param  mixed                    $value field value
-     * @param  string                   $type  The type of fieldname the $name is of:
-     *                                         one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                                         TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                                         Defaults to TableMap::TYPE_PHPNAME.
+     * @param  string $name
+     * @param  mixed  $value field value
+     * @param  string $type The type of fieldname the $name is of:
+     *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                Defaults to TableMap::TYPE_PHPNAME.
      * @return $this|\App\Model\Trigger
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
@@ -1460,8 +1461,8 @@ abstract class Trigger implements ActiveRecordInterface
      * Sets a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param  int                      $pos   position in xml schema
-     * @param  mixed                    $value field value
+     * @param  int $pos position in xml schema
+     * @param  mixed $value field value
      * @return $this|\App\Model\Trigger
      */
     public function setByPosition($pos, $value)
@@ -1525,8 +1526,8 @@ abstract class Trigger implements ActiveRecordInterface
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
-     * @param  array  $arr     An array to populate the object from.
-     * @param  string $keyType The type of keys the array uses.
+     * @param      array  $arr     An array to populate the object from.
+     * @param      string $keyType The type of keys the array uses.
      * @return void
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
@@ -1578,9 +1579,9 @@ abstract class Trigger implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
-     * @param mixed  $parser A AbstractParser instance,
+     * @param mixed $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
-     * @param string $data   The source data to import from
+     * @param string $data The source data to import from
      *
      * @return $this|\App\Model\Trigger The current object, for fluid interface
      */
@@ -1696,7 +1697,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Generic method to set the primary key (id_trigger column).
      *
-     * @param  int  $key Primary key.
+     * @param       int $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
@@ -1719,9 +1720,9 @@ abstract class Trigger implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param  object          $copyObj  An object of \App\Model\Trigger (or compatible) type.
-     * @param  boolean         $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @param  boolean         $makeNew  Whether to reset autoincrement PKs and make the object new.
+     * @param      object $copyObj An object of \App\Model\Trigger (or compatible) type.
+     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
@@ -1765,7 +1766,7 @@ abstract class Trigger implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param  boolean            $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @return \App\Model\Trigger Clone of current object.
      * @throws PropelException
      */
@@ -1782,7 +1783,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Declares an association between this object and a ChildTarget object.
      *
-     * @param  ChildTarget              $v
+     * @param  ChildTarget $v
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1802,6 +1803,7 @@ abstract class Trigger implements ActiveRecordInterface
             $v->addTrigger($this);
         }
 
+
         return $this;
     }
 
@@ -1810,7 +1812,7 @@ abstract class Trigger implements ActiveRecordInterface
      * Get the associated ChildTarget object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildTarget         The associated ChildTarget object.
+     * @return ChildTarget The associated ChildTarget object.
      * @throws PropelException
      */
     public function getTarget(ConnectionInterface $con = null)
@@ -1832,7 +1834,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Declares an association between this object and a ChildUser object.
      *
-     * @param  ChildUser                $v
+     * @param  ChildUser $v
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1852,6 +1854,7 @@ abstract class Trigger implements ActiveRecordInterface
             $v->addTrigger($this);
         }
 
+
         return $this;
     }
 
@@ -1860,7 +1863,7 @@ abstract class Trigger implements ActiveRecordInterface
      * Get the associated ChildUser object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildUser           The associated ChildUser object.
+     * @return ChildUser The associated ChildUser object.
      * @throws PropelException
      */
     public function getUser(ConnectionInterface $con = null)
@@ -1882,7 +1885,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Declares an association between this object and a ChildTriggerType object.
      *
-     * @param  ChildTriggerType         $v
+     * @param  ChildTriggerType $v
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      * @throws PropelException
      */
@@ -1902,6 +1905,7 @@ abstract class Trigger implements ActiveRecordInterface
             $v->addTrigger($this);
         }
 
+
         return $this;
     }
 
@@ -1910,7 +1914,7 @@ abstract class Trigger implements ActiveRecordInterface
      * Get the associated ChildTriggerType object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildTriggerType    The associated ChildTriggerType object.
+     * @return ChildTriggerType The associated ChildTriggerType object.
      * @throws PropelException
      */
     public function getTriggerType(ConnectionInterface $con = null)
@@ -1935,7 +1939,7 @@ abstract class Trigger implements ActiveRecordInterface
      * Avoids crafting an 'init[$relationName]s' method name
      * that wouldn't work when StandardEnglishPluralizer is used.
      *
-     * @param  string $relationName The name of the relation to initialize
+     * @param      string $relationName The name of the relation to initialize
      * @return void
      */
     public function initRelation($relationName)
@@ -1974,8 +1978,8 @@ abstract class Trigger implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                  the collection even if it is not empty
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
      *
      * @return void
      */
@@ -1997,8 +2001,8 @@ abstract class Trigger implements ActiveRecordInterface
      * If this ChildTrigger is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param  Criteria                           $criteria optional Criteria object to narrow the query
-     * @param  ConnectionInterface                $con      optional connection object
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
      * @return ObjectCollection|ChildTriggerLog[] List of ChildTriggerLog objects
      * @throws PropelException
      */
@@ -2052,14 +2056,15 @@ abstract class Trigger implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param  Collection          $triggerLogs A Propel collection.
-     * @param  ConnectionInterface $con         Optional connection object
-     * @return $this|ChildTrigger  The current object (for fluent API support)
+     * @param      Collection $triggerLogs A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildTrigger The current object (for fluent API support)
      */
     public function setTriggerLogs(Collection $triggerLogs, ConnectionInterface $con = null)
     {
         /** @var ChildTriggerLog[] $triggerLogsToDelete */
         $triggerLogsToDelete = $this->getTriggerLogs(new Criteria(), $con)->diff($triggerLogs);
+
 
         $this->triggerLogsScheduledForDeletion = $triggerLogsToDelete;
 
@@ -2081,10 +2086,10 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Returns the number of related TriggerLog objects.
      *
-     * @param  Criteria            $criteria
-     * @param  boolean             $distinct
-     * @param  ConnectionInterface $con
-     * @return int                 Count of related TriggerLog objects.
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related TriggerLog objects.
      * @throws PropelException
      */
     public function countTriggerLogs(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
@@ -2116,7 +2121,7 @@ abstract class Trigger implements ActiveRecordInterface
      * Method called to associate a ChildTriggerLog object to this object
      * through the ChildTriggerLog foreign key attribute.
      *
-     * @param  ChildTriggerLog          $l ChildTriggerLog
+     * @param  ChildTriggerLog $l ChildTriggerLog
      * @return $this|\App\Model\Trigger The current object (for fluent API support)
      */
     public function addTriggerLog(ChildTriggerLog $l)
@@ -2143,7 +2148,7 @@ abstract class Trigger implements ActiveRecordInterface
     }
 
     /**
-     * @param  ChildTriggerLog    $triggerLog The ChildTriggerLog object to remove.
+     * @param  ChildTriggerLog $triggerLog The ChildTriggerLog object to remove.
      * @return $this|ChildTrigger The current object (for fluent API support)
      */
     public function removeTriggerLog(ChildTriggerLog $triggerLog)
@@ -2205,7 +2210,7 @@ abstract class Trigger implements ActiveRecordInterface
      * This method is used to reset all php object references (not the actual reference in the database).
      * Necessary for object serialisation.
      *
-     * @param boolean $deep Whether to also clear the references on all referrer objects.
+     * @param      boolean $deep Whether to also clear the references on all referrer objects.
      */
     public function clearAllReferences($deep = false)
     {
@@ -2238,7 +2243,7 @@ abstract class Trigger implements ActiveRecordInterface
     /**
      * Mark the current object so that the update date doesn't get updated during next save
      *
-     * @return $this|ChildTrigger The current object (for fluent API support)
+     * @return     $this|ChildTrigger The current object (for fluent API support)
      */
     public function keepUpdateDateUnchanged()
     {

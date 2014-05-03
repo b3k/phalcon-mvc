@@ -1,8 +1,9 @@
 <?php
 
-namespace app\Model;
+namespace App\Model;
 
 use App\Model\Base\StackTestResultFailQuery as BaseStackTestResultFailQuery;
+
 
 /**
  * Skeleton subclass for performing query and update operations on the 'stack_test_result_fail' table.

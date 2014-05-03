@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Model;
+namespace App\Model;
 
 use App\Model\Base\ChannelOut as BaseChannelOut;
 

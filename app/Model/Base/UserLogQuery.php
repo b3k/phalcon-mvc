@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Model\Base;
+namespace App\Model\Base;
 
 use \Exception;
 use \PDO;
@@ -63,9 +63,9 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Initializes internal state of \App\Model\Base\UserLogQuery object.
      *
-     * @param string $dbName     The database name
-     * @param string $modelName  The phpName of a model, e.g. 'Book'
-     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param     string $dbName The database name
+     * @param     string $modelName The phpName of a model, e.g. 'Book'
+     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
     public function __construct($dbName = 'default', $modelName = '\\App\\Model\\UserLog', $modelAlias = null)
     {
@@ -75,8 +75,8 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Returns a new ChildUserLogQuery object.
      *
-     * @param string   $modelAlias The alias of a model in the query
-     * @param Criteria $criteria   Optional Criteria to build the query from
+     * @param     string $modelAlias The alias of a model in the query
+     * @param     Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildUserLogQuery
      */
@@ -105,7 +105,7 @@ abstract class UserLogQuery extends ModelCriteria
      * $obj  = $c->findPk(12, $con);
      * </code>
      *
-     * @param mixed               $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildUserLog|array|mixed the result, formatted by the current formatter
@@ -136,8 +136,8 @@ abstract class UserLogQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param mixed               $key Primary key to use for the query
-     * @param ConnectionInterface $con A connection object
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
      *
      * @return ChildUserLog A model object, or null if the key is not found
      */
@@ -167,8 +167,8 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param mixed               $key Primary key to use for the query
-     * @param ConnectionInterface $con A connection object
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
      *
      * @return ChildUserLog|array|mixed the result, formatted by the current formatter
      */
@@ -188,8 +188,8 @@ abstract class UserLogQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param array               $keys Primary keys to use for the query
-     * @param ConnectionInterface $con  an optional connection object
+     * @param     array $keys Primary keys to use for the query
+     * @param     ConnectionInterface $con an optional connection object
      *
      * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
      */
@@ -210,24 +210,26 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param mixed $key Primary key to use for the query
+     * @param     mixed $key Primary key to use for the query
      *
      * @return $this|ChildUserLogQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
+
         return $this->addUsingAlias(UserLogTableMap::COL_ID_USER_LOG, $key, Criteria::EQUAL);
     }
 
     /**
      * Filter the query by a list of primary keys
      *
-     * @param array $keys The list of primary key to use for the query
+     * @param     array $keys The list of primary key to use for the query
      *
      * @return $this|ChildUserLogQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
+
         return $this->addUsingAlias(UserLogTableMap::COL_ID_USER_LOG, $keys, Criteria::IN);
     }
 
@@ -241,11 +243,11 @@ abstract class UserLogQuery extends ModelCriteria
      * $query->filterByIdUserLog(array('min' => 12)); // WHERE id_user_log > 12
      * </code>
      *
-     * @param mixed  $idUserLog  The value to use as filter.
-     *                           Use scalar values for equality.
-     *                           Use array values for in_array() equivalent.
-     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $idUserLog The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserLogQuery The current query, for fluid interface
      */
@@ -282,11 +284,11 @@ abstract class UserLogQuery extends ModelCriteria
      * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
      * </code>
      *
-     * @param mixed  $userId     The value to use as filter.
-     *                           Use scalar values for equality.
-     *                           Use array values for in_array() equivalent.
-     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $userId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserLogQuery The current query, for fluid interface
      */
@@ -322,9 +324,9 @@ abstract class UserLogQuery extends ModelCriteria
      * $query->filterByUserLogAction('%fooValue%'); // WHERE user_log_action LIKE '%fooValue%'
      * </code>
      *
-     * @param string $userLogAction The value to use as filter.
-     *                              Accepts wildcards (* and % trigger a LIKE)
-     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     string $userLogAction The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserLogQuery The current query, for fluid interface
      */
@@ -351,9 +353,9 @@ abstract class UserLogQuery extends ModelCriteria
      * $query->filterByUserLogParams('%fooValue%'); // WHERE user_log_params LIKE '%fooValue%'
      * </code>
      *
-     * @param string $userLogParams The value to use as filter.
-     *                              Accepts wildcards (* and % trigger a LIKE)
-     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     string $userLogParams The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserLogQuery The current query, for fluid interface
      */
@@ -381,13 +383,13 @@ abstract class UserLogQuery extends ModelCriteria
      * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
-     * @param mixed  $createdAt  The value to use as filter.
-     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
-     *                           Empty strings are treated as NULL.
-     *                           Use scalar values for equality.
-     *                           Use array values for in_array() equivalent.
-     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $createdAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserLogQuery The current query, for fluid interface
      */
@@ -424,13 +426,13 @@ abstract class UserLogQuery extends ModelCriteria
      * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param mixed  $updatedAt  The value to use as filter.
-     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
-     *                           Empty strings are treated as NULL.
-     *                           Use scalar values for equality.
-     *                           Use array values for in_array() equivalent.
-     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $updatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserLogQuery The current query, for fluid interface
      */
@@ -460,7 +462,7 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param ChildUserLog $userLog Object to remove from the list of results
+     * @param   ChildUserLog $userLog Object to remove from the list of results
      *
      * @return $this|ChildUserLogQuery The current query, for fluid interface
      */
@@ -476,8 +478,8 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Deletes all rows from the user_log table.
      *
-     * @param  ConnectionInterface $con the connection to use
-     * @return int                 The number of affected rows (if supported by underlying database driver).
+     * @param ConnectionInterface $con the connection to use
+     * @return int The number of affected rows (if supported by underlying database driver).
      */
     public function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -503,11 +505,11 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param  ConnectionInterface $con the connection to use
-     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                                 if supported by native driver or if emulated using Propel.
-     * @throws PropelException     Any exceptions caught during processing will be
-     *                                 rethrown wrapped into a PropelException.
+     * @param ConnectionInterface $con the connection to use
+     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                         if supported by native driver or if emulated using Propel.
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -539,9 +541,9 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Filter by the latest updated
      *
-     * @param int $nbDays Maximum age of the latest update in days
+     * @param      int $nbDays Maximum age of the latest update in days
      *
-     * @return $this|ChildUserLogQuery The current query, for fluid interface
+     * @return     $this|ChildUserLogQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
@@ -551,7 +553,7 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Order by update date desc
      *
-     * @return $this|ChildUserLogQuery The current query, for fluid interface
+     * @return     $this|ChildUserLogQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
@@ -561,7 +563,7 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Order by update date asc
      *
-     * @return $this|ChildUserLogQuery The current query, for fluid interface
+     * @return     $this|ChildUserLogQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
@@ -571,7 +573,7 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Order by create date desc
      *
-     * @return $this|ChildUserLogQuery The current query, for fluid interface
+     * @return     $this|ChildUserLogQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
@@ -581,9 +583,9 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Filter by the latest created
      *
-     * @param int $nbDays Maximum age of in days
+     * @param      int $nbDays Maximum age of in days
      *
-     * @return $this|ChildUserLogQuery The current query, for fluid interface
+     * @return     $this|ChildUserLogQuery The current query, for fluid interface
      */
     public function recentlyCreated($nbDays = 7)
     {
@@ -593,7 +595,7 @@ abstract class UserLogQuery extends ModelCriteria
     /**
      * Order by create date asc
      *
-     * @return $this|ChildUserLogQuery The current query, for fluid interface
+     * @return     $this|ChildUserLogQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {

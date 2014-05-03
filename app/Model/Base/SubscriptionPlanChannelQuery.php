@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Model\Base;
+namespace App\Model\Base;
 
 use \Exception;
 use \PDO;
@@ -58,9 +58,9 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Initializes internal state of \App\Model\Base\SubscriptionPlanChannelQuery object.
      *
-     * @param string $dbName     The database name
-     * @param string $modelName  The phpName of a model, e.g. 'Book'
-     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param     string $dbName The database name
+     * @param     string $modelName The phpName of a model, e.g. 'Book'
+     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
     public function __construct($dbName = 'default', $modelName = '\\App\\Model\\SubscriptionPlanChannel', $modelAlias = null)
     {
@@ -70,8 +70,8 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Returns a new ChildSubscriptionPlanChannelQuery object.
      *
-     * @param string   $modelAlias The alias of a model in the query
-     * @param Criteria $criteria   Optional Criteria to build the query from
+     * @param     string $modelAlias The alias of a model in the query
+     * @param     Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildSubscriptionPlanChannelQuery
      */
@@ -131,8 +131,8 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param mixed               $key Primary key to use for the query
-     * @param ConnectionInterface $con A connection object
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
      *
      * @return ChildSubscriptionPlanChannel A model object, or null if the key is not found
      */
@@ -163,8 +163,8 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param mixed               $key Primary key to use for the query
-     * @param ConnectionInterface $con A connection object
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
      *
      * @return ChildSubscriptionPlanChannel|array|mixed the result, formatted by the current formatter
      */
@@ -184,8 +184,8 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(array(12, 56), array(832, 123), array(123, 456)), $con);
      * </code>
-     * @param array               $keys Primary keys to use for the query
-     * @param ConnectionInterface $con  an optional connection object
+     * @param     array $keys Primary keys to use for the query
+     * @param     ConnectionInterface $con an optional connection object
      *
      * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
      */
@@ -206,7 +206,7 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param mixed $key Primary key to use for the query
+     * @param     mixed $key Primary key to use for the query
      *
      * @return $this|ChildSubscriptionPlanChannelQuery The current query, for fluid interface
      */
@@ -221,7 +221,7 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Filter the query by a list of primary keys
      *
-     * @param array $keys The list of primary key to use for the query
+     * @param     array $keys The list of primary key to use for the query
      *
      * @return $this|ChildSubscriptionPlanChannelQuery The current query, for fluid interface
      */
@@ -252,11 +252,11 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
      *
      * @see       filterBySubscriptionPlan()
      *
-     * @param mixed  $idSubscriptionPlan The value to use as filter.
-     *                                   Use scalar values for equality.
-     *                                   Use array values for in_array() equivalent.
-     *                                   Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison         Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $idSubscriptionPlan The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildSubscriptionPlanChannelQuery The current query, for fluid interface
      */
@@ -295,11 +295,11 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
      *
      * @see       filterByChannel()
      *
-     * @param mixed  $idChannel  The value to use as filter.
-     *                           Use scalar values for equality.
-     *                           Use array values for in_array() equivalent.
-     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $idChannel The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildSubscriptionPlanChannelQuery The current query, for fluid interface
      */
@@ -329,8 +329,8 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Filter the query by a related \App\Model\Channel object
      *
-     * @param \App\Model\Channel|ObjectCollection $channel    The related object(s) to use as filter
-     * @param string                              $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\Channel|ObjectCollection $channel The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildSubscriptionPlanChannelQuery The current query, for fluid interface
      */
@@ -354,8 +354,8 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the Channel relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildSubscriptionPlanChannelQuery The current query, for fluid interface
      */
@@ -388,9 +388,9 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\ChannelQuery A secondary query class using the current class as primary query
      */
@@ -405,7 +405,7 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
      * Filter the query by a related \App\Model\SubscriptionPlan object
      *
      * @param \App\Model\SubscriptionPlan|ObjectCollection $subscriptionPlan The related object(s) to use as filter
-     * @param string                                       $comparison       Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildSubscriptionPlanChannelQuery The current query, for fluid interface
      */
@@ -429,8 +429,8 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the SubscriptionPlan relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildSubscriptionPlanChannelQuery The current query, for fluid interface
      */
@@ -463,9 +463,9 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\SubscriptionPlanQuery A secondary query class using the current class as primary query
      */
@@ -479,7 +479,7 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param ChildSubscriptionPlanChannel $subscriptionPlanChannel Object to remove from the list of results
+     * @param   ChildSubscriptionPlanChannel $subscriptionPlanChannel Object to remove from the list of results
      *
      * @return $this|ChildSubscriptionPlanChannelQuery The current query, for fluid interface
      */
@@ -497,8 +497,8 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Deletes all rows from the subscription_plan_channel table.
      *
-     * @param  ConnectionInterface $con the connection to use
-     * @return int                 The number of affected rows (if supported by underlying database driver).
+     * @param ConnectionInterface $con the connection to use
+     * @return int The number of affected rows (if supported by underlying database driver).
      */
     public function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -524,11 +524,11 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
     /**
      * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param  ConnectionInterface $con the connection to use
-     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                                 if supported by native driver or if emulated using Propel.
-     * @throws PropelException     Any exceptions caught during processing will be
-     *                                 rethrown wrapped into a PropelException.
+     * @param ConnectionInterface $con the connection to use
+     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                         if supported by native driver or if emulated using Propel.
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
     public function delete(ConnectionInterface $con = null)
     {

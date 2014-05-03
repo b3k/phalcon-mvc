@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Model\Base;
+namespace App\Model\Base;
 
 use \Exception;
 use \PDO;
@@ -98,9 +98,9 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Initializes internal state of \App\Model\Base\TargetQuery object.
      *
-     * @param string $dbName     The database name
-     * @param string $modelName  The phpName of a model, e.g. 'Book'
-     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param     string $dbName The database name
+     * @param     string $modelName The phpName of a model, e.g. 'Book'
+     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
     public function __construct($dbName = 'default', $modelName = '\\App\\Model\\Target', $modelAlias = null)
     {
@@ -110,8 +110,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Returns a new ChildTargetQuery object.
      *
-     * @param string   $modelAlias The alias of a model in the query
-     * @param Criteria $criteria   Optional Criteria to build the query from
+     * @param     string $modelAlias The alias of a model in the query
+     * @param     Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildTargetQuery
      */
@@ -140,7 +140,7 @@ abstract class TargetQuery extends ModelCriteria
      * $obj  = $c->findPk(12, $con);
      * </code>
      *
-     * @param mixed               $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildTarget|array|mixed the result, formatted by the current formatter
@@ -171,8 +171,8 @@ abstract class TargetQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param mixed               $key Primary key to use for the query
-     * @param ConnectionInterface $con A connection object
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
      *
      * @return ChildTarget A model object, or null if the key is not found
      */
@@ -202,8 +202,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param mixed               $key Primary key to use for the query
-     * @param ConnectionInterface $con A connection object
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
      *
      * @return ChildTarget|array|mixed the result, formatted by the current formatter
      */
@@ -223,8 +223,8 @@ abstract class TargetQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param array               $keys Primary keys to use for the query
-     * @param ConnectionInterface $con  an optional connection object
+     * @param     array $keys Primary keys to use for the query
+     * @param     ConnectionInterface $con an optional connection object
      *
      * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
      */
@@ -245,24 +245,26 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param mixed $key Primary key to use for the query
+     * @param     mixed $key Primary key to use for the query
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
+
         return $this->addUsingAlias(TargetTableMap::COL_ID_TARGET, $key, Criteria::EQUAL);
     }
 
     /**
      * Filter the query by a list of primary keys
      *
-     * @param array $keys The list of primary key to use for the query
+     * @param     array $keys The list of primary key to use for the query
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
+
         return $this->addUsingAlias(TargetTableMap::COL_ID_TARGET, $keys, Criteria::IN);
     }
 
@@ -276,11 +278,11 @@ abstract class TargetQuery extends ModelCriteria
      * $query->filterByIdTarget(array('min' => 12)); // WHERE id_target > 12
      * </code>
      *
-     * @param mixed  $idTarget   The value to use as filter.
-     *                           Use scalar values for equality.
-     *                           Use array values for in_array() equivalent.
-     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $idTarget The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -319,11 +321,11 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see       filterByTargetType()
      *
-     * @param mixed  $targetTypeId The value to use as filter.
-     *                             Use scalar values for equality.
-     *                             Use array values for in_array() equivalent.
-     *                             Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison   Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $targetTypeId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -362,11 +364,11 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see       filterByTargetGroup()
      *
-     * @param mixed  $targetGroupId The value to use as filter.
-     *                              Use scalar values for equality.
-     *                              Use array values for in_array() equivalent.
-     *                              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $targetGroupId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -402,9 +404,9 @@ abstract class TargetQuery extends ModelCriteria
      * $query->filterByTargetTarget('%fooValue%'); // WHERE target_target LIKE '%fooValue%'
      * </code>
      *
-     * @param string $targetTarget The value to use as filter.
-     *                             Accepts wildcards (* and % trigger a LIKE)
-     * @param string $comparison   Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     string $targetTarget The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -432,13 +434,13 @@ abstract class TargetQuery extends ModelCriteria
      * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
-     * @param mixed  $createdAt  The value to use as filter.
-     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
-     *                           Empty strings are treated as NULL.
-     *                           Use scalar values for equality.
-     *                           Use array values for in_array() equivalent.
-     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $createdAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -475,13 +477,13 @@ abstract class TargetQuery extends ModelCriteria
      * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param mixed  $updatedAt  The value to use as filter.
-     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
-     *                           Empty strings are treated as NULL.
-     *                           Use scalar values for equality.
-     *                           Use array values for in_array() equivalent.
-     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param     mixed $updatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -512,7 +514,7 @@ abstract class TargetQuery extends ModelCriteria
      * Filter the query by a related \App\Model\TargetType object
      *
      * @param \App\Model\TargetType|ObjectCollection $targetType The related object(s) to use as filter
-     * @param string                                 $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetQuery The current query, for fluid interface
      */
@@ -536,8 +538,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the TargetType relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -570,9 +572,9 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\TargetTypeQuery A secondary query class using the current class as primary query
      */
@@ -587,7 +589,7 @@ abstract class TargetQuery extends ModelCriteria
      * Filter the query by a related \App\Model\TargetGroup object
      *
      * @param \App\Model\TargetGroup|ObjectCollection $targetGroup The related object(s) to use as filter
-     * @param string                                  $comparison  Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetQuery The current query, for fluid interface
      */
@@ -611,8 +613,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the TargetGroup relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -645,9 +647,9 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\TargetGroupQuery A secondary query class using the current class as primary query
      */
@@ -661,8 +663,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Filter the query by a related \App\Model\ChannelOut object
      *
-     * @param \App\Model\ChannelOut|ObjectCollection $channelOut the related object to use as filter
-     * @param string                                 $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\ChannelOut|ObjectCollection $channelOut  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetQuery The current query, for fluid interface
      */
@@ -684,8 +686,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the ChannelOut relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -718,9 +720,9 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\ChannelOutQuery A secondary query class using the current class as primary query
      */
@@ -734,8 +736,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Filter the query by a related \App\Model\StackTestResultFail object
      *
-     * @param \App\Model\StackTestResultFail|ObjectCollection $stackTestResultFail the related object to use as filter
-     * @param string                                          $comparison          Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\StackTestResultFail|ObjectCollection $stackTestResultFail  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetQuery The current query, for fluid interface
      */
@@ -757,8 +759,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the StackTestResultFailRelatedByTargetId relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -791,9 +793,9 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\StackTestResultFailQuery A secondary query class using the current class as primary query
      */
@@ -807,8 +809,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Filter the query by a related \App\Model\StackTestResultFail object
      *
-     * @param \App\Model\StackTestResultFail|ObjectCollection $stackTestResultFail the related object to use as filter
-     * @param string                                          $comparison          Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\StackTestResultFail|ObjectCollection $stackTestResultFail  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetQuery The current query, for fluid interface
      */
@@ -830,8 +832,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the StackTestResultFailRelatedByTargetGroupId relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -864,9 +866,9 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\StackTestResultFailQuery A secondary query class using the current class as primary query
      */
@@ -880,8 +882,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Filter the query by a related \App\Model\StackTestResultFail object
      *
-     * @param \App\Model\StackTestResultFail|ObjectCollection $stackTestResultFail the related object to use as filter
-     * @param string                                          $comparison          Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\StackTestResultFail|ObjectCollection $stackTestResultFail  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetQuery The current query, for fluid interface
      */
@@ -903,8 +905,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the StackTestResultFailRelatedByTargetTypeId relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -937,9 +939,9 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\StackTestResultFailQuery A secondary query class using the current class as primary query
      */
@@ -953,8 +955,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Filter the query by a related \App\Model\StackTestResultPass object
      *
-     * @param \App\Model\StackTestResultPass|ObjectCollection $stackTestResultPass the related object to use as filter
-     * @param string                                          $comparison          Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\StackTestResultPass|ObjectCollection $stackTestResultPass  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetQuery The current query, for fluid interface
      */
@@ -976,8 +978,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the StackTestResultPass relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -1010,9 +1012,9 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\StackTestResultPassQuery A secondary query class using the current class as primary query
      */
@@ -1026,8 +1028,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Filter the query by a related \App\Model\Trigger object
      *
-     * @param \App\Model\Trigger|ObjectCollection $trigger    the related object to use as filter
-     * @param string                              $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\Trigger|ObjectCollection $trigger  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetQuery The current query, for fluid interface
      */
@@ -1049,8 +1051,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the Trigger relation
      *
-     * @param string $relationAlias optional alias for the relation
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -1083,9 +1085,9 @@ abstract class TargetQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                              to be used as main alias in the secondary query
-     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Model\TriggerQuery A secondary query class using the current class as primary query
      */
@@ -1099,7 +1101,7 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param ChildTarget $target Object to remove from the list of results
+     * @param   ChildTarget $target Object to remove from the list of results
      *
      * @return $this|ChildTargetQuery The current query, for fluid interface
      */
@@ -1115,8 +1117,8 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Deletes all rows from the target table.
      *
-     * @param  ConnectionInterface $con the connection to use
-     * @return int                 The number of affected rows (if supported by underlying database driver).
+     * @param ConnectionInterface $con the connection to use
+     * @return int The number of affected rows (if supported by underlying database driver).
      */
     public function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -1142,11 +1144,11 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param  ConnectionInterface $con the connection to use
-     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                                 if supported by native driver or if emulated using Propel.
-     * @throws PropelException     Any exceptions caught during processing will be
-     *                                 rethrown wrapped into a PropelException.
+     * @param ConnectionInterface $con the connection to use
+     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                         if supported by native driver or if emulated using Propel.
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -1178,9 +1180,9 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Filter by the latest updated
      *
-     * @param int $nbDays Maximum age of the latest update in days
+     * @param      int $nbDays Maximum age of the latest update in days
      *
-     * @return $this|ChildTargetQuery The current query, for fluid interface
+     * @return     $this|ChildTargetQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
@@ -1190,7 +1192,7 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Order by update date desc
      *
-     * @return $this|ChildTargetQuery The current query, for fluid interface
+     * @return     $this|ChildTargetQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
@@ -1200,7 +1202,7 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Order by update date asc
      *
-     * @return $this|ChildTargetQuery The current query, for fluid interface
+     * @return     $this|ChildTargetQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
@@ -1210,7 +1212,7 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Order by create date desc
      *
-     * @return $this|ChildTargetQuery The current query, for fluid interface
+     * @return     $this|ChildTargetQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
@@ -1220,9 +1222,9 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Filter by the latest created
      *
-     * @param int $nbDays Maximum age of in days
+     * @param      int $nbDays Maximum age of in days
      *
-     * @return $this|ChildTargetQuery The current query, for fluid interface
+     * @return     $this|ChildTargetQuery The current query, for fluid interface
      */
     public function recentlyCreated($nbDays = 7)
     {
@@ -1232,7 +1234,7 @@ abstract class TargetQuery extends ModelCriteria
     /**
      * Order by create date asc
      *
-     * @return $this|ChildTargetQuery The current query, for fluid interface
+     * @return     $this|ChildTargetQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {

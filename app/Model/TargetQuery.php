@@ -1,8 +1,9 @@
 <?php
 
-namespace app\Model;
+namespace App\Model;
 
 use App\Model\Base\TargetQuery as BaseTargetQuery;
+
 
 /**
  * Skeleton subclass for performing query and update operations on the 'target' table.

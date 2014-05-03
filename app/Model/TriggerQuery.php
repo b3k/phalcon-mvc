@@ -1,8 +1,9 @@
 <?php
 
-namespace app\Model;
+namespace App\Model;
 
 use App\Model\Base\TriggerQuery as BaseTriggerQuery;
+
 
 /**
  * Skeleton subclass for performing query and update operations on the 'trigger' table.

@@ -1,8 +1,9 @@
 <?php
 
-namespace app\Model;
+namespace App\Model;
 
 use App\Model\Base\UserQuery as BaseUserQuery;
+
 
 /**
  * Skeleton subclass for performing query and update operations on the 'user' table.

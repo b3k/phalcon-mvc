@@ -1,8 +1,9 @@
 <?php
 
-namespace app\Model;
+namespace App\Model;
 
 use App\Model\Base\CronTaskQuery as BaseCronTaskQuery;
+
 
 /**
  * Skeleton subclass for performing query and update operations on the 'cron_task' table.

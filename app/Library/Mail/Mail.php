@@ -54,7 +54,7 @@ class Mail extends Component
      * Applies a template to be used in the e-mail
      *
      * @param string $name
-     * @param array $params
+     * @param array  $params
      */
     public function getTemplate($name, $params)
     {
@@ -72,10 +72,10 @@ class Mail extends Component
     /**
      * Sends e-mails via AmazonSES based on predefined templates
      *
-     * @param array $to
+     * @param array  $to
      * @param string $subject
      * @param string $name
-     * @param array $params
+     * @param array  $params
      */
     public function send($to, $subject, $name, $params)
     {

@@ -15,8 +15,8 @@ use \Phalcon\Config as PhalconConfig;
  *
  * @author b3k
  */
-class Config extends PhalconConfig {
-
+class Config extends PhalconConfig
+{
     protected $env = null;
     protected $base_path = null;
     protected $loadable_config_groups = array(
@@ -24,7 +24,8 @@ class Config extends PhalconConfig {
     );
     protected $config_cache_file = 'cache/config.php';
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->env = APP_ENV;
         $this->base_path = APP_ROOT_DIR . DS . 'config' . DS . 'environment' . DS . strtolower($this->env) . DS;
         if (is_readable($this->config_cache_file)) {
@@ -33,7 +34,7 @@ class Config extends PhalconConfig {
         $config = array();
 
         // make all values strtolower
-        $this->loadable_config_groups = array_map(function($v) {
+        $this->loadable_config_groups = array_map(function ($v) {
             return strtolower(trim($v));
         }, $this->loadable_config_groups);
 
@@ -44,14 +45,17 @@ class Config extends PhalconConfig {
             }
         }
         $this->warmupCache($config);
+
         return parent::__construct($config);
     }
 
-    public function warmupCache($config) {
+    public function warmupCache($config)
+    {
         file_put_contents(APP_TMP_DIR . DS . $this->config_cache_file, $this->dumpAsString($config));
     }
 
-    protected function dumpAsString($array) {
+    protected function dumpAsString($array)
+    {
         return '<?php return ' . var_export($array, true) . ';';
     }
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Base;
+namespace app\Model\Base;
 
-use \Trigger as ChildTrigger;
-use \TriggerQuery as ChildTriggerQuery;
 use \Exception;
 use \PDO;
-use Map\TriggerTableMap;
+use App\Model\Trigger as ChildTrigger;
+use App\Model\TriggerQuery as ChildTriggerQuery;
+use App\Model\Map\TriggerTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -16,7 +16,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the '""trigger' table.
+ * Base class that represents a query for the 'trigger' table.
  *
  *
  *
@@ -66,7 +66,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTriggerQuery rightJoinTriggerLog($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TriggerLog relation
  * @method     ChildTriggerQuery innerJoinTriggerLog($relationAlias = null) Adds a INNER JOIN clause to the query using the TriggerLog relation
  *
- * @method     \TargetQuery|\UserQuery|\TriggerTypeQuery|\TriggerLogQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Model\TargetQuery|\App\Model\UserQuery|\App\Model\TriggerTypeQuery|\App\Model\TriggerLogQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildTrigger findOne(ConnectionInterface $con = null) Return the first ChildTrigger matching the query
  * @method     ChildTrigger findOneOrCreate(ConnectionInterface $con = null) Return the first ChildTrigger matching the query, or a new ChildTrigger object populated from the query conditions when no match is found
@@ -76,7 +76,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTrigger findOneByUserId(int $user_id) Return the first ChildTrigger filtered by the user_id column
  * @method     ChildTrigger findOneByTriggerTypeId(int $trigger_type_id) Return the first ChildTrigger filtered by the trigger_type_id column
  * @method     ChildTrigger findOneByTriggerParams(string $trigger_params) Return the first ChildTrigger filtered by the trigger_params column
- * @method     ChildTrigger findOneByTriggerInvokeOn(string $trigger_invoke_on) Return the first ChildTrigger filtered by the trigger_invoke_on column
+ * @method     ChildTrigger findOneByTriggerInvokeOn(array $trigger_invoke_on) Return the first ChildTrigger filtered by the trigger_invoke_on column
  * @method     ChildTrigger findOneByTriggerName(string $trigger_name) Return the first ChildTrigger filtered by the trigger_name column
  * @method     ChildTrigger findOneByTriggerActive(boolean $trigger_active) Return the first ChildTrigger filtered by the trigger_active column
  * @method     ChildTrigger findOneByTriggerLastExecutedAt(string $trigger_last_executed_at) Return the first ChildTrigger filtered by the trigger_last_executed_at column
@@ -90,7 +90,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTrigger[]|ObjectCollection findByUserId(int $user_id) Return ChildTrigger objects filtered by the user_id column
  * @method     ChildTrigger[]|ObjectCollection findByTriggerTypeId(int $trigger_type_id) Return ChildTrigger objects filtered by the trigger_type_id column
  * @method     ChildTrigger[]|ObjectCollection findByTriggerParams(string $trigger_params) Return ChildTrigger objects filtered by the trigger_params column
- * @method     ChildTrigger[]|ObjectCollection findByTriggerInvokeOn(string $trigger_invoke_on) Return ChildTrigger objects filtered by the trigger_invoke_on column
+ * @method     ChildTrigger[]|ObjectCollection findByTriggerInvokeOn(array $trigger_invoke_on) Return ChildTrigger objects filtered by the trigger_invoke_on column
  * @method     ChildTrigger[]|ObjectCollection findByTriggerName(string $trigger_name) Return ChildTrigger objects filtered by the trigger_name column
  * @method     ChildTrigger[]|ObjectCollection findByTriggerActive(boolean $trigger_active) Return ChildTrigger objects filtered by the trigger_active column
  * @method     ChildTrigger[]|ObjectCollection findByTriggerLastExecutedAt(string $trigger_last_executed_at) Return ChildTrigger objects filtered by the trigger_last_executed_at column
@@ -104,13 +104,13 @@ abstract class TriggerQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \Base\TriggerQuery object.
+     * Initializes internal state of \App\Model\Base\TriggerQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName     The database name
+     * @param string $modelName  The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\Trigger', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\App\\Model\\Trigger', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -118,8 +118,8 @@ abstract class TriggerQuery extends ModelCriteria
     /**
      * Returns a new ChildTriggerQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string   $modelAlias The alias of a model in the query
+     * @param Criteria $criteria   Optional Criteria to build the query from
      *
      * @return ChildTriggerQuery
      */
@@ -148,7 +148,7 @@ abstract class TriggerQuery extends ModelCriteria
      * $obj  = $c->findPk(12, $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param mixed               $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildTrigger|array|mixed the result, formatted by the current formatter
@@ -179,14 +179,14 @@ abstract class TriggerQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
-     * @return   ChildTrigger A model object, or null if the key is not found
+     * @return ChildTrigger A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_TRIGGER, TARGET_ID, USER_ID, TRIGGER_TYPE_ID, TRIGGER_PARAMS, TRIGGER_INVOKE_ON, TRIGGER_NAME, TRIGGER_ACTIVE, TRIGGER_LAST_EXECUTED_AT, TRIGGER_LAST_EXECUTED_RESULT, CREATED_AT, UPDATED_AT FROM ""trigger WHERE ID_TRIGGER = :p0';
+        $sql = 'SELECT ID_TRIGGER, TARGET_ID, USER_ID, TRIGGER_TYPE_ID, TRIGGER_PARAMS, TRIGGER_INVOKE_ON, TRIGGER_NAME, TRIGGER_ACTIVE, TRIGGER_LAST_EXECUTED_AT, TRIGGER_LAST_EXECUTED_RESULT, CREATED_AT, UPDATED_AT FROM trigger WHERE ID_TRIGGER = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -210,8 +210,8 @@ abstract class TriggerQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildTrigger|array|mixed the result, formatted by the current formatter
      */
@@ -231,8 +231,8 @@ abstract class TriggerQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array               $keys Primary keys to use for the query
+     * @param ConnectionInterface $con  an optional connection object
      *
      * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
      */
@@ -253,7 +253,7 @@ abstract class TriggerQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -265,7 +265,7 @@ abstract class TriggerQuery extends ModelCriteria
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array $keys The list of primary key to use for the query
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -284,11 +284,11 @@ abstract class TriggerQuery extends ModelCriteria
      * $query->filterByIdTrigger(array('min' => 12)); // WHERE id_trigger > 12
      * </code>
      *
-     * @param     mixed $idTrigger The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $idTrigger  The value to use as filter.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -327,11 +327,11 @@ abstract class TriggerQuery extends ModelCriteria
      *
      * @see       filterByTarget()
      *
-     * @param     mixed $targetId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $targetId   The value to use as filter.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -370,11 +370,11 @@ abstract class TriggerQuery extends ModelCriteria
      *
      * @see       filterByUser()
      *
-     * @param     mixed $userId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $userId     The value to use as filter.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -413,11 +413,11 @@ abstract class TriggerQuery extends ModelCriteria
      *
      * @see       filterByTriggerType()
      *
-     * @param     mixed $triggerTypeId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $triggerTypeId The value to use as filter.
+     *                              Use scalar values for equality.
+     *                              Use array values for in_array() equivalent.
+     *                              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -453,9 +453,9 @@ abstract class TriggerQuery extends ModelCriteria
      * $query->filterByTriggerParams('%fooValue%'); // WHERE trigger_params LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $triggerParams The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $triggerParams The value to use as filter.
+     *                              Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -476,27 +476,48 @@ abstract class TriggerQuery extends ModelCriteria
     /**
      * Filter the query on the trigger_invoke_on column
      *
-     * Example usage:
-     * <code>
-     * $query->filterByTriggerInvokeOn('fooValue');   // WHERE trigger_invoke_on = 'fooValue'
-     * $query->filterByTriggerInvokeOn('%fooValue%'); // WHERE trigger_invoke_on LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $triggerInvokeOn The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param array  $triggerInvokeOn The values to use as filter.
+     * @param string $comparison      Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
     public function filterByTriggerInvokeOn($triggerInvokeOn = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($triggerInvokeOn)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $triggerInvokeOn)) {
-                $triggerInvokeOn = str_replace('*', '%', $triggerInvokeOn);
-                $comparison = Criteria::LIKE;
+        $key = $this->getAliasedColName(TriggerTableMap::COL_TRIGGER_INVOKE_ON);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($triggerInvokeOn as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
             }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($triggerInvokeOn as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($triggerInvokeOn as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
         }
 
         return $this->addUsingAlias(TriggerTableMap::COL_TRIGGER_INVOKE_ON, $triggerInvokeOn, $comparison);
@@ -511,9 +532,9 @@ abstract class TriggerQuery extends ModelCriteria
      * $query->filterByTriggerName('%fooValue%'); // WHERE trigger_name LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $triggerName The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $triggerName The value to use as filter.
+     *                            Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison  Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -540,12 +561,12 @@ abstract class TriggerQuery extends ModelCriteria
      * $query->filterByTriggerActive('yes'); // WHERE trigger_active = true
      * </code>
      *
-     * @param     boolean|string $triggerActive The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param boolean|string $triggerActive The value to use as filter.
+     *                                      Non-boolean arguments are converted using the following rules:
+     *                                      * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                                      * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *                                      Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string         $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -568,13 +589,13 @@ abstract class TriggerQuery extends ModelCriteria
      * $query->filterByTriggerLastExecutedAt(array('max' => 'yesterday')); // WHERE trigger_last_executed_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $triggerLastExecutedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $triggerLastExecutedAt The value to use as filter.
+     *                                      Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                                      Empty strings are treated as NULL.
+     *                                      Use scalar values for equality.
+     *                                      Use array values for in_array() equivalent.
+     *                                      Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison            Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -610,9 +631,9 @@ abstract class TriggerQuery extends ModelCriteria
      * $query->filterByTriggerLastExecutedResult('%fooValue%'); // WHERE trigger_last_executed_result LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $triggerLastExecutedResult The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $triggerLastExecutedResult The value to use as filter.
+     *                                          Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison                Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -640,13 +661,13 @@ abstract class TriggerQuery extends ModelCriteria
      * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $createdAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -683,13 +704,13 @@ abstract class TriggerQuery extends ModelCriteria
      * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $updatedAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -717,16 +738,16 @@ abstract class TriggerQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Target object
+     * Filter the query by a related \App\Model\Target object
      *
-     * @param \Target|ObjectCollection $target The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\Target|ObjectCollection $target     The related object(s) to use as filter
+     * @param string                             $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTriggerQuery The current query, for fluid interface
      */
     public function filterByTarget($target, $comparison = null)
     {
-        if ($target instanceof \Target) {
+        if ($target instanceof \App\Model\Target) {
             return $this
                 ->addUsingAlias(TriggerTableMap::COL_TARGET_ID, $target->getIdTarget(), $comparison);
         } elseif ($target instanceof ObjectCollection) {
@@ -737,15 +758,15 @@ abstract class TriggerQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(TriggerTableMap::COL_TARGET_ID, $target->toKeyValue('PrimaryKey', 'IdTarget'), $comparison);
         } else {
-            throw new PropelException('filterByTarget() only accepts arguments of type \Target or Collection');
+            throw new PropelException('filterByTarget() only accepts arguments of type \App\Model\Target or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the Target relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -778,30 +799,30 @@ abstract class TriggerQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \TargetQuery A secondary query class using the current class as primary query
+     * @return \App\Model\TargetQuery A secondary query class using the current class as primary query
      */
     public function useTargetQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinTarget($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Target', '\TargetQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Target', '\App\Model\TargetQuery');
     }
 
     /**
-     * Filter the query by a related \User object
+     * Filter the query by a related \App\Model\User object
      *
-     * @param \User|ObjectCollection $user The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\User|ObjectCollection $user       The related object(s) to use as filter
+     * @param string                           $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTriggerQuery The current query, for fluid interface
      */
     public function filterByUser($user, $comparison = null)
     {
-        if ($user instanceof \User) {
+        if ($user instanceof \App\Model\User) {
             return $this
                 ->addUsingAlias(TriggerTableMap::COL_USER_ID, $user->getIdUser(), $comparison);
         } elseif ($user instanceof ObjectCollection) {
@@ -812,15 +833,15 @@ abstract class TriggerQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(TriggerTableMap::COL_USER_ID, $user->toKeyValue('PrimaryKey', 'IdUser'), $comparison);
         } else {
-            throw new PropelException('filterByUser() only accepts arguments of type \User or Collection');
+            throw new PropelException('filterByUser() only accepts arguments of type \App\Model\User or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the User relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -853,30 +874,30 @@ abstract class TriggerQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \UserQuery A secondary query class using the current class as primary query
+     * @return \App\Model\UserQuery A secondary query class using the current class as primary query
      */
     public function useUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\UserQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'User', '\App\Model\UserQuery');
     }
 
     /**
-     * Filter the query by a related \TriggerType object
+     * Filter the query by a related \App\Model\TriggerType object
      *
-     * @param \TriggerType|ObjectCollection $triggerType The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\TriggerType|ObjectCollection $triggerType The related object(s) to use as filter
+     * @param string                                  $comparison  Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTriggerQuery The current query, for fluid interface
      */
     public function filterByTriggerType($triggerType, $comparison = null)
     {
-        if ($triggerType instanceof \TriggerType) {
+        if ($triggerType instanceof \App\Model\TriggerType) {
             return $this
                 ->addUsingAlias(TriggerTableMap::COL_TRIGGER_TYPE_ID, $triggerType->getIdTriggerType(), $comparison);
         } elseif ($triggerType instanceof ObjectCollection) {
@@ -887,15 +908,15 @@ abstract class TriggerQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(TriggerTableMap::COL_TRIGGER_TYPE_ID, $triggerType->toKeyValue('PrimaryKey', 'IdTriggerType'), $comparison);
         } else {
-            throw new PropelException('filterByTriggerType() only accepts arguments of type \TriggerType or Collection');
+            throw new PropelException('filterByTriggerType() only accepts arguments of type \App\Model\TriggerType or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the TriggerType relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -928,30 +949,30 @@ abstract class TriggerQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \TriggerTypeQuery A secondary query class using the current class as primary query
+     * @return \App\Model\TriggerTypeQuery A secondary query class using the current class as primary query
      */
     public function useTriggerTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinTriggerType($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'TriggerType', '\TriggerTypeQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'TriggerType', '\App\Model\TriggerTypeQuery');
     }
 
     /**
-     * Filter the query by a related \TriggerLog object
+     * Filter the query by a related \App\Model\TriggerLog object
      *
-     * @param \TriggerLog|ObjectCollection $triggerLog  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\TriggerLog|ObjectCollection $triggerLog the related object to use as filter
+     * @param string                                 $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTriggerQuery The current query, for fluid interface
      */
     public function filterByTriggerLog($triggerLog, $comparison = null)
     {
-        if ($triggerLog instanceof \TriggerLog) {
+        if ($triggerLog instanceof \App\Model\TriggerLog) {
             return $this
                 ->addUsingAlias(TriggerTableMap::COL_ID_TRIGGER, $triggerLog->getTriggerId(), $comparison);
         } elseif ($triggerLog instanceof ObjectCollection) {
@@ -960,15 +981,15 @@ abstract class TriggerQuery extends ModelCriteria
                 ->filterByPrimaryKeys($triggerLog->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByTriggerLog() only accepts arguments of type \TriggerLog or Collection');
+            throw new PropelException('filterByTriggerLog() only accepts arguments of type \App\Model\TriggerLog or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the TriggerLog relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -1001,23 +1022,23 @@ abstract class TriggerQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \TriggerLogQuery A secondary query class using the current class as primary query
+     * @return \App\Model\TriggerLogQuery A secondary query class using the current class as primary query
      */
     public function useTriggerLogQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinTriggerLog($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'TriggerLog', '\TriggerLogQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'TriggerLog', '\App\Model\TriggerLogQuery');
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildTrigger $trigger Object to remove from the list of results
+     * @param ChildTrigger $trigger Object to remove from the list of results
      *
      * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
@@ -1031,10 +1052,10 @@ abstract class TriggerQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the ""trigger table.
+     * Deletes all rows from the trigger table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -1060,11 +1081,11 @@ abstract class TriggerQuery extends ModelCriteria
     /**
      * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                 if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                 rethrown wrapped into a PropelException.
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -1096,9 +1117,9 @@ abstract class TriggerQuery extends ModelCriteria
     /**
      * Filter by the latest updated
      *
-     * @param      int $nbDays Maximum age of the latest update in days
+     * @param int $nbDays Maximum age of the latest update in days
      *
-     * @return     $this|ChildTriggerQuery The current query, for fluid interface
+     * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
@@ -1106,21 +1127,9 @@ abstract class TriggerQuery extends ModelCriteria
     }
 
     /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     $this|ChildTriggerQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(TriggerTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
      * Order by update date desc
      *
-     * @return     $this|ChildTriggerQuery The current query, for fluid interface
+     * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
@@ -1130,7 +1139,7 @@ abstract class TriggerQuery extends ModelCriteria
     /**
      * Order by update date asc
      *
-     * @return     $this|ChildTriggerQuery The current query, for fluid interface
+     * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
@@ -1140,7 +1149,7 @@ abstract class TriggerQuery extends ModelCriteria
     /**
      * Order by create date desc
      *
-     * @return     $this|ChildTriggerQuery The current query, for fluid interface
+     * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
@@ -1148,9 +1157,21 @@ abstract class TriggerQuery extends ModelCriteria
     }
 
     /**
+     * Filter by the latest created
+     *
+     * @param int $nbDays Maximum age of in days
+     *
+     * @return $this|ChildTriggerQuery The current query, for fluid interface
+     */
+    public function recentlyCreated($nbDays = 7)
+    {
+        return $this->addUsingAlias(TriggerTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
      * Order by create date asc
      *
-     * @return     $this|ChildTriggerQuery The current query, for fluid interface
+     * @return $this|ChildTriggerQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {

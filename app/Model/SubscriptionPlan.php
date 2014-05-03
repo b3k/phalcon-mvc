@@ -1,6 +1,8 @@
 <?php
 
-use Base\SubscriptionPlan as BaseSubscriptionPlan;
+namespace app\Model;
+
+use App\Model\Base\SubscriptionPlan as BaseSubscriptionPlan;
 
 class SubscriptionPlan extends BaseSubscriptionPlan
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Base;
+namespace app\Model\Base;
 
-use \User as ChildUser;
-use \UserQuery as ChildUserQuery;
 use \Exception;
 use \PDO;
-use Map\UserTableMap;
+use App\Model\User as ChildUser;
+use App\Model\UserQuery as ChildUserQuery;
+use App\Model\Map\UserTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -16,7 +16,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the '""user' table.
+ * Base class that represents a query for the 'user' table.
  *
  *
  *
@@ -60,7 +60,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinUserTargetGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserTargetGroup relation
  * @method     ChildUserQuery innerJoinUserTargetGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the UserTargetGroup relation
  *
- * @method     \TriggerQuery|\UserTargetGroupQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Model\TriggerQuery|\App\Model\UserTargetGroupQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -73,7 +73,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser findOneByUserLastname(string $user_lastname) Return the first ChildUser filtered by the user_lastname column
  * @method     ChildUser findOneByUserEmail(string $user_email) Return the first ChildUser filtered by the user_email column
  * @method     ChildUser findOneByUserActive(boolean $user_active) Return the first ChildUser filtered by the user_active column
- * @method     ChildUser findOneByUserRoles(string $user_roles) Return the first ChildUser filtered by the user_roles column
+ * @method     ChildUser findOneByUserRoles(array $user_roles) Return the first ChildUser filtered by the user_roles column
  * @method     ChildUser findOneByUserExpireAt(string $user_expire_at) Return the first ChildUser filtered by the user_expire_at column
  * @method     ChildUser findOneByUserExpired(boolean $user_expired) Return the first ChildUser filtered by the user_expired column
  * @method     ChildUser findOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column
@@ -88,7 +88,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection findByUserLastname(string $user_lastname) Return ChildUser objects filtered by the user_lastname column
  * @method     ChildUser[]|ObjectCollection findByUserEmail(string $user_email) Return ChildUser objects filtered by the user_email column
  * @method     ChildUser[]|ObjectCollection findByUserActive(boolean $user_active) Return ChildUser objects filtered by the user_active column
- * @method     ChildUser[]|ObjectCollection findByUserRoles(string $user_roles) Return ChildUser objects filtered by the user_roles column
+ * @method     ChildUser[]|ObjectCollection findByUserRoles(array $user_roles) Return ChildUser objects filtered by the user_roles column
  * @method     ChildUser[]|ObjectCollection findByUserExpireAt(string $user_expire_at) Return ChildUser objects filtered by the user_expire_at column
  * @method     ChildUser[]|ObjectCollection findByUserExpired(boolean $user_expired) Return ChildUser objects filtered by the user_expired column
  * @method     ChildUser[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUser objects filtered by the created_at column
@@ -100,13 +100,13 @@ abstract class UserQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \Base\UserQuery object.
+     * Initializes internal state of \App\Model\Base\UserQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName     The database name
+     * @param string $modelName  The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\User', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\App\\Model\\User', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -114,8 +114,8 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Returns a new ChildUserQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string   $modelAlias The alias of a model in the query
+     * @param Criteria $criteria   Optional Criteria to build the query from
      *
      * @return ChildUserQuery
      */
@@ -144,7 +144,7 @@ abstract class UserQuery extends ModelCriteria
      * $obj  = $c->findPk(12, $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param mixed               $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildUser|array|mixed the result, formatted by the current formatter
@@ -175,14 +175,14 @@ abstract class UserQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
-     * @return   ChildUser A model object, or null if the key is not found
+     * @return ChildUser A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_USER, USER_USERNAME, USER_PASSWORD, USER_SALT, USER_FIRSTNAME, USER_LASTNAME, USER_EMAIL, USER_ACTIVE, USER_ROLES, USER_EXPIRE_AT, USER_EXPIRED, CREATED_AT, UPDATED_AT FROM ""user WHERE ID_USER = :p0';
+        $sql = 'SELECT ID_USER, USER_USERNAME, USER_PASSWORD, USER_SALT, USER_FIRSTNAME, USER_LASTNAME, USER_EMAIL, USER_ACTIVE, USER_ROLES, USER_EXPIRE_AT, USER_EXPIRED, CREATED_AT, UPDATED_AT FROM user WHERE ID_USER = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -206,8 +206,8 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildUser|array|mixed the result, formatted by the current formatter
      */
@@ -227,8 +227,8 @@ abstract class UserQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array               $keys Primary keys to use for the query
+     * @param ConnectionInterface $con  an optional connection object
      *
      * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
      */
@@ -249,7 +249,7 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -261,7 +261,7 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array $keys The list of primary key to use for the query
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -280,11 +280,11 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByIdUser(array('min' => 12)); // WHERE id_user > 12
      * </code>
      *
-     * @param     mixed $idUser The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $idUser     The value to use as filter.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -320,9 +320,9 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUserUsername('%fooValue%'); // WHERE user_username LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $userUsername The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $userUsername The value to use as filter.
+     *                             Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison   Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -349,9 +349,9 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUserPassword('%fooValue%'); // WHERE user_password LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $userPassword The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $userPassword The value to use as filter.
+     *                             Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison   Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -378,9 +378,9 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUserSalt('%fooValue%'); // WHERE user_salt LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $userSalt The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $userSalt   The value to use as filter.
+     *                           Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -407,9 +407,9 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUserFirstname('%fooValue%'); // WHERE user_firstname LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $userFirstname The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $userFirstname The value to use as filter.
+     *                              Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -436,9 +436,9 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUserLastname('%fooValue%'); // WHERE user_lastname LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $userLastname The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $userLastname The value to use as filter.
+     *                             Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison   Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -465,9 +465,9 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUserEmail('%fooValue%'); // WHERE user_email LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $userEmail The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $userEmail  The value to use as filter.
+     *                           Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -494,12 +494,12 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUserActive('yes'); // WHERE user_active = true
      * </code>
      *
-     * @param     boolean|string $userActive The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param boolean|string $userActive The value to use as filter.
+     *                                   Non-boolean arguments are converted using the following rules:
+     *                                   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                                   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *                                   Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string         $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -515,27 +515,79 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Filter the query on the user_roles column
      *
-     * Example usage:
-     * <code>
-     * $query->filterByUserRoles('fooValue');   // WHERE user_roles = 'fooValue'
-     * $query->filterByUserRoles('%fooValue%'); // WHERE user_roles LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $userRoles The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param array  $userRoles  The values to use as filter.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
     public function filterByUserRoles($userRoles = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($userRoles)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $userRoles)) {
-                $userRoles = str_replace('*', '%', $userRoles);
+        $key = $this->getAliasedColName(UserTableMap::COL_USER_ROLES);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($userRoles as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($userRoles as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($userRoles as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_USER_ROLES, $userRoles, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_roles column
+     * @param mixed  $userRoles  The value to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByUserRole($userRoles = null, $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($userRoles)) {
+                $userRoles = '%| ' . $userRoles . ' |%';
                 $comparison = Criteria::LIKE;
             }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $userRoles = '%| ' . $userRoles . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(UserTableMap::COL_USER_ROLES);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $userRoles, $comparison);
+            } else {
+                $this->addAnd($key, $userRoles, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
         }
 
         return $this->addUsingAlias(UserTableMap::COL_USER_ROLES, $userRoles, $comparison);
@@ -551,13 +603,13 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUserExpireAt(array('max' => 'yesterday')); // WHERE user_expire_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $userExpireAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $userExpireAt The value to use as filter.
+     *                             Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                             Empty strings are treated as NULL.
+     *                             Use scalar values for equality.
+     *                             Use array values for in_array() equivalent.
+     *                             Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison   Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -593,12 +645,12 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUserExpired('yes'); // WHERE user_expired = true
      * </code>
      *
-     * @param     boolean|string $userExpired The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param boolean|string $userExpired The value to use as filter.
+     *                                    Non-boolean arguments are converted using the following rules:
+     *                                    * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                                    * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *                                    Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string         $comparison  Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -621,13 +673,13 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $createdAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -664,13 +716,13 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $updatedAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -698,16 +750,16 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Trigger object
+     * Filter the query by a related \App\Model\Trigger object
      *
-     * @param \Trigger|ObjectCollection $trigger  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\Trigger|ObjectCollection $trigger    the related object to use as filter
+     * @param string                              $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserQuery The current query, for fluid interface
      */
     public function filterByTrigger($trigger, $comparison = null)
     {
-        if ($trigger instanceof \Trigger) {
+        if ($trigger instanceof \App\Model\Trigger) {
             return $this
                 ->addUsingAlias(UserTableMap::COL_ID_USER, $trigger->getUserId(), $comparison);
         } elseif ($trigger instanceof ObjectCollection) {
@@ -716,15 +768,15 @@ abstract class UserQuery extends ModelCriteria
                 ->filterByPrimaryKeys($trigger->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByTrigger() only accepts arguments of type \Trigger or Collection');
+            throw new PropelException('filterByTrigger() only accepts arguments of type \App\Model\Trigger or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the Trigger relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -757,30 +809,30 @@ abstract class UserQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \TriggerQuery A secondary query class using the current class as primary query
+     * @return \App\Model\TriggerQuery A secondary query class using the current class as primary query
      */
     public function useTriggerQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinTrigger($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Trigger', '\TriggerQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Trigger', '\App\Model\TriggerQuery');
     }
 
     /**
-     * Filter the query by a related \UserTargetGroup object
+     * Filter the query by a related \App\Model\UserTargetGroup object
      *
-     * @param \UserTargetGroup|ObjectCollection $userTargetGroup  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\UserTargetGroup|ObjectCollection $userTargetGroup the related object to use as filter
+     * @param string                                      $comparison      Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserQuery The current query, for fluid interface
      */
     public function filterByUserTargetGroup($userTargetGroup, $comparison = null)
     {
-        if ($userTargetGroup instanceof \UserTargetGroup) {
+        if ($userTargetGroup instanceof \App\Model\UserTargetGroup) {
             return $this
                 ->addUsingAlias(UserTableMap::COL_ID_USER, $userTargetGroup->getIdUser(), $comparison);
         } elseif ($userTargetGroup instanceof ObjectCollection) {
@@ -789,15 +841,15 @@ abstract class UserQuery extends ModelCriteria
                 ->filterByPrimaryKeys($userTargetGroup->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByUserTargetGroup() only accepts arguments of type \UserTargetGroup or Collection');
+            throw new PropelException('filterByUserTargetGroup() only accepts arguments of type \App\Model\UserTargetGroup or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the UserTargetGroup relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -830,23 +882,23 @@ abstract class UserQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \UserTargetGroupQuery A secondary query class using the current class as primary query
+     * @return \App\Model\UserTargetGroupQuery A secondary query class using the current class as primary query
      */
     public function useUserTargetGroupQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinUserTargetGroup($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'UserTargetGroup', '\UserTargetGroupQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'UserTargetGroup', '\App\Model\UserTargetGroupQuery');
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildUser $user Object to remove from the list of results
+     * @param ChildUser $user Object to remove from the list of results
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
@@ -860,10 +912,10 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the ""user table.
+     * Deletes all rows from the user table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -889,11 +941,11 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                 if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                 rethrown wrapped into a PropelException.
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -925,9 +977,9 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Filter by the latest updated
      *
-     * @param      int $nbDays Maximum age of the latest update in days
+     * @param int $nbDays Maximum age of the latest update in days
      *
-     * @return     $this|ChildUserQuery The current query, for fluid interface
+     * @return $this|ChildUserQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
@@ -935,21 +987,9 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(UserTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
      * Order by update date desc
      *
-     * @return     $this|ChildUserQuery The current query, for fluid interface
+     * @return $this|ChildUserQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
@@ -959,7 +999,7 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Order by update date asc
      *
-     * @return     $this|ChildUserQuery The current query, for fluid interface
+     * @return $this|ChildUserQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
@@ -969,7 +1009,7 @@ abstract class UserQuery extends ModelCriteria
     /**
      * Order by create date desc
      *
-     * @return     $this|ChildUserQuery The current query, for fluid interface
+     * @return $this|ChildUserQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
@@ -977,9 +1017,21 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
+     * Filter by the latest created
+     *
+     * @param int $nbDays Maximum age of in days
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function recentlyCreated($nbDays = 7)
+    {
+        return $this->addUsingAlias(UserTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
      * Order by create date asc
      *
-     * @return     $this|ChildUserQuery The current query, for fluid interface
+     * @return $this|ChildUserQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {

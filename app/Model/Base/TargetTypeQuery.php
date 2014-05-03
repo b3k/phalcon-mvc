@@ -1,12 +1,12 @@
 <?php
 
-namespace Base;
+namespace app\Model\Base;
 
-use \TargetType as ChildTargetType;
-use \TargetTypeQuery as ChildTargetTypeQuery;
 use \Exception;
 use \PDO;
-use Map\TargetTypeTableMap;
+use App\Model\TargetType as ChildTargetType;
+use App\Model\TargetTypeQuery as ChildTargetTypeQuery;
+use App\Model\Map\TargetTypeTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -16,7 +16,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the '""target_type' table.
+ * Base class that represents a query for the 'target_type' table.
  *
  *
  *
@@ -48,7 +48,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTargetTypeQuery rightJoinTarget($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Target relation
  * @method     ChildTargetTypeQuery innerJoinTarget($relationAlias = null) Adds a INNER JOIN clause to the query using the Target relation
  *
- * @method     \StackTestResultPassQuery|\TargetQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Model\StackTestResultPassQuery|\App\Model\TargetQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildTargetType findOne(ConnectionInterface $con = null) Return the first ChildTargetType matching the query
  * @method     ChildTargetType findOneOrCreate(ConnectionInterface $con = null) Return the first ChildTargetType matching the query, or a new ChildTargetType object populated from the query conditions when no match is found
@@ -76,13 +76,13 @@ abstract class TargetTypeQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \Base\TargetTypeQuery object.
+     * Initializes internal state of \App\Model\Base\TargetTypeQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName     The database name
+     * @param string $modelName  The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\TargetType', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\App\\Model\\TargetType', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -90,8 +90,8 @@ abstract class TargetTypeQuery extends ModelCriteria
     /**
      * Returns a new ChildTargetTypeQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string   $modelAlias The alias of a model in the query
+     * @param Criteria $criteria   Optional Criteria to build the query from
      *
      * @return ChildTargetTypeQuery
      */
@@ -120,7 +120,7 @@ abstract class TargetTypeQuery extends ModelCriteria
      * $obj  = $c->findPk(12, $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param mixed               $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildTargetType|array|mixed the result, formatted by the current formatter
@@ -151,14 +151,14 @@ abstract class TargetTypeQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
-     * @return   ChildTargetType A model object, or null if the key is not found
+     * @return ChildTargetType A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_TARGET_TYPE, TARGET_TYPE_CLASS, TARGET_TYPE_NAME, TARGET_TYPE_DESCRIPTION, TARGET_TYPE_ACTIVE, CREATED_AT, UPDATED_AT FROM ""target_type WHERE ID_TARGET_TYPE = :p0';
+        $sql = 'SELECT ID_TARGET_TYPE, TARGET_TYPE_CLASS, TARGET_TYPE_NAME, TARGET_TYPE_DESCRIPTION, TARGET_TYPE_ACTIVE, CREATED_AT, UPDATED_AT FROM target_type WHERE ID_TARGET_TYPE = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -182,8 +182,8 @@ abstract class TargetTypeQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildTargetType|array|mixed the result, formatted by the current formatter
      */
@@ -203,8 +203,8 @@ abstract class TargetTypeQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array               $keys Primary keys to use for the query
+     * @param ConnectionInterface $con  an optional connection object
      *
      * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
      */
@@ -225,7 +225,7 @@ abstract class TargetTypeQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -237,7 +237,7 @@ abstract class TargetTypeQuery extends ModelCriteria
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array $keys The list of primary key to use for the query
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -256,11 +256,11 @@ abstract class TargetTypeQuery extends ModelCriteria
      * $query->filterByIdTargetType(array('min' => 12)); // WHERE id_target_type > 12
      * </code>
      *
-     * @param     mixed $idTargetType The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $idTargetType The value to use as filter.
+     *                             Use scalar values for equality.
+     *                             Use array values for in_array() equivalent.
+     *                             Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison   Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -296,9 +296,9 @@ abstract class TargetTypeQuery extends ModelCriteria
      * $query->filterByTargetTypeClass('%fooValue%'); // WHERE target_type_class LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $targetTypeClass The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $targetTypeClass The value to use as filter.
+     *                                Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison      Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -325,9 +325,9 @@ abstract class TargetTypeQuery extends ModelCriteria
      * $query->filterByTargetTypeName('%fooValue%'); // WHERE target_type_name LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $targetTypeName The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $targetTypeName The value to use as filter.
+     *                               Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison     Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -354,9 +354,9 @@ abstract class TargetTypeQuery extends ModelCriteria
      * $query->filterByTargetTypeDescription('%fooValue%'); // WHERE target_type_description LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $targetTypeDescription The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $targetTypeDescription The value to use as filter.
+     *                                      Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison            Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -383,12 +383,12 @@ abstract class TargetTypeQuery extends ModelCriteria
      * $query->filterByTargetTypeActive('yes'); // WHERE target_type_active = true
      * </code>
      *
-     * @param     boolean|string $targetTypeActive The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param boolean|string $targetTypeActive The value to use as filter.
+     *                                         Non-boolean arguments are converted using the following rules:
+     *                                         * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                                         * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *                                         Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string         $comparison       Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -411,13 +411,13 @@ abstract class TargetTypeQuery extends ModelCriteria
      * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $createdAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -454,13 +454,13 @@ abstract class TargetTypeQuery extends ModelCriteria
      * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $updatedAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -488,16 +488,16 @@ abstract class TargetTypeQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \StackTestResultPass object
+     * Filter the query by a related \App\Model\StackTestResultPass object
      *
-     * @param \StackTestResultPass|ObjectCollection $stackTestResultPass  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\StackTestResultPass|ObjectCollection $stackTestResultPass the related object to use as filter
+     * @param string                                          $comparison          Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetTypeQuery The current query, for fluid interface
      */
     public function filterByStackTestResultPass($stackTestResultPass, $comparison = null)
     {
-        if ($stackTestResultPass instanceof \StackTestResultPass) {
+        if ($stackTestResultPass instanceof \App\Model\StackTestResultPass) {
             return $this
                 ->addUsingAlias(TargetTypeTableMap::COL_ID_TARGET_TYPE, $stackTestResultPass->getTargetTypeId(), $comparison);
         } elseif ($stackTestResultPass instanceof ObjectCollection) {
@@ -506,15 +506,15 @@ abstract class TargetTypeQuery extends ModelCriteria
                 ->filterByPrimaryKeys($stackTestResultPass->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByStackTestResultPass() only accepts arguments of type \StackTestResultPass or Collection');
+            throw new PropelException('filterByStackTestResultPass() only accepts arguments of type \App\Model\StackTestResultPass or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the StackTestResultPass relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -547,30 +547,30 @@ abstract class TargetTypeQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \StackTestResultPassQuery A secondary query class using the current class as primary query
+     * @return \App\Model\StackTestResultPassQuery A secondary query class using the current class as primary query
      */
     public function useStackTestResultPassQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinStackTestResultPass($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'StackTestResultPass', '\StackTestResultPassQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'StackTestResultPass', '\App\Model\StackTestResultPassQuery');
     }
 
     /**
-     * Filter the query by a related \Target object
+     * Filter the query by a related \App\Model\Target object
      *
-     * @param \Target|ObjectCollection $target  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\Target|ObjectCollection $target     the related object to use as filter
+     * @param string                             $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildTargetTypeQuery The current query, for fluid interface
      */
     public function filterByTarget($target, $comparison = null)
     {
-        if ($target instanceof \Target) {
+        if ($target instanceof \App\Model\Target) {
             return $this
                 ->addUsingAlias(TargetTypeTableMap::COL_ID_TARGET_TYPE, $target->getTargetTypeId(), $comparison);
         } elseif ($target instanceof ObjectCollection) {
@@ -579,15 +579,15 @@ abstract class TargetTypeQuery extends ModelCriteria
                 ->filterByPrimaryKeys($target->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByTarget() only accepts arguments of type \Target or Collection');
+            throw new PropelException('filterByTarget() only accepts arguments of type \App\Model\Target or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the Target relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -620,23 +620,23 @@ abstract class TargetTypeQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \TargetQuery A secondary query class using the current class as primary query
+     * @return \App\Model\TargetQuery A secondary query class using the current class as primary query
      */
     public function useTargetQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinTarget($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Target', '\TargetQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Target', '\App\Model\TargetQuery');
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildTargetType $targetType Object to remove from the list of results
+     * @param ChildTargetType $targetType Object to remove from the list of results
      *
      * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
@@ -650,10 +650,10 @@ abstract class TargetTypeQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the ""target_type table.
+     * Deletes all rows from the target_type table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -679,11 +679,11 @@ abstract class TargetTypeQuery extends ModelCriteria
     /**
      * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                 if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                 rethrown wrapped into a PropelException.
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -715,9 +715,9 @@ abstract class TargetTypeQuery extends ModelCriteria
     /**
      * Filter by the latest updated
      *
-     * @param      int $nbDays Maximum age of the latest update in days
+     * @param int $nbDays Maximum age of the latest update in days
      *
-     * @return     $this|ChildTargetTypeQuery The current query, for fluid interface
+     * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
@@ -725,21 +725,9 @@ abstract class TargetTypeQuery extends ModelCriteria
     }
 
     /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     $this|ChildTargetTypeQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(TargetTypeTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
      * Order by update date desc
      *
-     * @return     $this|ChildTargetTypeQuery The current query, for fluid interface
+     * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
@@ -749,7 +737,7 @@ abstract class TargetTypeQuery extends ModelCriteria
     /**
      * Order by update date asc
      *
-     * @return     $this|ChildTargetTypeQuery The current query, for fluid interface
+     * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
@@ -759,7 +747,7 @@ abstract class TargetTypeQuery extends ModelCriteria
     /**
      * Order by create date desc
      *
-     * @return     $this|ChildTargetTypeQuery The current query, for fluid interface
+     * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
@@ -767,9 +755,21 @@ abstract class TargetTypeQuery extends ModelCriteria
     }
 
     /**
+     * Filter by the latest created
+     *
+     * @param int $nbDays Maximum age of in days
+     *
+     * @return $this|ChildTargetTypeQuery The current query, for fluid interface
+     */
+    public function recentlyCreated($nbDays = 7)
+    {
+        return $this->addUsingAlias(TargetTypeTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
      * Order by create date asc
      *
-     * @return     $this|ChildTargetTypeQuery The current query, for fluid interface
+     * @return $this|ChildTargetTypeQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {

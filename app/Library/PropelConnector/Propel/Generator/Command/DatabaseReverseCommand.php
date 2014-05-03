@@ -11,7 +11,6 @@
 namespace App\Library\PropelConnector\Propel\Generator\Command;
 
 use Propel\Generator\Schema\Dumper\XmlDumper;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -1,6 +1,8 @@
 <?php
 
-use Base\StackTestResultFail as BaseStackTestResultFail;
+namespace app\Model;
+
+use App\Model\Base\StackTestResultFail as BaseStackTestResultFail;
 
 class StackTestResultFail extends BaseStackTestResultFail
 {

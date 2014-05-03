@@ -1,12 +1,12 @@
 <?php
 
-namespace Base;
+namespace app\Model\Base;
 
-use \CronTask as ChildCronTask;
-use \CronTaskQuery as ChildCronTaskQuery;
 use \Exception;
 use \PDO;
-use Map\CronTaskTableMap;
+use App\Model\CronTask as ChildCronTask;
+use App\Model\CronTaskQuery as ChildCronTaskQuery;
+use App\Model\Map\CronTaskTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -15,7 +15,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the '""cron_task' table.
+ * Base class that represents a query for the 'cron_task' table.
  *
  *
  *
@@ -77,13 +77,13 @@ abstract class CronTaskQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \Base\CronTaskQuery object.
+     * Initializes internal state of \App\Model\Base\CronTaskQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName     The database name
+     * @param string $modelName  The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\CronTask', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\App\\Model\\CronTask', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -91,8 +91,8 @@ abstract class CronTaskQuery extends ModelCriteria
     /**
      * Returns a new ChildCronTaskQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string   $modelAlias The alias of a model in the query
+     * @param Criteria $criteria   Optional Criteria to build the query from
      *
      * @return ChildCronTaskQuery
      */
@@ -121,7 +121,7 @@ abstract class CronTaskQuery extends ModelCriteria
      * $obj  = $c->findPk(12, $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param mixed               $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildCronTask|array|mixed the result, formatted by the current formatter
@@ -152,14 +152,14 @@ abstract class CronTaskQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
-     * @return   ChildCronTask A model object, or null if the key is not found
+     * @return ChildCronTask A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_CRON_TASK, CRON_TASK_CODE, CRON_TASK_INTERVAL, CRON_TASK_PARAMS, CRON_TASK_ACTIVE, CRON_TASK_STATE, CRON_TASK_RUN_AT, CRON_TASK_EXECUTED_AT, CREATED_AT, UPDATED_AT FROM ""cron_task WHERE ID_CRON_TASK = :p0';
+        $sql = 'SELECT ID_CRON_TASK, CRON_TASK_CODE, CRON_TASK_INTERVAL, CRON_TASK_PARAMS, CRON_TASK_ACTIVE, CRON_TASK_STATE, CRON_TASK_RUN_AT, CRON_TASK_EXECUTED_AT, CREATED_AT, UPDATED_AT FROM cron_task WHERE ID_CRON_TASK = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -183,8 +183,8 @@ abstract class CronTaskQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildCronTask|array|mixed the result, formatted by the current formatter
      */
@@ -204,8 +204,8 @@ abstract class CronTaskQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array               $keys Primary keys to use for the query
+     * @param ConnectionInterface $con  an optional connection object
      *
      * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
      */
@@ -226,7 +226,7 @@ abstract class CronTaskQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -238,7 +238,7 @@ abstract class CronTaskQuery extends ModelCriteria
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array $keys The list of primary key to use for the query
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -257,11 +257,11 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByIdCronTask(array('min' => 12)); // WHERE id_cron_task > 12
      * </code>
      *
-     * @param     mixed $idCronTask The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $idCronTask The value to use as filter.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -297,9 +297,9 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByCronTaskCode('%fooValue%'); // WHERE cron_task_code LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $cronTaskCode The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $cronTaskCode The value to use as filter.
+     *                             Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison   Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -327,11 +327,11 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByCronTaskInterval(array('min' => 12)); // WHERE cron_task_interval > 12
      * </code>
      *
-     * @param     mixed $cronTaskInterval The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $cronTaskInterval The value to use as filter.
+     *                                 Use scalar values for equality.
+     *                                 Use array values for in_array() equivalent.
+     *                                 Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison       Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -367,9 +367,9 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByCronTaskParams('%fooValue%'); // WHERE cron_task_params LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $cronTaskParams The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $cronTaskParams The value to use as filter.
+     *                               Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison     Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -396,12 +396,12 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByCronTaskActive('yes'); // WHERE cron_task_active = true
      * </code>
      *
-     * @param     boolean|string $cronTaskActive The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param boolean|string $cronTaskActive The value to use as filter.
+     *                                       Non-boolean arguments are converted using the following rules:
+     *                                       * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                                       * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *                                       Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string         $comparison     Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -423,9 +423,9 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByCronTaskState('%fooValue%'); // WHERE cron_task_state LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $cronTaskState The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $cronTaskState The value to use as filter.
+     *                              Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -453,13 +453,13 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByCronTaskRunAt(array('max' => 'yesterday')); // WHERE cron_task_run_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $cronTaskRunAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $cronTaskRunAt The value to use as filter.
+     *                              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                              Empty strings are treated as NULL.
+     *                              Use scalar values for equality.
+     *                              Use array values for in_array() equivalent.
+     *                              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -496,13 +496,13 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByCronTaskExecutedAt(array('max' => 'yesterday')); // WHERE cron_task_executed_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $cronTaskExecutedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $cronTaskExecutedAt The value to use as filter.
+     *                                   Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                                   Empty strings are treated as NULL.
+     *                                   Use scalar values for equality.
+     *                                   Use array values for in_array() equivalent.
+     *                                   Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison         Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -539,13 +539,13 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $createdAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -582,13 +582,13 @@ abstract class CronTaskQuery extends ModelCriteria
      * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $updatedAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -618,7 +618,7 @@ abstract class CronTaskQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param   ChildCronTask $cronTask Object to remove from the list of results
+     * @param ChildCronTask $cronTask Object to remove from the list of results
      *
      * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
@@ -632,10 +632,10 @@ abstract class CronTaskQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the ""cron_task table.
+     * Deletes all rows from the cron_task table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -661,11 +661,11 @@ abstract class CronTaskQuery extends ModelCriteria
     /**
      * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                 if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                 rethrown wrapped into a PropelException.
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -697,9 +697,9 @@ abstract class CronTaskQuery extends ModelCriteria
     /**
      * Filter by the latest updated
      *
-     * @param      int $nbDays Maximum age of the latest update in days
+     * @param int $nbDays Maximum age of the latest update in days
      *
-     * @return     $this|ChildCronTaskQuery The current query, for fluid interface
+     * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
@@ -707,21 +707,9 @@ abstract class CronTaskQuery extends ModelCriteria
     }
 
     /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     $this|ChildCronTaskQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(CronTaskTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
      * Order by update date desc
      *
-     * @return     $this|ChildCronTaskQuery The current query, for fluid interface
+     * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
@@ -731,7 +719,7 @@ abstract class CronTaskQuery extends ModelCriteria
     /**
      * Order by update date asc
      *
-     * @return     $this|ChildCronTaskQuery The current query, for fluid interface
+     * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
@@ -741,7 +729,7 @@ abstract class CronTaskQuery extends ModelCriteria
     /**
      * Order by create date desc
      *
-     * @return     $this|ChildCronTaskQuery The current query, for fluid interface
+     * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
@@ -749,9 +737,21 @@ abstract class CronTaskQuery extends ModelCriteria
     }
 
     /**
+     * Filter by the latest created
+     *
+     * @param int $nbDays Maximum age of in days
+     *
+     * @return $this|ChildCronTaskQuery The current query, for fluid interface
+     */
+    public function recentlyCreated($nbDays = 7)
+    {
+        return $this->addUsingAlias(CronTaskTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
      * Order by create date asc
      *
-     * @return     $this|ChildCronTaskQuery The current query, for fluid interface
+     * @return $this|ChildCronTaskQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {

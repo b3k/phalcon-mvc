@@ -1,6 +1,8 @@
 <?php
 
-use Base\StackTestResultPass as BaseStackTestResultPass;
+namespace app\Model;
+
+use App\Model\Base\StackTestResultPass as BaseStackTestResultPass;
 
 class StackTestResultPass extends BaseStackTestResultPass
 {

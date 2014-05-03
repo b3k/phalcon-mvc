@@ -1,6 +1,8 @@
 <?php
 
-use Base\TriggerLog as BaseTriggerLog;
+namespace app\Model;
+
+use App\Model\Base\TriggerLog as BaseTriggerLog;
 
 class TriggerLog extends BaseTriggerLog
 {

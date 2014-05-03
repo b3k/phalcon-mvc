@@ -1,17 +1,17 @@
 <?php
 
-namespace Base;
+namespace app\Model\Base;
 
-use \Trigger as ChildTrigger;
-use \TriggerQuery as ChildTriggerQuery;
-use \User as ChildUser;
-use \UserQuery as ChildUserQuery;
-use \UserTargetGroup as ChildUserTargetGroup;
-use \UserTargetGroupQuery as ChildUserTargetGroupQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
-use Map\UserTableMap;
+use App\Model\Trigger as ChildTrigger;
+use App\Model\TriggerQuery as ChildTriggerQuery;
+use App\Model\User as ChildUser;
+use App\Model\UserQuery as ChildUserQuery;
+use App\Model\UserTargetGroup as ChildUserTargetGroup;
+use App\Model\UserTargetGroupQuery as ChildUserTargetGroupQuery;
+use App\Model\Map\UserTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -31,8 +31,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\UserTableMap';
-
+    const TABLE_MAP = '\\App\\Model\\Map\\UserTableMap';
 
     /**
      * attribute to determine if this object has previously been saved.
@@ -111,10 +110,16 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * The value for the user_roles field.
-     * Note: this column has a database default value of: 'ROLE_USER'
-     * @var        string
+     * @var        array
      */
     protected $user_roles;
+
+    /**
+     * The unserialized $user_roles value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $user_roles_unserialized;
 
     /**
      * The value for the user_expire_at field.
@@ -182,12 +187,11 @@ abstract class User implements ActiveRecordInterface
     public function applyDefaultValues()
     {
         $this->user_active = false;
-        $this->user_roles = 'ROLE_USER';
         $this->user_expired = false;
     }
 
     /**
-     * Initializes internal state of Base\User object.
+     * Initializes internal state of App\Model\Base\User object.
      * @see applyDefaults()
      */
     public function __construct()
@@ -301,7 +305,7 @@ abstract class User implements ActiveRecordInterface
             return true;
         }
 
-        if (null === $this->getPrimaryKey() || null === $obj->getPrimaryKey())  {
+        if (null === $this->getPrimaryKey() || null === $obj->getPrimaryKey()) {
             return false;
         }
 
@@ -408,7 +412,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [id_user] column value.
      *
-     * @return   int
+     * @return int
      */
     public function getIdUser()
     {
@@ -418,7 +422,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_username] column value.
      *
-     * @return   string
+     * @return string
      */
     public function getUserUsername()
     {
@@ -428,7 +432,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_password] column value.
      *
-     * @return   string
+     * @return string
      */
     public function getUserPassword()
     {
@@ -438,7 +442,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_salt] column value.
      *
-     * @return   string
+     * @return string
      */
     public function getUserSalt()
     {
@@ -448,7 +452,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_firstname] column value.
      *
-     * @return   string
+     * @return string
      */
     public function getUserFirstname()
     {
@@ -458,7 +462,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_lastname] column value.
      *
-     * @return   string
+     * @return string
      */
     public function getUserLastname()
     {
@@ -468,7 +472,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_email] column value.
      *
-     * @return   string
+     * @return string
      */
     public function getUserEmail()
     {
@@ -478,7 +482,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_active] column value.
      *
-     * @return   boolean
+     * @return boolean
      */
     public function getUserActive()
     {
@@ -488,7 +492,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_active] column value.
      *
-     * @return   boolean
+     * @return boolean
      */
     public function isUserActive()
     {
@@ -498,19 +502,38 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_roles] column value.
      *
-     * @return   string
+     * @return array
      */
     public function getUserRoles()
     {
-        return $this->user_roles;
+        if (null === $this->user_roles_unserialized) {
+            $this->user_roles_unserialized = array();
+        }
+        if (!$this->user_roles_unserialized && null !== $this->user_roles) {
+            $user_roles_unserialized = substr($this->user_roles, 2, -2);
+            $this->user_roles_unserialized = $user_roles_unserialized ? explode(' | ', $user_roles_unserialized) : array();
+        }
+
+        return $this->user_roles_unserialized;
     }
+
+    /**
+     * Test the presence of a value in the [user_roles] array column value.
+     * @param mixed $value
+     *
+     * @return boolean
+     */
+    public function hasUserRole($value)
+    {
+        return in_array($value, $this->getUserRoles());
+    } // hasUserRole()
 
     /**
      * Get the [optionally formatted] temporal [user_expire_at] column value.
      *
      *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *                       If format is NULL, then the raw \DateTime object will be returned.
      *
      * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
@@ -528,7 +551,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_expired] column value.
      *
-     * @return   boolean
+     * @return boolean
      */
     public function getUserExpired()
     {
@@ -538,7 +561,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [user_expired] column value.
      *
-     * @return   boolean
+     * @return boolean
      */
     public function isUserExpired()
     {
@@ -549,8 +572,8 @@ abstract class User implements ActiveRecordInterface
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *                       If format is NULL, then the raw \DateTime object will be returned.
      *
      * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
@@ -569,8 +592,8 @@ abstract class User implements ActiveRecordInterface
      * Get the [optionally formatted] temporal [updated_at] column value.
      *
      *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *                       If format is NULL, then the raw \DateTime object will be returned.
      *
      * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
@@ -586,282 +609,6 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [id_user] column.
-     *
-     * @param      int $v new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setIdUser($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_user !== $v) {
-            $this->id_user = $v;
-            $this->modifiedColumns[UserTableMap::COL_ID_USER] = true;
-        }
-
-        return $this;
-    } // setIdUser()
-
-    /**
-     * Set the value of [user_username] column.
-     *
-     * @param      string $v new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserUsername($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->user_username !== $v) {
-            $this->user_username = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_USERNAME] = true;
-        }
-
-        return $this;
-    } // setUserUsername()
-
-    /**
-     * Set the value of [user_password] column.
-     *
-     * @param      string $v new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserPassword($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->user_password !== $v) {
-            $this->user_password = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_PASSWORD] = true;
-        }
-
-        return $this;
-    } // setUserPassword()
-
-    /**
-     * Set the value of [user_salt] column.
-     *
-     * @param      string $v new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserSalt($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->user_salt !== $v) {
-            $this->user_salt = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_SALT] = true;
-        }
-
-        return $this;
-    } // setUserSalt()
-
-    /**
-     * Set the value of [user_firstname] column.
-     *
-     * @param      string $v new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserFirstname($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->user_firstname !== $v) {
-            $this->user_firstname = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_FIRSTNAME] = true;
-        }
-
-        return $this;
-    } // setUserFirstname()
-
-    /**
-     * Set the value of [user_lastname] column.
-     *
-     * @param      string $v new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserLastname($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->user_lastname !== $v) {
-            $this->user_lastname = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_LASTNAME] = true;
-        }
-
-        return $this;
-    } // setUserLastname()
-
-    /**
-     * Set the value of [user_email] column.
-     *
-     * @param      string $v new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserEmail($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->user_email !== $v) {
-            $this->user_email = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_EMAIL] = true;
-        }
-
-        return $this;
-    } // setUserEmail()
-
-    /**
-     * Sets the value of the [user_active] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     *
-     * @param      boolean|integer|string $v The new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserActive($v)
-    {
-        if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
-        }
-
-        if ($this->user_active !== $v) {
-            $this->user_active = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_ACTIVE] = true;
-        }
-
-        return $this;
-    } // setUserActive()
-
-    /**
-     * Set the value of [user_roles] column.
-     *
-     * @param      string $v new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserRoles($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->user_roles !== $v) {
-            $this->user_roles = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_ROLES] = true;
-        }
-
-        return $this;
-    } // setUserRoles()
-
-    /**
-     * Sets the value of [user_expire_at] column to a normalized version of the date/time value specified.
-     *
-     * @param      mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserExpireAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->user_expire_at !== null || $dt !== null) {
-            if ($dt !== $this->user_expire_at) {
-                $this->user_expire_at = $dt;
-                $this->modifiedColumns[UserTableMap::COL_USER_EXPIRE_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setUserExpireAt()
-
-    /**
-     * Sets the value of the [user_expired] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     *
-     * @param      boolean|integer|string $v The new value
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUserExpired($v)
-    {
-        if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
-        }
-
-        if ($this->user_expired !== $v) {
-            $this->user_expired = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_EXPIRED] = true;
-        }
-
-        return $this;
-    } // setUserExpired()
-
-    /**
-     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param      mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->created_at !== null || $dt !== null) {
-            if ($dt !== $this->created_at) {
-                $this->created_at = $dt;
-                $this->modifiedColumns[UserTableMap::COL_CREATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setCreatedAt()
-
-    /**
-     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
-     *
-     * @param      mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return     $this|\User The current object (for fluent API support)
-     */
-    public function setUpdatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->updated_at !== null || $dt !== null) {
-            if ($dt !== $this->updated_at) {
-                $this->updated_at = $dt;
-                $this->modifiedColumns[UserTableMap::COL_UPDATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setUpdatedAt()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -872,10 +619,6 @@ abstract class User implements ActiveRecordInterface
     public function hasOnlyDefaultValues()
     {
             if ($this->user_active !== false) {
-                return false;
-            }
-
-            if ($this->user_roles !== 'ROLE_USER') {
                 return false;
             }
 
@@ -934,7 +677,8 @@ abstract class User implements ActiveRecordInterface
             $this->user_active = (null !== $col) ? (boolean) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('UserRoles', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->user_roles = (null !== $col) ? (string) $col : null;
+            $this->user_roles = $col;
+            $this->user_roles_unserialized = null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('UserExpireAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
@@ -967,7 +711,7 @@ abstract class User implements ActiveRecordInterface
             return $startcol + 13; // 13 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\User'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\App\\Model\\User'), 0, $e);
         }
     }
 
@@ -989,14 +733,321 @@ abstract class User implements ActiveRecordInterface
     } // ensureConsistency
 
     /**
+     * Set the value of [id_user] column.
+     *
+     * @param  int                   $v new value
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setIdUser($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id_user !== $v) {
+            $this->id_user = $v;
+            $this->modifiedColumns[UserTableMap::COL_ID_USER] = true;
+        }
+
+        return $this;
+    } // setIdUser()
+
+    /**
+     * Set the value of [user_username] column.
+     *
+     * @param  string                $v new value
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserUsername($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_username !== $v) {
+            $this->user_username = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_USERNAME] = true;
+        }
+
+        return $this;
+    } // setUserUsername()
+
+    /**
+     * Set the value of [user_password] column.
+     *
+     * @param  string                $v new value
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserPassword($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_password !== $v) {
+            $this->user_password = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_PASSWORD] = true;
+        }
+
+        return $this;
+    } // setUserPassword()
+
+    /**
+     * Set the value of [user_salt] column.
+     *
+     * @param  string                $v new value
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserSalt($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_salt !== $v) {
+            $this->user_salt = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_SALT] = true;
+        }
+
+        return $this;
+    } // setUserSalt()
+
+    /**
+     * Set the value of [user_firstname] column.
+     *
+     * @param  string                $v new value
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserFirstname($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_firstname !== $v) {
+            $this->user_firstname = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_FIRSTNAME] = true;
+        }
+
+        return $this;
+    } // setUserFirstname()
+
+    /**
+     * Set the value of [user_lastname] column.
+     *
+     * @param  string                $v new value
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserLastname($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_lastname !== $v) {
+            $this->user_lastname = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_LASTNAME] = true;
+        }
+
+        return $this;
+    } // setUserLastname()
+
+    /**
+     * Set the value of [user_email] column.
+     *
+     * @param  string                $v new value
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserEmail($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_email !== $v) {
+            $this->user_email = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_EMAIL] = true;
+        }
+
+        return $this;
+    } // setUserEmail()
+
+    /**
+     * Sets the value of the [user_active] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\App\Model\User  The current object (for fluent API support)
+     */
+    public function setUserActive($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->user_active !== $v) {
+            $this->user_active = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_ACTIVE] = true;
+        }
+
+        return $this;
+    } // setUserActive()
+
+    /**
+     * Set the value of [user_roles] column.
+     *
+     * @param  array                 $v new value
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserRoles($v)
+    {
+        if ($this->user_roles_unserialized !== $v) {
+            $this->user_roles_unserialized = $v;
+            $this->user_roles = '| ' . implode(' | ', $v) . ' |';
+            $this->modifiedColumns[UserTableMap::COL_USER_ROLES] = true;
+        }
+
+        return $this;
+    } // setUserRoles()
+
+    /**
+     * Adds a value to the [user_roles] array column value.
+     * @param mixed $value
+     *
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function addUserRole($value)
+    {
+        $currentArray = $this->getUserRoles();
+        $currentArray []= $value;
+        $this->setUserRoles($currentArray);
+
+        return $this;
+    } // addUserRole()
+
+    /**
+     * Removes a value from the [user_roles] array column value.
+     * @param mixed $value
+     *
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function removeUserRole($value)
+    {
+        $targetArray = array();
+        foreach ($this->getUserRoles() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setUserRoles($targetArray);
+
+        return $this;
+    } // removeUserRole()
+
+    /**
+     * Sets the value of [user_expire_at] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed                 $v string, integer (timestamp), or \DateTime value.
+     *                                  Empty strings are treated as NULL.
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserExpireAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->user_expire_at !== null || $dt !== null) {
+            if ($dt !== $this->user_expire_at) {
+                $this->user_expire_at = $dt;
+                $this->modifiedColumns[UserTableMap::COL_USER_EXPIRE_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setUserExpireAt()
+
+    /**
+     * Sets the value of the [user_expired] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\App\Model\User  The current object (for fluent API support)
+     */
+    public function setUserExpired($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->user_expired !== $v) {
+            $this->user_expired = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_EXPIRED] = true;
+        }
+
+        return $this;
+    } // setUserExpired()
+
+    /**
+     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed                 $v string, integer (timestamp), or \DateTime value.
+     *                                  Empty strings are treated as NULL.
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->created_at !== null || $dt !== null) {
+            if ($dt !== $this->created_at) {
+                $this->created_at = $dt;
+                $this->modifiedColumns[UserTableMap::COL_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setCreatedAt()
+
+    /**
+     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed                 $v string, integer (timestamp), or \DateTime value.
+     *                                  Empty strings are treated as NULL.
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUpdatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->updated_at !== null || $dt !== null) {
+            if ($dt !== $this->updated_at) {
+                $this->updated_at = $dt;
+                $this->modifiedColumns[UserTableMap::COL_UPDATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setUpdatedAt()
+
+    /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
      *
      * This will only work if the object has been saved and has a valid primary key set.
      *
-     * @param      boolean $deep (optional) Whether to also de-associated any related objects.
-     * @param      ConnectionInterface $con (optional) The ConnectionInterface connection to use.
+     * @param  boolean             $deep (optional) Whether to also de-associated any related objects.
+     * @param  ConnectionInterface $con  (optional) The ConnectionInterface connection to use.
      * @return void
-     * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
+     * @throws PropelException     - if this object is deleted, unsaved or doesn't have pk match in db
      */
     public function reload($deep = false, ConnectionInterface $con = null)
     {
@@ -1035,7 +1086,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Removes this object from datastore and sets delete attribute.
      *
-     * @param      ConnectionInterface $con
+     * @param  ConnectionInterface $con
      * @return void
      * @throws PropelException
      * @see User::setDeleted()
@@ -1071,8 +1122,8 @@ abstract class User implements ActiveRecordInterface
      * method.  This method wraps all precipitate database operations in a
      * single transaction.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @param  ConnectionInterface $con
+     * @return int                 The number of rows affected by this insert/update and any referring fk objects' save() operations.
      * @throws PropelException
      * @see doSave()
      */
@@ -1092,6 +1143,7 @@ abstract class User implements ActiveRecordInterface
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // timestampable behavior
+
                 if (!$this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
                     $this->setCreatedAt(time());
                 }
@@ -1128,8 +1180,8 @@ abstract class User implements ActiveRecordInterface
      * If the object is new, it inserts it; otherwise an update is performed.
      * All related objects are also updated in this method.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @param  ConnectionInterface $con
+     * @return int                 The number of rows affected by this insert/update and any referring fk objects' save() operations.
      * @throws PropelException
      * @see save()
      */
@@ -1152,7 +1204,7 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->triggersScheduledForDeletion !== null) {
                 if (!$this->triggersScheduledForDeletion->isEmpty()) {
-                    \TriggerQuery::create()
+                    \App\Model\TriggerQuery::create()
                         ->filterByPrimaryKeys($this->triggersScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->triggersScheduledForDeletion = null;
@@ -1169,7 +1221,7 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->userTargetGroupsScheduledForDeletion !== null) {
                 if (!$this->userTargetGroupsScheduledForDeletion->isEmpty()) {
-                    \UserTargetGroupQuery::create()
+                    \App\Model\UserTargetGroupQuery::create()
                         ->filterByPrimaryKeys($this->userTargetGroupsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->userTargetGroupsScheduledForDeletion = null;
@@ -1194,7 +1246,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Insert the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
      * @throws PropelException
      * @see doSave()
@@ -1251,7 +1303,7 @@ abstract class User implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO ""user (%s) VALUES (%s)',
+            'INSERT INTO user (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1320,7 +1372,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Update the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
      * @return Integer Number of updated rows
      * @see doSave()
@@ -1336,12 +1388,12 @@ abstract class User implements ActiveRecordInterface
     /**
      * Retrieves a field from the object by name passed in as a string.
      *
-     * @param      string $name name
-     * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                     Defaults to TableMap::TYPE_PHPNAME.
-     * @return mixed Value of field.
+     * @param  string $name name
+     * @param  string $type The type of fieldname the $name is of:
+     *                      one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                      TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                      Defaults to TableMap::TYPE_PHPNAME.
+     * @return mixed  Value of field.
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
@@ -1355,7 +1407,7 @@ abstract class User implements ActiveRecordInterface
      * Retrieves a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param      int $pos position in xml schema
+     * @param  int   $pos position in xml schema
      * @return mixed Value of field at $pos
      */
     public function getByPosition($pos)
@@ -1412,12 +1464,12 @@ abstract class User implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
-     *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                    Defaults to TableMap::TYPE_PHPNAME.
-     * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
-     * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
-     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
+     * @param string  $keyType                (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     *                                        TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                                        Defaults to TableMap::TYPE_PHPNAME.
+     * @param boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+     * @param array   $alreadyDumpedObjects   List of objects to skip to avoid recursion
+     * @param boolean $includeForeignObjects  (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
@@ -1463,13 +1515,13 @@ abstract class User implements ActiveRecordInterface
     /**
      * Sets a field from the object by name passed in as a string.
      *
-     * @param      string $name
-     * @param      mixed  $value field value
-     * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                     Defaults to TableMap::TYPE_PHPNAME.
-     * @return     $this|\User
+     * @param  string                $name
+     * @param  mixed                 $value field value
+     * @param  string                $type  The type of fieldname the $name is of:
+     *                                      one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                                      TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                                      Defaults to TableMap::TYPE_PHPNAME.
+     * @return $this|\App\Model\User
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
@@ -1482,9 +1534,9 @@ abstract class User implements ActiveRecordInterface
      * Sets a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param      int $pos position in xml schema
-     * @param      mixed $value field value
-     * @return     $this|\User
+     * @param  int                   $pos   position in xml schema
+     * @param  mixed                 $value field value
+     * @return $this|\App\Model\User
      */
     public function setByPosition($pos, $value)
     {
@@ -1514,6 +1566,10 @@ abstract class User implements ActiveRecordInterface
                 $this->setUserActive($value);
                 break;
             case 8:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setUserRoles($value);
                 break;
             case 9:
@@ -1546,8 +1602,8 @@ abstract class User implements ActiveRecordInterface
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
-     * @param      array  $arr     An array to populate the object from.
-     * @param      string $keyType The type of keys the array uses.
+     * @param  array  $arr     An array to populate the object from.
+     * @param  string $keyType The type of keys the array uses.
      * @return void
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
@@ -1602,11 +1658,11 @@ abstract class User implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
-     * @param mixed $parser A AbstractParser instance,
+     * @param mixed  $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
-     * @param string $data The source data to import from
+     * @param string $data   The source data to import from
      *
-     * @return $this|\User The current object, for fluid interface
+     * @return $this|\App\Model\User The current object, for fluid interface
      */
     public function importFrom($parser, $data)
     {
@@ -1704,7 +1760,7 @@ abstract class User implements ActiveRecordInterface
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
-        } else if ($validPrimaryKeyFKs) {
+        } elseif ($validPrimaryKeyFKs) {
             return crc32(json_encode($primaryKeyFKs, JSON_UNESCAPED_UNICODE));
         }
 
@@ -1713,7 +1769,7 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * Returns the primary key for this object (row).
-     * @return   int
+     * @return int
      */
     public function getPrimaryKey()
     {
@@ -1723,7 +1779,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Generic method to set the primary key (id_user column).
      *
-     * @param       int $key Primary key.
+     * @param  int  $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
@@ -1746,9 +1802,9 @@ abstract class User implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \User (or compatible) type.
-     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
+     * @param  object          $copyObj  An object of \App\Model\User (or compatible) type.
+     * @param  boolean         $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @param  boolean         $makeNew  Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
@@ -1799,8 +1855,8 @@ abstract class User implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return                 \User Clone of current object.
+     * @param  boolean         $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @return \App\Model\User Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1813,13 +1869,12 @@ abstract class User implements ActiveRecordInterface
         return $copyObj;
     }
 
-
     /**
      * Initializes a collection based on the name of a relation.
      * Avoids crafting an 'init[$relationName]s' method name
      * that wouldn't work when StandardEnglishPluralizer is used.
      *
-     * @param      string $relationName The name of the relation to initialize
+     * @param  string $relationName The name of the relation to initialize
      * @return void
      */
     public function initRelation($relationName)
@@ -1861,8 +1916,8 @@ abstract class User implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                  the collection even if it is not empty
      *
      * @return void
      */
@@ -1872,7 +1927,7 @@ abstract class User implements ActiveRecordInterface
             return;
         }
         $this->collTriggers = new ObjectCollection();
-        $this->collTriggers->setModel('\Trigger');
+        $this->collTriggers->setModel('\App\Model\Trigger');
     }
 
     /**
@@ -1884,8 +1939,8 @@ abstract class User implements ActiveRecordInterface
      * If this ChildUser is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param  Criteria                        $criteria optional Criteria object to narrow the query
+     * @param  ConnectionInterface             $con      optional connection object
      * @return ObjectCollection|ChildTrigger[] List of ChildTrigger objects
      * @throws PropelException
      */
@@ -1914,8 +1969,6 @@ abstract class User implements ActiveRecordInterface
                         $this->collTriggersPartial = true;
                     }
 
-                    $collTriggers->rewind();
-
                     return $collTriggers;
                 }
 
@@ -1941,9 +1994,9 @@ abstract class User implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $triggers A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return     $this|ChildUser The current object (for fluent API support)
+     * @param  Collection          $triggers A Propel collection.
+     * @param  ConnectionInterface $con      Optional connection object
+     * @return $this|ChildUser     The current object (for fluent API support)
      */
     public function setTriggers(Collection $triggers, ConnectionInterface $con = null)
     {
@@ -1971,10 +2024,10 @@ abstract class User implements ActiveRecordInterface
     /**
      * Returns the number of related Trigger objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Trigger objects.
+     * @param  Criteria            $criteria
+     * @param  boolean             $distinct
+     * @param  ConnectionInterface $con
+     * @return int                 Count of related Trigger objects.
      * @throws PropelException
      */
     public function countTriggers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
@@ -2006,8 +2059,8 @@ abstract class User implements ActiveRecordInterface
      * Method called to associate a ChildTrigger object to this object
      * through the ChildTrigger foreign key attribute.
      *
-     * @param    ChildTrigger $l ChildTrigger
-     * @return   $this|\User The current object (for fluent API support)
+     * @param  ChildTrigger          $l ChildTrigger
+     * @return $this|\App\Model\User The current object (for fluent API support)
      */
     public function addTrigger(ChildTrigger $l)
     {
@@ -2033,7 +2086,7 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * @param  ChildTrigger $trigger The ChildTrigger object to remove.
+     * @param  ChildTrigger    $trigger The ChildTrigger object to remove.
      * @return $this|ChildUser The current object (for fluent API support)
      */
     public function removeTrigger(ChildTrigger $trigger)
@@ -2064,9 +2117,9 @@ abstract class User implements ActiveRecordInterface
      * api reasonable.  You can provide public methods for those you
      * actually need in User.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @param  Criteria                        $criteria     optional Criteria object to narrow the query
+     * @param  ConnectionInterface             $con          optional connection object
+     * @param  string                          $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildTrigger[] List of ChildTrigger objects
      */
     public function getTriggersJoinTarget(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
@@ -2089,9 +2142,9 @@ abstract class User implements ActiveRecordInterface
      * api reasonable.  You can provide public methods for those you
      * actually need in User.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @param  Criteria                        $criteria     optional Criteria object to narrow the query
+     * @param  ConnectionInterface             $con          optional connection object
+     * @param  string                          $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildTrigger[] List of ChildTrigger objects
      */
     public function getTriggersJoinTriggerType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
@@ -2131,8 +2184,8 @@ abstract class User implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                  the collection even if it is not empty
      *
      * @return void
      */
@@ -2142,7 +2195,7 @@ abstract class User implements ActiveRecordInterface
             return;
         }
         $this->collUserTargetGroups = new ObjectCollection();
-        $this->collUserTargetGroups->setModel('\UserTargetGroup');
+        $this->collUserTargetGroups->setModel('\App\Model\UserTargetGroup');
     }
 
     /**
@@ -2154,8 +2207,8 @@ abstract class User implements ActiveRecordInterface
      * If this ChildUser is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param  Criteria                                $criteria optional Criteria object to narrow the query
+     * @param  ConnectionInterface                     $con      optional connection object
      * @return ObjectCollection|ChildUserTargetGroup[] List of ChildUserTargetGroup objects
      * @throws PropelException
      */
@@ -2184,8 +2237,6 @@ abstract class User implements ActiveRecordInterface
                         $this->collUserTargetGroupsPartial = true;
                     }
 
-                    $collUserTargetGroups->rewind();
-
                     return $collUserTargetGroups;
                 }
 
@@ -2211,9 +2262,9 @@ abstract class User implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $userTargetGroups A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return     $this|ChildUser The current object (for fluent API support)
+     * @param  Collection          $userTargetGroups A Propel collection.
+     * @param  ConnectionInterface $con              Optional connection object
+     * @return $this|ChildUser     The current object (for fluent API support)
      */
     public function setUserTargetGroups(Collection $userTargetGroups, ConnectionInterface $con = null)
     {
@@ -2241,10 +2292,10 @@ abstract class User implements ActiveRecordInterface
     /**
      * Returns the number of related UserTargetGroup objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related UserTargetGroup objects.
+     * @param  Criteria            $criteria
+     * @param  boolean             $distinct
+     * @param  ConnectionInterface $con
+     * @return int                 Count of related UserTargetGroup objects.
      * @throws PropelException
      */
     public function countUserTargetGroups(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
@@ -2276,8 +2327,8 @@ abstract class User implements ActiveRecordInterface
      * Method called to associate a ChildUserTargetGroup object to this object
      * through the ChildUserTargetGroup foreign key attribute.
      *
-     * @param    ChildUserTargetGroup $l ChildUserTargetGroup
-     * @return   $this|\User The current object (for fluent API support)
+     * @param  ChildUserTargetGroup  $l ChildUserTargetGroup
+     * @return $this|\App\Model\User The current object (for fluent API support)
      */
     public function addUserTargetGroup(ChildUserTargetGroup $l)
     {
@@ -2304,7 +2355,7 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * @param  ChildUserTargetGroup $userTargetGroup The ChildUserTargetGroup object to remove.
-     * @return $this|ChildUser The current object (for fluent API support)
+     * @return $this|ChildUser      The current object (for fluent API support)
      */
     public function removeUserTargetGroup(ChildUserTargetGroup $userTargetGroup)
     {
@@ -2334,9 +2385,9 @@ abstract class User implements ActiveRecordInterface
      * api reasonable.  You can provide public methods for those you
      * actually need in User.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @param  Criteria                                $criteria     optional Criteria object to narrow the query
+     * @param  ConnectionInterface                     $con          optional connection object
+     * @param  string                                  $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildUserTargetGroup[] List of ChildUserTargetGroup objects
      */
     public function getUserTargetGroupsJoinTargetGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
@@ -2363,6 +2414,7 @@ abstract class User implements ActiveRecordInterface
         $this->user_email = null;
         $this->user_active = null;
         $this->user_roles = null;
+        $this->user_roles_unserialized = null;
         $this->user_expire_at = null;
         $this->user_expired = null;
         $this->created_at = null;
@@ -2381,7 +2433,7 @@ abstract class User implements ActiveRecordInterface
      * This method is used to reset all php object references (not the actual reference in the database).
      * Necessary for object serialisation.
      *
-     * @param      boolean $deep Whether to also clear the references on all referrer objects.
+     * @param boolean $deep Whether to also clear the references on all referrer objects.
      */
     public function clearAllReferences($deep = false)
     {
@@ -2417,7 +2469,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Mark the current object so that the update date doesn't get updated during next save
      *
-     * @return     $this|ChildUser The current object (for fluent API support)
+     * @return $this|ChildUser The current object (for fluent API support)
      */
     public function keepUpdateDateUnchanged()
     {
@@ -2501,7 +2553,6 @@ abstract class User implements ActiveRecordInterface
     {
 
     }
-
 
     /**
      * Derived method to catches calls to undefined methods.

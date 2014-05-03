@@ -18,9 +18,12 @@ use Propel\Generator\Manager\SqlManager;
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
-class SqlInsertCommand extends \Propel\Generator\Command\SqlInsertCommand
+class SqlInsertCommand
+        extends \Propel\Generator\Command\SqlInsertCommand
 {
-    const DEFAULT_OUTPUT_DIRECTORY  = 'generated-sql';
+
+    const DEFAULT_SQL_DIRECTORY = '/../../../../../../config/db/sql';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db';
 
     /**
      * {@inheritdoc}
@@ -28,12 +31,14 @@ class SqlInsertCommand extends \Propel\Generator\Command\SqlInsertCommand
     protected function configure()
     {
         $this
-            ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', self::DEFAULT_OUTPUT_DIRECTORY)
-            ->addOption('sql-dir', null, InputOption::VALUE_REQUIRED, 'The SQL files directory', self::DEFAULT_OUTPUT_DIRECTORY)
-            ->addOption('connection', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Connection to use. Example: \'bookstore=mysql:host=127.0.0.1;dbname=test;user=root;password=foobar\' where "bookstore" is your propel database name (used in your schema.xml)')
-            ->setName('propel:sql:insert')
-            ->setAliases(array('insert-sql'))
-            ->setDescription('Insert SQL statements')
+                ->addOption('platform', null, InputOption::VALUE_REQUIRED, 'The platform', self::DEFAULT_PLATFORM)
+                ->addOption('recursive', null, InputOption::VALUE_NONE, 'Search for schema.xml inside the input directory')
+                ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
+                ->addOption('sql-dir', null, InputOption::VALUE_REQUIRED, 'The SQL files directory', __DIR__ . self::DEFAULT_SQL_DIRECTORY)
+                ->addOption('connection', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Connection to use. Example: \'bookstore=mysql:host=127.0.0.1;dbname=test;user=root;password=foobar\' where "bookstore" is your propel database name (used in your schema.xml)')
+                ->setName('propel:sql:insert')
+                ->setAliases(array('insert-sql'))
+                ->setDescription('Insert SQL statements')
         ;
     }
 
@@ -67,4 +72,5 @@ class SqlInsertCommand extends \Propel\Generator\Command\SqlInsertCommand
 
         $manager->insertSql();
     }
+
 }

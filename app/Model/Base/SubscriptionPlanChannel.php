@@ -1,15 +1,15 @@
 <?php
 
-namespace Base;
+namespace app\Model\Base;
 
-use \Channel as ChildChannel;
-use \ChannelQuery as ChildChannelQuery;
-use \SubscriptionPlan as ChildSubscriptionPlan;
-use \SubscriptionPlanChannelQuery as ChildSubscriptionPlanChannelQuery;
-use \SubscriptionPlanQuery as ChildSubscriptionPlanQuery;
 use \Exception;
 use \PDO;
-use Map\SubscriptionPlanChannelTableMap;
+use App\Model\Channel as ChildChannel;
+use App\Model\ChannelQuery as ChildChannelQuery;
+use App\Model\SubscriptionPlan as ChildSubscriptionPlan;
+use App\Model\SubscriptionPlanChannelQuery as ChildSubscriptionPlanChannelQuery;
+use App\Model\SubscriptionPlanQuery as ChildSubscriptionPlanQuery;
+use App\Model\Map\SubscriptionPlanChannelTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -27,8 +27,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\SubscriptionPlanChannelTableMap';
-
+    const TABLE_MAP = '\\App\\Model\\Map\\SubscriptionPlanChannelTableMap';
 
     /**
      * attribute to determine if this object has previously been saved.
@@ -87,7 +86,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Base\SubscriptionPlanChannel object.
+     * Initializes internal state of App\Model\Base\SubscriptionPlanChannel object.
      */
     public function __construct()
     {
@@ -199,7 +198,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
             return true;
         }
 
-        if (null === $this->getPrimaryKey() || null === $obj->getPrimaryKey())  {
+        if (null === $this->getPrimaryKey() || null === $obj->getPrimaryKey()) {
             return false;
         }
 
@@ -306,7 +305,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Get the [id_subscription_plan] column value.
      *
-     * @return   int
+     * @return int
      */
     public function getIdSubscriptionPlan()
     {
@@ -316,60 +315,12 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Get the [id_channel] column value.
      *
-     * @return   int
+     * @return int
      */
     public function getIdChannel()
     {
         return $this->id_channel;
     }
-
-    /**
-     * Set the value of [id_subscription_plan] column.
-     *
-     * @param      int $v new value
-     * @return     $this|\SubscriptionPlanChannel The current object (for fluent API support)
-     */
-    public function setIdSubscriptionPlan($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_subscription_plan !== $v) {
-            $this->id_subscription_plan = $v;
-            $this->modifiedColumns[SubscriptionPlanChannelTableMap::COL_ID_SUBSCRIPTION_PLAN] = true;
-        }
-
-        if ($this->aSubscriptionPlan !== null && $this->aSubscriptionPlan->getIdSubscriptionPlan() !== $v) {
-            $this->aSubscriptionPlan = null;
-        }
-
-        return $this;
-    } // setIdSubscriptionPlan()
-
-    /**
-     * Set the value of [id_channel] column.
-     *
-     * @param      int $v new value
-     * @return     $this|\SubscriptionPlanChannel The current object (for fluent API support)
-     */
-    public function setIdChannel($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_channel !== $v) {
-            $this->id_channel = $v;
-            $this->modifiedColumns[SubscriptionPlanChannelTableMap::COL_ID_CHANNEL] = true;
-        }
-
-        if ($this->aChannel !== null && $this->aChannel->getIdChannel() !== $v) {
-            $this->aChannel = null;
-        }
-
-        return $this;
-    } // setIdChannel()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -423,7 +374,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
             return $startcol + 2; // 2 = SubscriptionPlanChannelTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\SubscriptionPlanChannel'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\App\\Model\\SubscriptionPlanChannel'), 0, $e);
         }
     }
 
@@ -451,14 +402,62 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     } // ensureConsistency
 
     /**
+     * Set the value of [id_subscription_plan] column.
+     *
+     * @param  int                                      $v new value
+     * @return $this|\App\Model\SubscriptionPlanChannel The current object (for fluent API support)
+     */
+    public function setIdSubscriptionPlan($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id_subscription_plan !== $v) {
+            $this->id_subscription_plan = $v;
+            $this->modifiedColumns[SubscriptionPlanChannelTableMap::COL_ID_SUBSCRIPTION_PLAN] = true;
+        }
+
+        if ($this->aSubscriptionPlan !== null && $this->aSubscriptionPlan->getIdSubscriptionPlan() !== $v) {
+            $this->aSubscriptionPlan = null;
+        }
+
+        return $this;
+    } // setIdSubscriptionPlan()
+
+    /**
+     * Set the value of [id_channel] column.
+     *
+     * @param  int                                      $v new value
+     * @return $this|\App\Model\SubscriptionPlanChannel The current object (for fluent API support)
+     */
+    public function setIdChannel($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id_channel !== $v) {
+            $this->id_channel = $v;
+            $this->modifiedColumns[SubscriptionPlanChannelTableMap::COL_ID_CHANNEL] = true;
+        }
+
+        if ($this->aChannel !== null && $this->aChannel->getIdChannel() !== $v) {
+            $this->aChannel = null;
+        }
+
+        return $this;
+    } // setIdChannel()
+
+    /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
      *
      * This will only work if the object has been saved and has a valid primary key set.
      *
-     * @param      boolean $deep (optional) Whether to also de-associated any related objects.
-     * @param      ConnectionInterface $con (optional) The ConnectionInterface connection to use.
+     * @param  boolean             $deep (optional) Whether to also de-associated any related objects.
+     * @param  ConnectionInterface $con  (optional) The ConnectionInterface connection to use.
      * @return void
-     * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
+     * @throws PropelException     - if this object is deleted, unsaved or doesn't have pk match in db
      */
     public function reload($deep = false, ConnectionInterface $con = null)
     {
@@ -495,7 +494,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Removes this object from datastore and sets delete attribute.
      *
-     * @param      ConnectionInterface $con
+     * @param  ConnectionInterface $con
      * @return void
      * @throws PropelException
      * @see SubscriptionPlanChannel::setDeleted()
@@ -531,8 +530,8 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * method.  This method wraps all precipitate database operations in a
      * single transaction.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @param  ConnectionInterface $con
+     * @return int                 The number of rows affected by this insert/update and any referring fk objects' save() operations.
      * @throws PropelException
      * @see doSave()
      */
@@ -577,8 +576,8 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * If the object is new, it inserts it; otherwise an update is performed.
      * All related objects are also updated in this method.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @param  ConnectionInterface $con
+     * @return int                 The number of rows affected by this insert/update and any referring fk objects' save() operations.
      * @throws PropelException
      * @see save()
      */
@@ -628,7 +627,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Insert the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
      * @throws PropelException
      * @see doSave()
@@ -637,7 +636,6 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     {
         $modifiedColumns = array();
         $index = 0;
-
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(SubscriptionPlanChannelTableMap::COL_ID_SUBSCRIPTION_PLAN)) {
@@ -648,7 +646,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO ""subscription_plan_channel (%s) VALUES (%s)',
+            'INSERT INTO subscription_plan_channel (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -677,7 +675,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Update the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
      * @return Integer Number of updated rows
      * @see doSave()
@@ -693,12 +691,12 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Retrieves a field from the object by name passed in as a string.
      *
-     * @param      string $name name
-     * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                     Defaults to TableMap::TYPE_PHPNAME.
-     * @return mixed Value of field.
+     * @param  string $name name
+     * @param  string $type The type of fieldname the $name is of:
+     *                      one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                      TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                      Defaults to TableMap::TYPE_PHPNAME.
+     * @return mixed  Value of field.
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
@@ -712,7 +710,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * Retrieves a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param      int $pos position in xml schema
+     * @param  int   $pos position in xml schema
      * @return mixed Value of field at $pos
      */
     public function getByPosition($pos)
@@ -736,12 +734,12 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
-     *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                    Defaults to TableMap::TYPE_PHPNAME.
-     * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
-     * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
-     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
+     * @param string  $keyType                (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     *                                        TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                                        Defaults to TableMap::TYPE_PHPNAME.
+     * @param boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+     * @param array   $alreadyDumpedObjects   List of objects to skip to avoid recursion
+     * @param boolean $includeForeignObjects  (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
@@ -776,13 +774,13 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Sets a field from the object by name passed in as a string.
      *
-     * @param      string $name
-     * @param      mixed  $value field value
-     * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                     Defaults to TableMap::TYPE_PHPNAME.
-     * @return     $this|\SubscriptionPlanChannel
+     * @param  string                                   $name
+     * @param  mixed                                    $value field value
+     * @param  string                                   $type  The type of fieldname the $name is of:
+     *                                                         one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                                                         TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                                                         Defaults to TableMap::TYPE_PHPNAME.
+     * @return $this|\App\Model\SubscriptionPlanChannel
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
@@ -795,9 +793,9 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * Sets a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param      int $pos position in xml schema
-     * @param      mixed $value field value
-     * @return     $this|\SubscriptionPlanChannel
+     * @param  int                                      $pos   position in xml schema
+     * @param  mixed                                    $value field value
+     * @return $this|\App\Model\SubscriptionPlanChannel
      */
     public function setByPosition($pos, $value)
     {
@@ -826,8 +824,8 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
-     * @param      array  $arr     An array to populate the object from.
-     * @param      string $keyType The type of keys the array uses.
+     * @param  array  $arr     An array to populate the object from.
+     * @param  string $keyType The type of keys the array uses.
      * @return void
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
@@ -849,11 +847,11 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
-     * @param mixed $parser A AbstractParser instance,
+     * @param mixed  $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
-     * @param string $data The source data to import from
+     * @param string $data   The source data to import from
      *
-     * @return $this|\SubscriptionPlanChannel The current object, for fluid interface
+     * @return $this|\App\Model\SubscriptionPlanChannel The current object, for fluid interface
      */
     public function importFrom($parser, $data)
     {
@@ -918,14 +916,14 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
         $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
 
-        //relation subscription_plan_channel_ibfk_1 to table ""channel
+        //relation subscription_plan_channel_ibfk_1 to table channel
         if ($this->aChannel && $hash = spl_object_hash($this->aChannel)) {
             $primaryKeyFKs[] = $hash;
         } else {
             $validPrimaryKeyFKs = false;
         }
 
-        //relation subscription_plan_channel_ibfk_2 to table ""subscription_plan
+        //relation subscription_plan_channel_ibfk_2 to table subscription_plan
         if ($this->aSubscriptionPlan && $hash = spl_object_hash($this->aSubscriptionPlan)) {
             $primaryKeyFKs[] = $hash;
         } else {
@@ -934,7 +932,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
-        } else if ($validPrimaryKeyFKs) {
+        } elseif ($validPrimaryKeyFKs) {
             return crc32(json_encode($primaryKeyFKs, JSON_UNESCAPED_UNICODE));
         }
 
@@ -958,7 +956,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Set the [composite] primary key.
      *
-     * @param      array $keys The elements of the composite key (order must match the order in XML file).
+     * @param  array $keys The elements of the composite key (order must match the order in XML file).
      * @return void
      */
     public function setPrimaryKey($keys)
@@ -982,9 +980,9 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \SubscriptionPlanChannel (or compatible) type.
-     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
+     * @param  object          $copyObj  An object of \App\Model\SubscriptionPlanChannel (or compatible) type.
+     * @param  boolean         $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @param  boolean         $makeNew  Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
@@ -1004,8 +1002,8 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return                 \SubscriptionPlanChannel Clone of current object.
+     * @param  boolean                            $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @return \App\Model\SubscriptionPlanChannel Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1021,8 +1019,8 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Declares an association between this object and a ChildChannel object.
      *
-     * @param                  ChildChannel $v
-     * @return                 $this|\SubscriptionPlanChannel The current object (for fluent API support)
+     * @param  ChildChannel                             $v
+     * @return $this|\App\Model\SubscriptionPlanChannel The current object (for fluent API support)
      * @throws PropelException
      */
     public function setChannel(ChildChannel $v = null)
@@ -1041,7 +1039,6 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
             $v->addSubscriptionPlanChannel($this);
         }
 
-
         return $this;
     }
 
@@ -1049,8 +1046,8 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Get the associated ChildChannel object
      *
-     * @param      ConnectionInterface $con Optional Connection object.
-     * @return                 ChildChannel The associated ChildChannel object.
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildChannel        The associated ChildChannel object.
      * @throws PropelException
      */
     public function getChannel(ConnectionInterface $con = null)
@@ -1072,8 +1069,8 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Declares an association between this object and a ChildSubscriptionPlan object.
      *
-     * @param                  ChildSubscriptionPlan $v
-     * @return                 $this|\SubscriptionPlanChannel The current object (for fluent API support)
+     * @param  ChildSubscriptionPlan                    $v
+     * @return $this|\App\Model\SubscriptionPlanChannel The current object (for fluent API support)
      * @throws PropelException
      */
     public function setSubscriptionPlan(ChildSubscriptionPlan $v = null)
@@ -1092,7 +1089,6 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
             $v->addSubscriptionPlanChannel($this);
         }
 
-
         return $this;
     }
 
@@ -1100,8 +1096,8 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
     /**
      * Get the associated ChildSubscriptionPlan object
      *
-     * @param      ConnectionInterface $con Optional Connection object.
-     * @return                 ChildSubscriptionPlan The associated ChildSubscriptionPlan object.
+     * @param  ConnectionInterface   $con Optional Connection object.
+     * @return ChildSubscriptionPlan The associated ChildSubscriptionPlan object.
      * @throws PropelException
      */
     public function getSubscriptionPlan(ConnectionInterface $con = null)
@@ -1148,7 +1144,7 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
      * This method is used to reset all php object references (not the actual reference in the database).
      * Necessary for object serialisation.
      *
-     * @param      boolean $deep Whether to also clear the references on all referrer objects.
+     * @param boolean $deep Whether to also clear the references on all referrer objects.
      */
     public function clearAllReferences($deep = false)
     {

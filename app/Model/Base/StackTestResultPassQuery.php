@@ -1,12 +1,12 @@
 <?php
 
-namespace Base;
+namespace app\Model\Base;
 
-use \StackTestResultPass as ChildStackTestResultPass;
-use \StackTestResultPassQuery as ChildStackTestResultPassQuery;
 use \Exception;
 use \PDO;
-use Map\StackTestResultPassTableMap;
+use App\Model\StackTestResultPass as ChildStackTestResultPass;
+use App\Model\StackTestResultPassQuery as ChildStackTestResultPassQuery;
+use App\Model\Map\StackTestResultPassTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -16,7 +16,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the '""stack_test_result_pass' table.
+ * Base class that represents a query for the 'stack_test_result_pass' table.
  *
  *
  *
@@ -54,7 +54,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStackTestResultPassQuery rightJoinTargetType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TargetType relation
  * @method     ChildStackTestResultPassQuery innerJoinTargetType($relationAlias = null) Adds a INNER JOIN clause to the query using the TargetType relation
  *
- * @method     \TargetQuery|\TargetGroupQuery|\TargetTypeQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Model\TargetQuery|\App\Model\TargetGroupQuery|\App\Model\TargetTypeQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildStackTestResultPass findOne(ConnectionInterface $con = null) Return the first ChildStackTestResultPass matching the query
  * @method     ChildStackTestResultPass findOneOrCreate(ConnectionInterface $con = null) Return the first ChildStackTestResultPass matching the query, or a new ChildStackTestResultPass object populated from the query conditions when no match is found
@@ -84,13 +84,13 @@ abstract class StackTestResultPassQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \Base\StackTestResultPassQuery object.
+     * Initializes internal state of \App\Model\Base\StackTestResultPassQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName     The database name
+     * @param string $modelName  The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\StackTestResultPass', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\App\\Model\\StackTestResultPass', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -98,8 +98,8 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     /**
      * Returns a new ChildStackTestResultPassQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string   $modelAlias The alias of a model in the query
+     * @param Criteria $criteria   Optional Criteria to build the query from
      *
      * @return ChildStackTestResultPassQuery
      */
@@ -128,7 +128,7 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      * $obj  = $c->findPk(12, $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param mixed               $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildStackTestResultPass|array|mixed the result, formatted by the current formatter
@@ -159,14 +159,14 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
-     * @return   ChildStackTestResultPass A model object, or null if the key is not found
+     * @return ChildStackTestResultPass A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_TEST_RESULT_PASS, TARGET_ID, TARGET_GROUP_ID, TARGET_TYPE_ID, STACK_TEST_RESULT_PASS_INFO, STACK_TEST_RESULT_PASS_PRIORITY, CREATED_AT, UPDATED_AT FROM ""stack_test_result_pass WHERE ID_TEST_RESULT_PASS = :p0';
+        $sql = 'SELECT ID_TEST_RESULT_PASS, TARGET_ID, TARGET_GROUP_ID, TARGET_TYPE_ID, STACK_TEST_RESULT_PASS_INFO, STACK_TEST_RESULT_PASS_PRIORITY, CREATED_AT, UPDATED_AT FROM stack_test_result_pass WHERE ID_TEST_RESULT_PASS = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -190,8 +190,8 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed               $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildStackTestResultPass|array|mixed the result, formatted by the current formatter
      */
@@ -211,8 +211,8 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array               $keys Primary keys to use for the query
+     * @param ConnectionInterface $con  an optional connection object
      *
      * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
      */
@@ -233,7 +233,7 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -245,7 +245,7 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array $keys The list of primary key to use for the query
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -264,11 +264,11 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      * $query->filterByIdTestResultPass(array('min' => 12)); // WHERE id_test_result_pass > 12
      * </code>
      *
-     * @param     mixed $idTestResultPass The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $idTestResultPass The value to use as filter.
+     *                                 Use scalar values for equality.
+     *                                 Use array values for in_array() equivalent.
+     *                                 Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison       Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -307,11 +307,11 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      *
      * @see       filterByTarget()
      *
-     * @param     mixed $targetId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $targetId   The value to use as filter.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -350,11 +350,11 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      *
      * @see       filterByTargetGroup()
      *
-     * @param     mixed $targetGroupId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $targetGroupId The value to use as filter.
+     *                              Use scalar values for equality.
+     *                              Use array values for in_array() equivalent.
+     *                              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -393,11 +393,11 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      *
      * @see       filterByTargetType()
      *
-     * @param     mixed $targetTypeId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $targetTypeId The value to use as filter.
+     *                             Use scalar values for equality.
+     *                             Use array values for in_array() equivalent.
+     *                             Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison   Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -433,9 +433,9 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      * $query->filterByStackTestResultPassInfo('%fooValue%'); // WHERE stack_test_result_pass_info LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $stackTestResultPassInfo The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $stackTestResultPassInfo The value to use as filter.
+     *                                        Accepts wildcards (* and % trigger a LIKE)
+     * @param string $comparison              Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -462,12 +462,12 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      * $query->filterByStackTestResultPassPriority('yes'); // WHERE stack_test_result_pass_priority = true
      * </code>
      *
-     * @param     boolean|string $stackTestResultPassPriority The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param boolean|string $stackTestResultPassPriority The value to use as filter.
+     *                                                    Non-boolean arguments are converted using the following rules:
+     *                                                    * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                                                    * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *                                                    Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string         $comparison                  Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -490,13 +490,13 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $createdAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -533,13 +533,13 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $updatedAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -567,16 +567,16 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Target object
+     * Filter the query by a related \App\Model\Target object
      *
-     * @param \Target|ObjectCollection $target The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\Target|ObjectCollection $target     The related object(s) to use as filter
+     * @param string                             $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildStackTestResultPassQuery The current query, for fluid interface
      */
     public function filterByTarget($target, $comparison = null)
     {
-        if ($target instanceof \Target) {
+        if ($target instanceof \App\Model\Target) {
             return $this
                 ->addUsingAlias(StackTestResultPassTableMap::COL_TARGET_ID, $target->getIdTarget(), $comparison);
         } elseif ($target instanceof ObjectCollection) {
@@ -587,15 +587,15 @@ abstract class StackTestResultPassQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(StackTestResultPassTableMap::COL_TARGET_ID, $target->toKeyValue('PrimaryKey', 'IdTarget'), $comparison);
         } else {
-            throw new PropelException('filterByTarget() only accepts arguments of type \Target or Collection');
+            throw new PropelException('filterByTarget() only accepts arguments of type \App\Model\Target or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the Target relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -628,30 +628,30 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \TargetQuery A secondary query class using the current class as primary query
+     * @return \App\Model\TargetQuery A secondary query class using the current class as primary query
      */
     public function useTargetQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinTarget($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Target', '\TargetQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Target', '\App\Model\TargetQuery');
     }
 
     /**
-     * Filter the query by a related \TargetGroup object
+     * Filter the query by a related \App\Model\TargetGroup object
      *
-     * @param \TargetGroup|ObjectCollection $targetGroup The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\TargetGroup|ObjectCollection $targetGroup The related object(s) to use as filter
+     * @param string                                  $comparison  Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildStackTestResultPassQuery The current query, for fluid interface
      */
     public function filterByTargetGroup($targetGroup, $comparison = null)
     {
-        if ($targetGroup instanceof \TargetGroup) {
+        if ($targetGroup instanceof \App\Model\TargetGroup) {
             return $this
                 ->addUsingAlias(StackTestResultPassTableMap::COL_TARGET_GROUP_ID, $targetGroup->getIdTargetGroup(), $comparison);
         } elseif ($targetGroup instanceof ObjectCollection) {
@@ -662,15 +662,15 @@ abstract class StackTestResultPassQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(StackTestResultPassTableMap::COL_TARGET_GROUP_ID, $targetGroup->toKeyValue('PrimaryKey', 'IdTargetGroup'), $comparison);
         } else {
-            throw new PropelException('filterByTargetGroup() only accepts arguments of type \TargetGroup or Collection');
+            throw new PropelException('filterByTargetGroup() only accepts arguments of type \App\Model\TargetGroup or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the TargetGroup relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -703,30 +703,30 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \TargetGroupQuery A secondary query class using the current class as primary query
+     * @return \App\Model\TargetGroupQuery A secondary query class using the current class as primary query
      */
     public function useTargetGroupQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinTargetGroup($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'TargetGroup', '\TargetGroupQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'TargetGroup', '\App\Model\TargetGroupQuery');
     }
 
     /**
-     * Filter the query by a related \TargetType object
+     * Filter the query by a related \App\Model\TargetType object
      *
-     * @param \TargetType|ObjectCollection $targetType The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\TargetType|ObjectCollection $targetType The related object(s) to use as filter
+     * @param string                                 $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildStackTestResultPassQuery The current query, for fluid interface
      */
     public function filterByTargetType($targetType, $comparison = null)
     {
-        if ($targetType instanceof \TargetType) {
+        if ($targetType instanceof \App\Model\TargetType) {
             return $this
                 ->addUsingAlias(StackTestResultPassTableMap::COL_TARGET_TYPE_ID, $targetType->getIdTargetType(), $comparison);
         } elseif ($targetType instanceof ObjectCollection) {
@@ -737,15 +737,15 @@ abstract class StackTestResultPassQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(StackTestResultPassTableMap::COL_TARGET_TYPE_ID, $targetType->toKeyValue('PrimaryKey', 'IdTargetType'), $comparison);
         } else {
-            throw new PropelException('filterByTargetType() only accepts arguments of type \TargetType or Collection');
+            throw new PropelException('filterByTargetType() only accepts arguments of type \App\Model\TargetType or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the TargetType relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -778,23 +778,23 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \TargetTypeQuery A secondary query class using the current class as primary query
+     * @return \App\Model\TargetTypeQuery A secondary query class using the current class as primary query
      */
     public function useTargetTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinTargetType($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'TargetType', '\TargetTypeQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'TargetType', '\App\Model\TargetTypeQuery');
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildStackTestResultPass $stackTestResultPass Object to remove from the list of results
+     * @param ChildStackTestResultPass $stackTestResultPass Object to remove from the list of results
      *
      * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
@@ -808,10 +808,10 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the ""stack_test_result_pass table.
+     * Deletes all rows from the stack_test_result_pass table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -837,11 +837,11 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     /**
      * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                 if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                 rethrown wrapped into a PropelException.
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -873,9 +873,9 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     /**
      * Filter by the latest updated
      *
-     * @param      int $nbDays Maximum age of the latest update in days
+     * @param int $nbDays Maximum age of the latest update in days
      *
-     * @return     $this|ChildStackTestResultPassQuery The current query, for fluid interface
+     * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
@@ -883,21 +883,9 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     }
 
     /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     $this|ChildStackTestResultPassQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(StackTestResultPassTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
      * Order by update date desc
      *
-     * @return     $this|ChildStackTestResultPassQuery The current query, for fluid interface
+     * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
@@ -907,7 +895,7 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     /**
      * Order by update date asc
      *
-     * @return     $this|ChildStackTestResultPassQuery The current query, for fluid interface
+     * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
@@ -917,7 +905,7 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     /**
      * Order by create date desc
      *
-     * @return     $this|ChildStackTestResultPassQuery The current query, for fluid interface
+     * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
@@ -925,9 +913,21 @@ abstract class StackTestResultPassQuery extends ModelCriteria
     }
 
     /**
+     * Filter by the latest created
+     *
+     * @param int $nbDays Maximum age of in days
+     *
+     * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
+     */
+    public function recentlyCreated($nbDays = 7)
+    {
+        return $this->addUsingAlias(StackTestResultPassTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
      * Order by create date asc
      *
-     * @return     $this|ChildStackTestResultPassQuery The current query, for fluid interface
+     * @return $this|ChildStackTestResultPassQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {

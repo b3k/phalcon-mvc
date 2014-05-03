@@ -1,10 +1,11 @@
 <?php
 
-use Base\SubscriptionPlanQuery as BaseSubscriptionPlanQuery;
+namespace app\Model;
 
+use App\Model\Base\SubscriptionPlanQuery as BaseSubscriptionPlanQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the '""subscription_plan' table.
+ * Skeleton subclass for performing query and update operations on the 'subscription_plan' table.
  *
  *
  *

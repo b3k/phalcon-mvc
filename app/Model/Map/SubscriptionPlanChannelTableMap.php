@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \SubscriptionPlanChannel;
-use \SubscriptionPlanChannelQuery;
+use App\Model\SubscriptionPlanChannel;
+use App\Model\SubscriptionPlanChannelQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""subscription_plan_channel' table.
+ * This class defines the structure of the 'subscription_plan_channel' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class SubscriptionPlanChannelTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.SubscriptionPlanChannelTableMap';
+    const CLASS_NAME = 'App.Model.Map.SubscriptionPlanChannelTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class SubscriptionPlanChannelTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""subscription_plan_channel';
+    const TABLE_NAME = 'subscription_plan_channel';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\SubscriptionPlanChannel';
+    const OM_CLASS = '\\App\\Model\\SubscriptionPlanChannel';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'SubscriptionPlanChannel';
+    const CLASS_DEFAULT = 'App.Model.SubscriptionPlanChannel';
 
     /**
      * The total number of columns
@@ -74,12 +73,12 @@ class SubscriptionPlanChannelTableMap extends TableMap
     /**
      * the column name for the ID_SUBSCRIPTION_PLAN field
      */
-    const COL_ID_SUBSCRIPTION_PLAN = '""subscription_plan_channel.ID_SUBSCRIPTION_PLAN';
+    const COL_ID_SUBSCRIPTION_PLAN = 'subscription_plan_channel.ID_SUBSCRIPTION_PLAN';
 
     /**
      * the column name for the ID_CHANNEL field
      */
-    const COL_ID_CHANNEL = '""subscription_plan_channel.ID_CHANNEL';
+    const COL_ID_CHANNEL = 'subscription_plan_channel.ID_CHANNEL';
 
     /**
      * The default string format for model objects of the related table
@@ -126,14 +125,14 @@ class SubscriptionPlanChannelTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""subscription_plan_channel');
+        $this->setName('subscription_plan_channel');
         $this->setPhpName('SubscriptionPlanChannel');
-        $this->setClassName('\\SubscriptionPlanChannel');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\SubscriptionPlanChannel');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addForeignPrimaryKey('ID_SUBSCRIPTION_PLAN', 'IdSubscriptionPlan', 'INTEGER' , '""subscription_plan', 'ID_SUBSCRIPTION_PLAN', true, 10, null);
-        $this->addForeignPrimaryKey('ID_CHANNEL', 'IdChannel', 'INTEGER' , '""channel', 'ID_CHANNEL', true, 10, null);
+        $this->addForeignPrimaryKey('ID_SUBSCRIPTION_PLAN', 'IdSubscriptionPlan', 'INTEGER' , 'subscription_plan', 'ID_SUBSCRIPTION_PLAN', true, 10, null);
+        $this->addForeignPrimaryKey('ID_CHANNEL', 'IdChannel', 'INTEGER' , 'channel', 'ID_CHANNEL', true, 10, null);
     } // initialize()
 
     /**
@@ -141,8 +140,8 @@ class SubscriptionPlanChannelTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Channel', '\\Channel', RelationMap::MANY_TO_ONE, array('id_channel' => 'id_channel', ), 'CASCADE', null);
-        $this->addRelation('SubscriptionPlan', '\\SubscriptionPlan', RelationMap::MANY_TO_ONE, array('id_subscription_plan' => 'id_subscription_plan', ), 'CASCADE', null);
+        $this->addRelation('Channel', '\\App\\Model\\Channel', RelationMap::MANY_TO_ONE, array('id_channel' => 'id_channel', ), 'CASCADE', null);
+        $this->addRelation('SubscriptionPlan', '\\App\\Model\\SubscriptionPlan', RelationMap::MANY_TO_ONE, array('id_subscription_plan' => 'id_subscription_plan', ), 'CASCADE', null);
     } // buildRelations()
 
     /**
@@ -153,8 +152,8 @@ class SubscriptionPlanChannelTableMap extends TableMap
      * to the cache in order to ensure that the same objects are always returned by find*()
      * and findPk*() calls.
      *
-     * @param \SubscriptionPlanChannel $obj A \SubscriptionPlanChannel object.
-     * @param string $key             (optional) key to use for instance map (for performance boost if key was already calculated externally).
+     * @param \App\Model\SubscriptionPlanChannel $obj A \App\Model\SubscriptionPlanChannel object.
+     * @param string                             $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
     {
@@ -174,12 +173,12 @@ class SubscriptionPlanChannelTableMap extends TableMap
      * methods in your stub classes -- you may need to explicitly remove objects
      * from the cache in order to prevent returning objects that no longer exist.
      *
-     * @param mixed $value A \SubscriptionPlanChannel object or a primary key value.
+     * @param mixed $value A \App\Model\SubscriptionPlanChannel object or a primary key value.
      */
     public static function removeInstanceFromPool($value)
     {
         if (Propel::isInstancePoolingEnabled() && null !== $value) {
-            if (is_object($value) && $value instanceof \SubscriptionPlanChannel) {
+            if (is_object($value) && $value instanceof \App\Model\SubscriptionPlanChannel) {
                 $key = serialize(array((string) $value->getIdSubscriptionPlan(), (string) $value->getIdChannel()));
 
             } elseif (is_array($value) && count($value) === 2) {
@@ -190,7 +189,7 @@ class SubscriptionPlanChannelTableMap extends TableMap
 
                 return;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \SubscriptionPlanChannel object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \App\Model\SubscriptionPlanChannel object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
                 throw $e;
             }
 
@@ -207,7 +206,7 @@ class SubscriptionPlanChannelTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -229,7 +228,7 @@ class SubscriptionPlanChannelTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -259,8 +258,8 @@ class SubscriptionPlanChannelTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -277,8 +276,8 @@ class SubscriptionPlanChannelTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (SubscriptionPlanChannel object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (SubscriptionPlanChannel object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -303,10 +302,10 @@ class SubscriptionPlanChannelTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -340,10 +339,10 @@ class SubscriptionPlanChannelTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -361,7 +360,7 @@ class SubscriptionPlanChannelTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -382,13 +381,13 @@ class SubscriptionPlanChannelTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a SubscriptionPlanChannel or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or SubscriptionPlanChannel object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or SubscriptionPlanChannel object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -399,7 +398,7 @@ class SubscriptionPlanChannelTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \SubscriptionPlanChannel) { // it's a model object
+        } elseif ($values instanceof \App\Model\SubscriptionPlanChannel) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -431,10 +430,10 @@ class SubscriptionPlanChannelTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""subscription_plan_channel table.
+     * Deletes all rows from the subscription_plan_channel table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -444,11 +443,11 @@ class SubscriptionPlanChannelTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a SubscriptionPlanChannel or Criteria object.
      *
-     * @param mixed               $criteria Criteria or SubscriptionPlanChannel object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or SubscriptionPlanChannel object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -461,7 +460,6 @@ class SubscriptionPlanChannelTableMap extends TableMap
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from SubscriptionPlanChannel object
         }
-
 
         // Set the correct dbName
         $query = SubscriptionPlanChannelQuery::create()->mergeWith($criteria);

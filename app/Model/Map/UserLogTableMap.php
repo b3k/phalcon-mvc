@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \UserLog;
-use \UserLogQuery;
+use App\Model\UserLog;
+use App\Model\UserLogQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""user_log' table.
+ * This class defines the structure of the 'user_log' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class UserLogTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.UserLogTableMap';
+    const CLASS_NAME = 'App.Model.Map.UserLogTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class UserLogTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""user_log';
+    const TABLE_NAME = 'user_log';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\UserLog';
+    const OM_CLASS = '\\App\\Model\\UserLog';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'UserLog';
+    const CLASS_DEFAULT = 'App.Model.UserLog';
 
     /**
      * The total number of columns
@@ -74,32 +73,32 @@ class UserLogTableMap extends TableMap
     /**
      * the column name for the ID_USER_LOG field
      */
-    const COL_ID_USER_LOG = '""user_log.ID_USER_LOG';
+    const COL_ID_USER_LOG = 'user_log.ID_USER_LOG';
 
     /**
      * the column name for the USER_ID field
      */
-    const COL_USER_ID = '""user_log.USER_ID';
+    const COL_USER_ID = 'user_log.USER_ID';
 
     /**
      * the column name for the USER_LOG_ACTION field
      */
-    const COL_USER_LOG_ACTION = '""user_log.USER_LOG_ACTION';
+    const COL_USER_LOG_ACTION = 'user_log.USER_LOG_ACTION';
 
     /**
      * the column name for the USER_LOG_PARAMS field
      */
-    const COL_USER_LOG_PARAMS = '""user_log.USER_LOG_PARAMS';
+    const COL_USER_LOG_PARAMS = 'user_log.USER_LOG_PARAMS';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = '""user_log.CREATED_AT';
+    const COL_CREATED_AT = 'user_log.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = '""user_log.UPDATED_AT';
+    const COL_UPDATED_AT = 'user_log.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -146,10 +145,10 @@ class UserLogTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""user_log');
+        $this->setName('user_log');
         $this->setPhpName('UserLog');
-        $this->setClassName('\\UserLog');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\UserLog');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_USER_LOG', 'IdUserLog', 'INTEGER', true, 10, null);
@@ -176,7 +175,7 @@ class UserLogTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
         );
     } // getBehaviors()
 
@@ -189,7 +188,7 @@ class UserLogTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -211,7 +210,7 @@ class UserLogTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -232,8 +231,8 @@ class UserLogTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -250,8 +249,8 @@ class UserLogTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (UserLog object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (UserLog object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -276,10 +275,10 @@ class UserLogTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -313,10 +312,10 @@ class UserLogTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -342,7 +341,7 @@ class UserLogTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -363,13 +362,13 @@ class UserLogTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a UserLog or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or UserLog object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or UserLog object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -380,7 +379,7 @@ class UserLogTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \UserLog) { // it's a model object
+        } elseif ($values instanceof \App\Model\UserLog) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -402,10 +401,10 @@ class UserLogTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""user_log table.
+     * Deletes all rows from the user_log table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -415,11 +414,11 @@ class UserLogTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a UserLog or Criteria object.
      *
-     * @param mixed               $criteria Criteria or UserLog object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or UserLog object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -436,7 +435,6 @@ class UserLogTableMap extends TableMap
         if ($criteria->containsKey(UserLogTableMap::COL_ID_USER_LOG) && $criteria->keyContainsValue(UserLogTableMap::COL_ID_USER_LOG) ) {
             throw new PropelException('Cannot insert a value for auto-increment primary key ('.UserLogTableMap::COL_ID_USER_LOG.')');
         }
-
 
         // Set the correct dbName
         $query = UserLogQuery::create()->mergeWith($criteria);

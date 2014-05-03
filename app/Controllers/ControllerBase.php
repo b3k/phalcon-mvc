@@ -26,6 +26,7 @@ class ControllerBase extends Controller
                     'controller' => 'index',
                     'action' => 'index'
                 ));
+
                 return false;
             }
 

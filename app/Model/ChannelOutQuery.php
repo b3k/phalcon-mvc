@@ -1,10 +1,11 @@
 <?php
 
-use Base\ChannelOutQuery as BaseChannelOutQuery;
+namespace app\Model;
 
+use App\Model\Base\ChannelOutQuery as BaseChannelOutQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the '""channel_out' table.
+ * Skeleton subclass for performing query and update operations on the 'channel_out' table.
  *
  *
  *

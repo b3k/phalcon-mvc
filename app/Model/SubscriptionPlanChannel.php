@@ -1,6 +1,8 @@
 <?php
 
-use Base\SubscriptionPlanChannel as BaseSubscriptionPlanChannel;
+namespace app\Model;
+
+use App\Model\Base\SubscriptionPlanChannel as BaseSubscriptionPlanChannel;
 
 class SubscriptionPlanChannel extends BaseSubscriptionPlanChannel
 {

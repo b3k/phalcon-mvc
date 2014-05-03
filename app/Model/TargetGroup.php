@@ -1,6 +1,8 @@
 <?php
 
-use Base\TargetGroup as BaseTargetGroup;
+namespace app\Model;
+
+use App\Model\Base\TargetGroup as BaseTargetGroup;
 
 class TargetGroup extends BaseTargetGroup
 {

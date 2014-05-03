@@ -1,25 +1,25 @@
 <?php
 
-namespace Base;
+namespace app\Model\Base;
 
-use \ChannelOut as ChildChannelOut;
-use \ChannelOutQuery as ChildChannelOutQuery;
-use \StackTestResultFail as ChildStackTestResultFail;
-use \StackTestResultFailQuery as ChildStackTestResultFailQuery;
-use \StackTestResultPass as ChildStackTestResultPass;
-use \StackTestResultPassQuery as ChildStackTestResultPassQuery;
-use \Target as ChildTarget;
-use \TargetGroup as ChildTargetGroup;
-use \TargetGroupQuery as ChildTargetGroupQuery;
-use \TargetQuery as ChildTargetQuery;
-use \TargetType as ChildTargetType;
-use \TargetTypeQuery as ChildTargetTypeQuery;
-use \Trigger as ChildTrigger;
-use \TriggerQuery as ChildTriggerQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
-use Map\TargetTableMap;
+use App\Model\ChannelOut as ChildChannelOut;
+use App\Model\ChannelOutQuery as ChildChannelOutQuery;
+use App\Model\StackTestResultFail as ChildStackTestResultFail;
+use App\Model\StackTestResultFailQuery as ChildStackTestResultFailQuery;
+use App\Model\StackTestResultPass as ChildStackTestResultPass;
+use App\Model\StackTestResultPassQuery as ChildStackTestResultPassQuery;
+use App\Model\Target as ChildTarget;
+use App\Model\TargetGroup as ChildTargetGroup;
+use App\Model\TargetGroupQuery as ChildTargetGroupQuery;
+use App\Model\TargetQuery as ChildTargetQuery;
+use App\Model\TargetType as ChildTargetType;
+use App\Model\TargetTypeQuery as ChildTargetTypeQuery;
+use App\Model\Trigger as ChildTrigger;
+use App\Model\TriggerQuery as ChildTriggerQuery;
+use App\Model\Map\TargetTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -39,8 +39,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\TargetTableMap';
-
+    const TABLE_MAP = '\\App\\Model\\Map\\TargetTableMap';
 
     /**
      * attribute to determine if this object has previously been saved.
@@ -195,7 +194,7 @@ abstract class Target implements ActiveRecordInterface
     protected $triggersScheduledForDeletion = null;
 
     /**
-     * Initializes internal state of Base\Target object.
+     * Initializes internal state of App\Model\Base\Target object.
      */
     public function __construct()
     {
@@ -307,7 +306,7 @@ abstract class Target implements ActiveRecordInterface
             return true;
         }
 
-        if (null === $this->getPrimaryKey() || null === $obj->getPrimaryKey())  {
+        if (null === $this->getPrimaryKey() || null === $obj->getPrimaryKey()) {
             return false;
         }
 
@@ -414,7 +413,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Get the [id_target] column value.
      *
-     * @return   int
+     * @return int
      */
     public function getIdTarget()
     {
@@ -424,7 +423,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Get the [target_type_id] column value.
      *
-     * @return   int
+     * @return int
      */
     public function getTargetTypeId()
     {
@@ -434,7 +433,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Get the [target_group_id] column value.
      *
-     * @return   int
+     * @return int
      */
     public function getTargetGroupId()
     {
@@ -444,7 +443,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Get the [target_target] column value.
      *
-     * @return   string
+     * @return string
      */
     public function getTargetTarget()
     {
@@ -455,8 +454,8 @@ abstract class Target implements ActiveRecordInterface
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *                       If format is NULL, then the raw \DateTime object will be returned.
      *
      * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
@@ -475,8 +474,8 @@ abstract class Target implements ActiveRecordInterface
      * Get the [optionally formatted] temporal [updated_at] column value.
      *
      *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *                       If format is NULL, then the raw \DateTime object will be returned.
      *
      * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
@@ -490,134 +489,6 @@ abstract class Target implements ActiveRecordInterface
             return $this->updated_at instanceof \DateTime ? $this->updated_at->format($format) : null;
         }
     }
-
-    /**
-     * Set the value of [id_target] column.
-     *
-     * @param      int $v new value
-     * @return     $this|\Target The current object (for fluent API support)
-     */
-    public function setIdTarget($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_target !== $v) {
-            $this->id_target = $v;
-            $this->modifiedColumns[TargetTableMap::COL_ID_TARGET] = true;
-        }
-
-        return $this;
-    } // setIdTarget()
-
-    /**
-     * Set the value of [target_type_id] column.
-     *
-     * @param      int $v new value
-     * @return     $this|\Target The current object (for fluent API support)
-     */
-    public function setTargetTypeId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->target_type_id !== $v) {
-            $this->target_type_id = $v;
-            $this->modifiedColumns[TargetTableMap::COL_TARGET_TYPE_ID] = true;
-        }
-
-        if ($this->aTargetType !== null && $this->aTargetType->getIdTargetType() !== $v) {
-            $this->aTargetType = null;
-        }
-
-        return $this;
-    } // setTargetTypeId()
-
-    /**
-     * Set the value of [target_group_id] column.
-     *
-     * @param      int $v new value
-     * @return     $this|\Target The current object (for fluent API support)
-     */
-    public function setTargetGroupId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->target_group_id !== $v) {
-            $this->target_group_id = $v;
-            $this->modifiedColumns[TargetTableMap::COL_TARGET_GROUP_ID] = true;
-        }
-
-        if ($this->aTargetGroup !== null && $this->aTargetGroup->getIdTargetGroup() !== $v) {
-            $this->aTargetGroup = null;
-        }
-
-        return $this;
-    } // setTargetGroupId()
-
-    /**
-     * Set the value of [target_target] column.
-     *
-     * @param      string $v new value
-     * @return     $this|\Target The current object (for fluent API support)
-     */
-    public function setTargetTarget($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->target_target !== $v) {
-            $this->target_target = $v;
-            $this->modifiedColumns[TargetTableMap::COL_TARGET_TARGET] = true;
-        }
-
-        return $this;
-    } // setTargetTarget()
-
-    /**
-     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param      mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return     $this|\Target The current object (for fluent API support)
-     */
-    public function setCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->created_at !== null || $dt !== null) {
-            if ($dt !== $this->created_at) {
-                $this->created_at = $dt;
-                $this->modifiedColumns[TargetTableMap::COL_CREATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setCreatedAt()
-
-    /**
-     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
-     *
-     * @param      mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return     $this|\Target The current object (for fluent API support)
-     */
-    public function setUpdatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->updated_at !== null || $dt !== null) {
-            if ($dt !== $this->updated_at) {
-                $this->updated_at = $dt;
-                $this->modifiedColumns[TargetTableMap::COL_UPDATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setUpdatedAt()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -689,7 +560,7 @@ abstract class Target implements ActiveRecordInterface
             return $startcol + 6; // 6 = TargetTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Target'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\App\\Model\\Target'), 0, $e);
         }
     }
 
@@ -717,14 +588,142 @@ abstract class Target implements ActiveRecordInterface
     } // ensureConsistency
 
     /**
+     * Set the value of [id_target] column.
+     *
+     * @param  int                     $v new value
+     * @return $this|\App\Model\Target The current object (for fluent API support)
+     */
+    public function setIdTarget($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id_target !== $v) {
+            $this->id_target = $v;
+            $this->modifiedColumns[TargetTableMap::COL_ID_TARGET] = true;
+        }
+
+        return $this;
+    } // setIdTarget()
+
+    /**
+     * Set the value of [target_type_id] column.
+     *
+     * @param  int                     $v new value
+     * @return $this|\App\Model\Target The current object (for fluent API support)
+     */
+    public function setTargetTypeId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->target_type_id !== $v) {
+            $this->target_type_id = $v;
+            $this->modifiedColumns[TargetTableMap::COL_TARGET_TYPE_ID] = true;
+        }
+
+        if ($this->aTargetType !== null && $this->aTargetType->getIdTargetType() !== $v) {
+            $this->aTargetType = null;
+        }
+
+        return $this;
+    } // setTargetTypeId()
+
+    /**
+     * Set the value of [target_group_id] column.
+     *
+     * @param  int                     $v new value
+     * @return $this|\App\Model\Target The current object (for fluent API support)
+     */
+    public function setTargetGroupId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->target_group_id !== $v) {
+            $this->target_group_id = $v;
+            $this->modifiedColumns[TargetTableMap::COL_TARGET_GROUP_ID] = true;
+        }
+
+        if ($this->aTargetGroup !== null && $this->aTargetGroup->getIdTargetGroup() !== $v) {
+            $this->aTargetGroup = null;
+        }
+
+        return $this;
+    } // setTargetGroupId()
+
+    /**
+     * Set the value of [target_target] column.
+     *
+     * @param  string                  $v new value
+     * @return $this|\App\Model\Target The current object (for fluent API support)
+     */
+    public function setTargetTarget($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->target_target !== $v) {
+            $this->target_target = $v;
+            $this->modifiedColumns[TargetTableMap::COL_TARGET_TARGET] = true;
+        }
+
+        return $this;
+    } // setTargetTarget()
+
+    /**
+     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed                   $v string, integer (timestamp), or \DateTime value.
+     *                                    Empty strings are treated as NULL.
+     * @return $this|\App\Model\Target The current object (for fluent API support)
+     */
+    public function setCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->created_at !== null || $dt !== null) {
+            if ($dt !== $this->created_at) {
+                $this->created_at = $dt;
+                $this->modifiedColumns[TargetTableMap::COL_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setCreatedAt()
+
+    /**
+     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed                   $v string, integer (timestamp), or \DateTime value.
+     *                                    Empty strings are treated as NULL.
+     * @return $this|\App\Model\Target The current object (for fluent API support)
+     */
+    public function setUpdatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->updated_at !== null || $dt !== null) {
+            if ($dt !== $this->updated_at) {
+                $this->updated_at = $dt;
+                $this->modifiedColumns[TargetTableMap::COL_UPDATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setUpdatedAt()
+
+    /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
      *
      * This will only work if the object has been saved and has a valid primary key set.
      *
-     * @param      boolean $deep (optional) Whether to also de-associated any related objects.
-     * @param      ConnectionInterface $con (optional) The ConnectionInterface connection to use.
+     * @param  boolean             $deep (optional) Whether to also de-associated any related objects.
+     * @param  ConnectionInterface $con  (optional) The ConnectionInterface connection to use.
      * @return void
-     * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
+     * @throws PropelException     - if this object is deleted, unsaved or doesn't have pk match in db
      */
     public function reload($deep = false, ConnectionInterface $con = null)
     {
@@ -773,7 +772,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Removes this object from datastore and sets delete attribute.
      *
-     * @param      ConnectionInterface $con
+     * @param  ConnectionInterface $con
      * @return void
      * @throws PropelException
      * @see Target::setDeleted()
@@ -809,8 +808,8 @@ abstract class Target implements ActiveRecordInterface
      * method.  This method wraps all precipitate database operations in a
      * single transaction.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @param  ConnectionInterface $con
+     * @return int                 The number of rows affected by this insert/update and any referring fk objects' save() operations.
      * @throws PropelException
      * @see doSave()
      */
@@ -830,6 +829,7 @@ abstract class Target implements ActiveRecordInterface
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // timestampable behavior
+
                 if (!$this->isColumnModified(TargetTableMap::COL_CREATED_AT)) {
                     $this->setCreatedAt(time());
                 }
@@ -866,8 +866,8 @@ abstract class Target implements ActiveRecordInterface
      * If the object is new, it inserts it; otherwise an update is performed.
      * All related objects are also updated in this method.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @param  ConnectionInterface $con
+     * @return int                 The number of rows affected by this insert/update and any referring fk objects' save() operations.
      * @throws PropelException
      * @see save()
      */
@@ -909,7 +909,7 @@ abstract class Target implements ActiveRecordInterface
 
             if ($this->channelOutsScheduledForDeletion !== null) {
                 if (!$this->channelOutsScheduledForDeletion->isEmpty()) {
-                    \ChannelOutQuery::create()
+                    \App\Model\ChannelOutQuery::create()
                         ->filterByPrimaryKeys($this->channelOutsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->channelOutsScheduledForDeletion = null;
@@ -926,7 +926,7 @@ abstract class Target implements ActiveRecordInterface
 
             if ($this->stackTestResultFailsRelatedByTargetIdScheduledForDeletion !== null) {
                 if (!$this->stackTestResultFailsRelatedByTargetIdScheduledForDeletion->isEmpty()) {
-                    \StackTestResultFailQuery::create()
+                    \App\Model\StackTestResultFailQuery::create()
                         ->filterByPrimaryKeys($this->stackTestResultFailsRelatedByTargetIdScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->stackTestResultFailsRelatedByTargetIdScheduledForDeletion = null;
@@ -943,7 +943,7 @@ abstract class Target implements ActiveRecordInterface
 
             if ($this->stackTestResultFailsRelatedByTargetGroupIdScheduledForDeletion !== null) {
                 if (!$this->stackTestResultFailsRelatedByTargetGroupIdScheduledForDeletion->isEmpty()) {
-                    \StackTestResultFailQuery::create()
+                    \App\Model\StackTestResultFailQuery::create()
                         ->filterByPrimaryKeys($this->stackTestResultFailsRelatedByTargetGroupIdScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->stackTestResultFailsRelatedByTargetGroupIdScheduledForDeletion = null;
@@ -960,7 +960,7 @@ abstract class Target implements ActiveRecordInterface
 
             if ($this->stackTestResultFailsRelatedByTargetTypeIdScheduledForDeletion !== null) {
                 if (!$this->stackTestResultFailsRelatedByTargetTypeIdScheduledForDeletion->isEmpty()) {
-                    \StackTestResultFailQuery::create()
+                    \App\Model\StackTestResultFailQuery::create()
                         ->filterByPrimaryKeys($this->stackTestResultFailsRelatedByTargetTypeIdScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->stackTestResultFailsRelatedByTargetTypeIdScheduledForDeletion = null;
@@ -977,7 +977,7 @@ abstract class Target implements ActiveRecordInterface
 
             if ($this->stackTestResultPassesScheduledForDeletion !== null) {
                 if (!$this->stackTestResultPassesScheduledForDeletion->isEmpty()) {
-                    \StackTestResultPassQuery::create()
+                    \App\Model\StackTestResultPassQuery::create()
                         ->filterByPrimaryKeys($this->stackTestResultPassesScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->stackTestResultPassesScheduledForDeletion = null;
@@ -994,7 +994,7 @@ abstract class Target implements ActiveRecordInterface
 
             if ($this->triggersScheduledForDeletion !== null) {
                 if (!$this->triggersScheduledForDeletion->isEmpty()) {
-                    \TriggerQuery::create()
+                    \App\Model\TriggerQuery::create()
                         ->filterByPrimaryKeys($this->triggersScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->triggersScheduledForDeletion = null;
@@ -1019,7 +1019,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Insert the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
      * @throws PropelException
      * @see doSave()
@@ -1055,7 +1055,7 @@ abstract class Target implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO ""target (%s) VALUES (%s)',
+            'INSERT INTO target (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1103,7 +1103,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Update the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
      * @return Integer Number of updated rows
      * @see doSave()
@@ -1119,12 +1119,12 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Retrieves a field from the object by name passed in as a string.
      *
-     * @param      string $name name
-     * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                     Defaults to TableMap::TYPE_PHPNAME.
-     * @return mixed Value of field.
+     * @param  string $name name
+     * @param  string $type The type of fieldname the $name is of:
+     *                      one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                      TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                      Defaults to TableMap::TYPE_PHPNAME.
+     * @return mixed  Value of field.
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
@@ -1138,7 +1138,7 @@ abstract class Target implements ActiveRecordInterface
      * Retrieves a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param      int $pos position in xml schema
+     * @param  int   $pos position in xml schema
      * @return mixed Value of field at $pos
      */
     public function getByPosition($pos)
@@ -1174,12 +1174,12 @@ abstract class Target implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
-     *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                    Defaults to TableMap::TYPE_PHPNAME.
-     * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
-     * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
-     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
+     * @param string  $keyType                (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME,
+     *                                        TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                                        Defaults to TableMap::TYPE_PHPNAME.
+     * @param boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+     * @param array   $alreadyDumpedObjects   List of objects to skip to avoid recursion
+     * @param boolean $includeForeignObjects  (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
@@ -1236,13 +1236,13 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Sets a field from the object by name passed in as a string.
      *
-     * @param      string $name
-     * @param      mixed  $value field value
-     * @param      string $type The type of fieldname the $name is of:
-     *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
-     *                     Defaults to TableMap::TYPE_PHPNAME.
-     * @return     $this|\Target
+     * @param  string                  $name
+     * @param  mixed                   $value field value
+     * @param  string                  $type  The type of fieldname the $name is of:
+     *                                        one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
+     *                                        TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
+     *                                        Defaults to TableMap::TYPE_PHPNAME.
+     * @return $this|\App\Model\Target
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
@@ -1255,9 +1255,9 @@ abstract class Target implements ActiveRecordInterface
      * Sets a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param      int $pos position in xml schema
-     * @param      mixed $value field value
-     * @return     $this|\Target
+     * @param  int                     $pos   position in xml schema
+     * @param  mixed                   $value field value
+     * @return $this|\App\Model\Target
      */
     public function setByPosition($pos, $value)
     {
@@ -1298,8 +1298,8 @@ abstract class Target implements ActiveRecordInterface
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
-     * @param      array  $arr     An array to populate the object from.
-     * @param      string $keyType The type of keys the array uses.
+     * @param  array  $arr     An array to populate the object from.
+     * @param  string $keyType The type of keys the array uses.
      * @return void
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
@@ -1333,11 +1333,11 @@ abstract class Target implements ActiveRecordInterface
      * $book->importFrom('JSON', '{"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
-     * @param mixed $parser A AbstractParser instance,
+     * @param mixed  $parser A AbstractParser instance,
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
-     * @param string $data The source data to import from
+     * @param string $data   The source data to import from
      *
-     * @return $this|\Target The current object, for fluid interface
+     * @return $this|\App\Model\Target The current object, for fluid interface
      */
     public function importFrom($parser, $data)
     {
@@ -1414,7 +1414,7 @@ abstract class Target implements ActiveRecordInterface
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
-        } else if ($validPrimaryKeyFKs) {
+        } elseif ($validPrimaryKeyFKs) {
             return crc32(json_encode($primaryKeyFKs, JSON_UNESCAPED_UNICODE));
         }
 
@@ -1423,7 +1423,7 @@ abstract class Target implements ActiveRecordInterface
 
     /**
      * Returns the primary key for this object (row).
-     * @return   int
+     * @return int
      */
     public function getPrimaryKey()
     {
@@ -1433,7 +1433,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Generic method to set the primary key (id_target column).
      *
-     * @param       int $key Primary key.
+     * @param  int  $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
@@ -1456,9 +1456,9 @@ abstract class Target implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Target (or compatible) type.
-     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
+     * @param  object          $copyObj  An object of \App\Model\Target (or compatible) type.
+     * @param  boolean         $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @param  boolean         $makeNew  Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
@@ -1526,8 +1526,8 @@ abstract class Target implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return                 \Target Clone of current object.
+     * @param  boolean           $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @return \App\Model\Target Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1543,8 +1543,8 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Declares an association between this object and a ChildTargetType object.
      *
-     * @param                  ChildTargetType $v
-     * @return                 $this|\Target The current object (for fluent API support)
+     * @param  ChildTargetType         $v
+     * @return $this|\App\Model\Target The current object (for fluent API support)
      * @throws PropelException
      */
     public function setTargetType(ChildTargetType $v = null)
@@ -1563,7 +1563,6 @@ abstract class Target implements ActiveRecordInterface
             $v->addTarget($this);
         }
 
-
         return $this;
     }
 
@@ -1571,8 +1570,8 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Get the associated ChildTargetType object
      *
-     * @param      ConnectionInterface $con Optional Connection object.
-     * @return                 ChildTargetType The associated ChildTargetType object.
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildTargetType     The associated ChildTargetType object.
      * @throws PropelException
      */
     public function getTargetType(ConnectionInterface $con = null)
@@ -1594,8 +1593,8 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Declares an association between this object and a ChildTargetGroup object.
      *
-     * @param                  ChildTargetGroup $v
-     * @return                 $this|\Target The current object (for fluent API support)
+     * @param  ChildTargetGroup        $v
+     * @return $this|\App\Model\Target The current object (for fluent API support)
      * @throws PropelException
      */
     public function setTargetGroup(ChildTargetGroup $v = null)
@@ -1614,7 +1613,6 @@ abstract class Target implements ActiveRecordInterface
             $v->addTarget($this);
         }
 
-
         return $this;
     }
 
@@ -1622,8 +1620,8 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Get the associated ChildTargetGroup object
      *
-     * @param      ConnectionInterface $con Optional Connection object.
-     * @return                 ChildTargetGroup The associated ChildTargetGroup object.
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildTargetGroup    The associated ChildTargetGroup object.
      * @throws PropelException
      */
     public function getTargetGroup(ConnectionInterface $con = null)
@@ -1648,7 +1646,7 @@ abstract class Target implements ActiveRecordInterface
      * Avoids crafting an 'init[$relationName]s' method name
      * that wouldn't work when StandardEnglishPluralizer is used.
      *
-     * @param      string $relationName The name of the relation to initialize
+     * @param  string $relationName The name of the relation to initialize
      * @return void
      */
     public function initRelation($relationName)
@@ -1702,8 +1700,8 @@ abstract class Target implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                  the collection even if it is not empty
      *
      * @return void
      */
@@ -1713,7 +1711,7 @@ abstract class Target implements ActiveRecordInterface
             return;
         }
         $this->collChannelOuts = new ObjectCollection();
-        $this->collChannelOuts->setModel('\ChannelOut');
+        $this->collChannelOuts->setModel('\App\Model\ChannelOut');
     }
 
     /**
@@ -1725,8 +1723,8 @@ abstract class Target implements ActiveRecordInterface
      * If this ChildTarget is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param  Criteria                           $criteria optional Criteria object to narrow the query
+     * @param  ConnectionInterface                $con      optional connection object
      * @return ObjectCollection|ChildChannelOut[] List of ChildChannelOut objects
      * @throws PropelException
      */
@@ -1755,8 +1753,6 @@ abstract class Target implements ActiveRecordInterface
                         $this->collChannelOutsPartial = true;
                     }
 
-                    $collChannelOuts->rewind();
-
                     return $collChannelOuts;
                 }
 
@@ -1782,15 +1778,14 @@ abstract class Target implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $channelOuts A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return     $this|ChildTarget The current object (for fluent API support)
+     * @param  Collection          $channelOuts A Propel collection.
+     * @param  ConnectionInterface $con         Optional connection object
+     * @return $this|ChildTarget   The current object (for fluent API support)
      */
     public function setChannelOuts(Collection $channelOuts, ConnectionInterface $con = null)
     {
         /** @var ChildChannelOut[] $channelOutsToDelete */
         $channelOutsToDelete = $this->getChannelOuts(new Criteria(), $con)->diff($channelOuts);
-
 
         $this->channelOutsScheduledForDeletion = $channelOutsToDelete;
 
@@ -1812,10 +1807,10 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Returns the number of related ChannelOut objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related ChannelOut objects.
+     * @param  Criteria            $criteria
+     * @param  boolean             $distinct
+     * @param  ConnectionInterface $con
+     * @return int                 Count of related ChannelOut objects.
      * @throws PropelException
      */
     public function countChannelOuts(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
@@ -1847,8 +1842,8 @@ abstract class Target implements ActiveRecordInterface
      * Method called to associate a ChildChannelOut object to this object
      * through the ChildChannelOut foreign key attribute.
      *
-     * @param    ChildChannelOut $l ChildChannelOut
-     * @return   $this|\Target The current object (for fluent API support)
+     * @param  ChildChannelOut         $l ChildChannelOut
+     * @return $this|\App\Model\Target The current object (for fluent API support)
      */
     public function addChannelOut(ChildChannelOut $l)
     {
@@ -1874,7 +1869,7 @@ abstract class Target implements ActiveRecordInterface
     }
 
     /**
-     * @param  ChildChannelOut $channelOut The ChildChannelOut object to remove.
+     * @param  ChildChannelOut   $channelOut The ChildChannelOut object to remove.
      * @return $this|ChildTarget The current object (for fluent API support)
      */
     public function removeChannelOut(ChildChannelOut $channelOut)
@@ -1893,7 +1888,6 @@ abstract class Target implements ActiveRecordInterface
         return $this;
     }
 
-
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
@@ -1905,9 +1899,9 @@ abstract class Target implements ActiveRecordInterface
      * api reasonable.  You can provide public methods for those you
      * actually need in Target.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @param  Criteria                           $criteria     optional Criteria object to narrow the query
+     * @param  ConnectionInterface                $con          optional connection object
+     * @param  string                             $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildChannelOut[] List of ChildChannelOut objects
      */
     public function getChannelOutsJoinChannel(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
@@ -1947,8 +1941,8 @@ abstract class Target implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                  the collection even if it is not empty
      *
      * @return void
      */
@@ -1958,7 +1952,7 @@ abstract class Target implements ActiveRecordInterface
             return;
         }
         $this->collStackTestResultFailsRelatedByTargetId = new ObjectCollection();
-        $this->collStackTestResultFailsRelatedByTargetId->setModel('\StackTestResultFail');
+        $this->collStackTestResultFailsRelatedByTargetId->setModel('\App\Model\StackTestResultFail');
     }
 
     /**
@@ -1970,8 +1964,8 @@ abstract class Target implements ActiveRecordInterface
      * If this ChildTarget is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param  Criteria                                    $criteria optional Criteria object to narrow the query
+     * @param  ConnectionInterface                         $con      optional connection object
      * @return ObjectCollection|ChildStackTestResultFail[] List of ChildStackTestResultFail objects
      * @throws PropelException
      */
@@ -2000,8 +1994,6 @@ abstract class Target implements ActiveRecordInterface
                         $this->collStackTestResultFailsRelatedByTargetIdPartial = true;
                     }
 
-                    $collStackTestResultFailsRelatedByTargetId->rewind();
-
                     return $collStackTestResultFailsRelatedByTargetId;
                 }
 
@@ -2027,15 +2019,14 @@ abstract class Target implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $stackTestResultFailsRelatedByTargetId A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return     $this|ChildTarget The current object (for fluent API support)
+     * @param  Collection          $stackTestResultFailsRelatedByTargetId A Propel collection.
+     * @param  ConnectionInterface $con                                   Optional connection object
+     * @return $this|ChildTarget   The current object (for fluent API support)
      */
     public function setStackTestResultFailsRelatedByTargetId(Collection $stackTestResultFailsRelatedByTargetId, ConnectionInterface $con = null)
     {
         /** @var ChildStackTestResultFail[] $stackTestResultFailsRelatedByTargetIdToDelete */
         $stackTestResultFailsRelatedByTargetIdToDelete = $this->getStackTestResultFailsRelatedByTargetId(new Criteria(), $con)->diff($stackTestResultFailsRelatedByTargetId);
-
 
         $this->stackTestResultFailsRelatedByTargetIdScheduledForDeletion = $stackTestResultFailsRelatedByTargetIdToDelete;
 
@@ -2057,10 +2048,10 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Returns the number of related StackTestResultFail objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related StackTestResultFail objects.
+     * @param  Criteria            $criteria
+     * @param  boolean             $distinct
+     * @param  ConnectionInterface $con
+     * @return int                 Count of related StackTestResultFail objects.
      * @throws PropelException
      */
     public function countStackTestResultFailsRelatedByTargetId(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
@@ -2092,8 +2083,8 @@ abstract class Target implements ActiveRecordInterface
      * Method called to associate a ChildStackTestResultFail object to this object
      * through the ChildStackTestResultFail foreign key attribute.
      *
-     * @param    ChildStackTestResultFail $l ChildStackTestResultFail
-     * @return   $this|\Target The current object (for fluent API support)
+     * @param  ChildStackTestResultFail $l ChildStackTestResultFail
+     * @return $this|\App\Model\Target  The current object (for fluent API support)
      */
     public function addStackTestResultFailRelatedByTargetId(ChildStackTestResultFail $l)
     {
@@ -2120,7 +2111,7 @@ abstract class Target implements ActiveRecordInterface
 
     /**
      * @param  ChildStackTestResultFail $stackTestResultFailRelatedByTargetId The ChildStackTestResultFail object to remove.
-     * @return $this|ChildTarget The current object (for fluent API support)
+     * @return $this|ChildTarget        The current object (for fluent API support)
      */
     public function removeStackTestResultFailRelatedByTargetId(ChildStackTestResultFail $stackTestResultFailRelatedByTargetId)
     {
@@ -2167,8 +2158,8 @@ abstract class Target implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                  the collection even if it is not empty
      *
      * @return void
      */
@@ -2178,7 +2169,7 @@ abstract class Target implements ActiveRecordInterface
             return;
         }
         $this->collStackTestResultFailsRelatedByTargetGroupId = new ObjectCollection();
-        $this->collStackTestResultFailsRelatedByTargetGroupId->setModel('\StackTestResultFail');
+        $this->collStackTestResultFailsRelatedByTargetGroupId->setModel('\App\Model\StackTestResultFail');
     }
 
     /**
@@ -2190,8 +2181,8 @@ abstract class Target implements ActiveRecordInterface
      * If this ChildTarget is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param  Criteria                                    $criteria optional Criteria object to narrow the query
+     * @param  ConnectionInterface                         $con      optional connection object
      * @return ObjectCollection|ChildStackTestResultFail[] List of ChildStackTestResultFail objects
      * @throws PropelException
      */
@@ -2220,8 +2211,6 @@ abstract class Target implements ActiveRecordInterface
                         $this->collStackTestResultFailsRelatedByTargetGroupIdPartial = true;
                     }
 
-                    $collStackTestResultFailsRelatedByTargetGroupId->rewind();
-
                     return $collStackTestResultFailsRelatedByTargetGroupId;
                 }
 
@@ -2247,15 +2236,14 @@ abstract class Target implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $stackTestResultFailsRelatedByTargetGroupId A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return     $this|ChildTarget The current object (for fluent API support)
+     * @param  Collection          $stackTestResultFailsRelatedByTargetGroupId A Propel collection.
+     * @param  ConnectionInterface $con                                        Optional connection object
+     * @return $this|ChildTarget   The current object (for fluent API support)
      */
     public function setStackTestResultFailsRelatedByTargetGroupId(Collection $stackTestResultFailsRelatedByTargetGroupId, ConnectionInterface $con = null)
     {
         /** @var ChildStackTestResultFail[] $stackTestResultFailsRelatedByTargetGroupIdToDelete */
         $stackTestResultFailsRelatedByTargetGroupIdToDelete = $this->getStackTestResultFailsRelatedByTargetGroupId(new Criteria(), $con)->diff($stackTestResultFailsRelatedByTargetGroupId);
-
 
         $this->stackTestResultFailsRelatedByTargetGroupIdScheduledForDeletion = $stackTestResultFailsRelatedByTargetGroupIdToDelete;
 
@@ -2277,10 +2265,10 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Returns the number of related StackTestResultFail objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related StackTestResultFail objects.
+     * @param  Criteria            $criteria
+     * @param  boolean             $distinct
+     * @param  ConnectionInterface $con
+     * @return int                 Count of related StackTestResultFail objects.
      * @throws PropelException
      */
     public function countStackTestResultFailsRelatedByTargetGroupId(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
@@ -2312,8 +2300,8 @@ abstract class Target implements ActiveRecordInterface
      * Method called to associate a ChildStackTestResultFail object to this object
      * through the ChildStackTestResultFail foreign key attribute.
      *
-     * @param    ChildStackTestResultFail $l ChildStackTestResultFail
-     * @return   $this|\Target The current object (for fluent API support)
+     * @param  ChildStackTestResultFail $l ChildStackTestResultFail
+     * @return $this|\App\Model\Target  The current object (for fluent API support)
      */
     public function addStackTestResultFailRelatedByTargetGroupId(ChildStackTestResultFail $l)
     {
@@ -2340,7 +2328,7 @@ abstract class Target implements ActiveRecordInterface
 
     /**
      * @param  ChildStackTestResultFail $stackTestResultFailRelatedByTargetGroupId The ChildStackTestResultFail object to remove.
-     * @return $this|ChildTarget The current object (for fluent API support)
+     * @return $this|ChildTarget        The current object (for fluent API support)
      */
     public function removeStackTestResultFailRelatedByTargetGroupId(ChildStackTestResultFail $stackTestResultFailRelatedByTargetGroupId)
     {
@@ -2387,8 +2375,8 @@ abstract class Target implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                  the collection even if it is not empty
      *
      * @return void
      */
@@ -2398,7 +2386,7 @@ abstract class Target implements ActiveRecordInterface
             return;
         }
         $this->collStackTestResultFailsRelatedByTargetTypeId = new ObjectCollection();
-        $this->collStackTestResultFailsRelatedByTargetTypeId->setModel('\StackTestResultFail');
+        $this->collStackTestResultFailsRelatedByTargetTypeId->setModel('\App\Model\StackTestResultFail');
     }
 
     /**
@@ -2410,8 +2398,8 @@ abstract class Target implements ActiveRecordInterface
      * If this ChildTarget is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param  Criteria                                    $criteria optional Criteria object to narrow the query
+     * @param  ConnectionInterface                         $con      optional connection object
      * @return ObjectCollection|ChildStackTestResultFail[] List of ChildStackTestResultFail objects
      * @throws PropelException
      */
@@ -2440,8 +2428,6 @@ abstract class Target implements ActiveRecordInterface
                         $this->collStackTestResultFailsRelatedByTargetTypeIdPartial = true;
                     }
 
-                    $collStackTestResultFailsRelatedByTargetTypeId->rewind();
-
                     return $collStackTestResultFailsRelatedByTargetTypeId;
                 }
 
@@ -2467,15 +2453,14 @@ abstract class Target implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $stackTestResultFailsRelatedByTargetTypeId A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return     $this|ChildTarget The current object (for fluent API support)
+     * @param  Collection          $stackTestResultFailsRelatedByTargetTypeId A Propel collection.
+     * @param  ConnectionInterface $con                                       Optional connection object
+     * @return $this|ChildTarget   The current object (for fluent API support)
      */
     public function setStackTestResultFailsRelatedByTargetTypeId(Collection $stackTestResultFailsRelatedByTargetTypeId, ConnectionInterface $con = null)
     {
         /** @var ChildStackTestResultFail[] $stackTestResultFailsRelatedByTargetTypeIdToDelete */
         $stackTestResultFailsRelatedByTargetTypeIdToDelete = $this->getStackTestResultFailsRelatedByTargetTypeId(new Criteria(), $con)->diff($stackTestResultFailsRelatedByTargetTypeId);
-
 
         $this->stackTestResultFailsRelatedByTargetTypeIdScheduledForDeletion = $stackTestResultFailsRelatedByTargetTypeIdToDelete;
 
@@ -2497,10 +2482,10 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Returns the number of related StackTestResultFail objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related StackTestResultFail objects.
+     * @param  Criteria            $criteria
+     * @param  boolean             $distinct
+     * @param  ConnectionInterface $con
+     * @return int                 Count of related StackTestResultFail objects.
      * @throws PropelException
      */
     public function countStackTestResultFailsRelatedByTargetTypeId(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
@@ -2532,8 +2517,8 @@ abstract class Target implements ActiveRecordInterface
      * Method called to associate a ChildStackTestResultFail object to this object
      * through the ChildStackTestResultFail foreign key attribute.
      *
-     * @param    ChildStackTestResultFail $l ChildStackTestResultFail
-     * @return   $this|\Target The current object (for fluent API support)
+     * @param  ChildStackTestResultFail $l ChildStackTestResultFail
+     * @return $this|\App\Model\Target  The current object (for fluent API support)
      */
     public function addStackTestResultFailRelatedByTargetTypeId(ChildStackTestResultFail $l)
     {
@@ -2560,7 +2545,7 @@ abstract class Target implements ActiveRecordInterface
 
     /**
      * @param  ChildStackTestResultFail $stackTestResultFailRelatedByTargetTypeId The ChildStackTestResultFail object to remove.
-     * @return $this|ChildTarget The current object (for fluent API support)
+     * @return $this|ChildTarget        The current object (for fluent API support)
      */
     public function removeStackTestResultFailRelatedByTargetTypeId(ChildStackTestResultFail $stackTestResultFailRelatedByTargetTypeId)
     {
@@ -2607,8 +2592,8 @@ abstract class Target implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                  the collection even if it is not empty
      *
      * @return void
      */
@@ -2618,7 +2603,7 @@ abstract class Target implements ActiveRecordInterface
             return;
         }
         $this->collStackTestResultPasses = new ObjectCollection();
-        $this->collStackTestResultPasses->setModel('\StackTestResultPass');
+        $this->collStackTestResultPasses->setModel('\App\Model\StackTestResultPass');
     }
 
     /**
@@ -2630,8 +2615,8 @@ abstract class Target implements ActiveRecordInterface
      * If this ChildTarget is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param  Criteria                                    $criteria optional Criteria object to narrow the query
+     * @param  ConnectionInterface                         $con      optional connection object
      * @return ObjectCollection|ChildStackTestResultPass[] List of ChildStackTestResultPass objects
      * @throws PropelException
      */
@@ -2660,8 +2645,6 @@ abstract class Target implements ActiveRecordInterface
                         $this->collStackTestResultPassesPartial = true;
                     }
 
-                    $collStackTestResultPasses->rewind();
-
                     return $collStackTestResultPasses;
                 }
 
@@ -2687,15 +2670,14 @@ abstract class Target implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $stackTestResultPasses A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return     $this|ChildTarget The current object (for fluent API support)
+     * @param  Collection          $stackTestResultPasses A Propel collection.
+     * @param  ConnectionInterface $con                   Optional connection object
+     * @return $this|ChildTarget   The current object (for fluent API support)
      */
     public function setStackTestResultPasses(Collection $stackTestResultPasses, ConnectionInterface $con = null)
     {
         /** @var ChildStackTestResultPass[] $stackTestResultPassesToDelete */
         $stackTestResultPassesToDelete = $this->getStackTestResultPasses(new Criteria(), $con)->diff($stackTestResultPasses);
-
 
         $this->stackTestResultPassesScheduledForDeletion = $stackTestResultPassesToDelete;
 
@@ -2717,10 +2699,10 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Returns the number of related StackTestResultPass objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related StackTestResultPass objects.
+     * @param  Criteria            $criteria
+     * @param  boolean             $distinct
+     * @param  ConnectionInterface $con
+     * @return int                 Count of related StackTestResultPass objects.
      * @throws PropelException
      */
     public function countStackTestResultPasses(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
@@ -2752,8 +2734,8 @@ abstract class Target implements ActiveRecordInterface
      * Method called to associate a ChildStackTestResultPass object to this object
      * through the ChildStackTestResultPass foreign key attribute.
      *
-     * @param    ChildStackTestResultPass $l ChildStackTestResultPass
-     * @return   $this|\Target The current object (for fluent API support)
+     * @param  ChildStackTestResultPass $l ChildStackTestResultPass
+     * @return $this|\App\Model\Target  The current object (for fluent API support)
      */
     public function addStackTestResultPass(ChildStackTestResultPass $l)
     {
@@ -2780,7 +2762,7 @@ abstract class Target implements ActiveRecordInterface
 
     /**
      * @param  ChildStackTestResultPass $stackTestResultPass The ChildStackTestResultPass object to remove.
-     * @return $this|ChildTarget The current object (for fluent API support)
+     * @return $this|ChildTarget        The current object (for fluent API support)
      */
     public function removeStackTestResultPass(ChildStackTestResultPass $stackTestResultPass)
     {
@@ -2798,7 +2780,6 @@ abstract class Target implements ActiveRecordInterface
         return $this;
     }
 
-
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
@@ -2810,9 +2791,9 @@ abstract class Target implements ActiveRecordInterface
      * api reasonable.  You can provide public methods for those you
      * actually need in Target.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @param  Criteria                                    $criteria     optional Criteria object to narrow the query
+     * @param  ConnectionInterface                         $con          optional connection object
+     * @param  string                                      $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildStackTestResultPass[] List of ChildStackTestResultPass objects
      */
     public function getStackTestResultPassesJoinTargetGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
@@ -2823,7 +2804,6 @@ abstract class Target implements ActiveRecordInterface
         return $this->getStackTestResultPasses($query, $con);
     }
 
-
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
@@ -2835,9 +2815,9 @@ abstract class Target implements ActiveRecordInterface
      * api reasonable.  You can provide public methods for those you
      * actually need in Target.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @param  Criteria                                    $criteria     optional Criteria object to narrow the query
+     * @param  ConnectionInterface                         $con          optional connection object
+     * @param  string                                      $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildStackTestResultPass[] List of ChildStackTestResultPass objects
      */
     public function getStackTestResultPassesJoinTargetType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
@@ -2877,8 +2857,8 @@ abstract class Target implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                  the collection even if it is not empty
      *
      * @return void
      */
@@ -2888,7 +2868,7 @@ abstract class Target implements ActiveRecordInterface
             return;
         }
         $this->collTriggers = new ObjectCollection();
-        $this->collTriggers->setModel('\Trigger');
+        $this->collTriggers->setModel('\App\Model\Trigger');
     }
 
     /**
@@ -2900,8 +2880,8 @@ abstract class Target implements ActiveRecordInterface
      * If this ChildTarget is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param  Criteria                        $criteria optional Criteria object to narrow the query
+     * @param  ConnectionInterface             $con      optional connection object
      * @return ObjectCollection|ChildTrigger[] List of ChildTrigger objects
      * @throws PropelException
      */
@@ -2930,8 +2910,6 @@ abstract class Target implements ActiveRecordInterface
                         $this->collTriggersPartial = true;
                     }
 
-                    $collTriggers->rewind();
-
                     return $collTriggers;
                 }
 
@@ -2957,15 +2935,14 @@ abstract class Target implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $triggers A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return     $this|ChildTarget The current object (for fluent API support)
+     * @param  Collection          $triggers A Propel collection.
+     * @param  ConnectionInterface $con      Optional connection object
+     * @return $this|ChildTarget   The current object (for fluent API support)
      */
     public function setTriggers(Collection $triggers, ConnectionInterface $con = null)
     {
         /** @var ChildTrigger[] $triggersToDelete */
         $triggersToDelete = $this->getTriggers(new Criteria(), $con)->diff($triggers);
-
 
         $this->triggersScheduledForDeletion = $triggersToDelete;
 
@@ -2987,10 +2964,10 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Returns the number of related Trigger objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Trigger objects.
+     * @param  Criteria            $criteria
+     * @param  boolean             $distinct
+     * @param  ConnectionInterface $con
+     * @return int                 Count of related Trigger objects.
      * @throws PropelException
      */
     public function countTriggers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
@@ -3022,8 +2999,8 @@ abstract class Target implements ActiveRecordInterface
      * Method called to associate a ChildTrigger object to this object
      * through the ChildTrigger foreign key attribute.
      *
-     * @param    ChildTrigger $l ChildTrigger
-     * @return   $this|\Target The current object (for fluent API support)
+     * @param  ChildTrigger            $l ChildTrigger
+     * @return $this|\App\Model\Target The current object (for fluent API support)
      */
     public function addTrigger(ChildTrigger $l)
     {
@@ -3049,7 +3026,7 @@ abstract class Target implements ActiveRecordInterface
     }
 
     /**
-     * @param  ChildTrigger $trigger The ChildTrigger object to remove.
+     * @param  ChildTrigger      $trigger The ChildTrigger object to remove.
      * @return $this|ChildTarget The current object (for fluent API support)
      */
     public function removeTrigger(ChildTrigger $trigger)
@@ -3068,7 +3045,6 @@ abstract class Target implements ActiveRecordInterface
         return $this;
     }
 
-
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
@@ -3080,9 +3056,9 @@ abstract class Target implements ActiveRecordInterface
      * api reasonable.  You can provide public methods for those you
      * actually need in Target.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @param  Criteria                        $criteria     optional Criteria object to narrow the query
+     * @param  ConnectionInterface             $con          optional connection object
+     * @param  string                          $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildTrigger[] List of ChildTrigger objects
      */
     public function getTriggersJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
@@ -3093,7 +3069,6 @@ abstract class Target implements ActiveRecordInterface
         return $this->getTriggers($query, $con);
     }
 
-
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
@@ -3105,9 +3080,9 @@ abstract class Target implements ActiveRecordInterface
      * api reasonable.  You can provide public methods for those you
      * actually need in Target.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @param  Criteria                        $criteria     optional Criteria object to narrow the query
+     * @param  ConnectionInterface             $con          optional connection object
+     * @param  string                          $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildTrigger[] List of ChildTrigger objects
      */
     public function getTriggersJoinTriggerType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
@@ -3150,7 +3125,7 @@ abstract class Target implements ActiveRecordInterface
      * This method is used to reset all php object references (not the actual reference in the database).
      * Necessary for object serialisation.
      *
-     * @param      boolean $deep Whether to also clear the references on all referrer objects.
+     * @param boolean $deep Whether to also clear the references on all referrer objects.
      */
     public function clearAllReferences($deep = false)
     {
@@ -3212,7 +3187,7 @@ abstract class Target implements ActiveRecordInterface
     /**
      * Mark the current object so that the update date doesn't get updated during next save
      *
-     * @return     $this|ChildTarget The current object (for fluent API support)
+     * @return $this|ChildTarget The current object (for fluent API support)
      */
     public function keepUpdateDateUnchanged()
     {

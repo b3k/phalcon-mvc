@@ -14,7 +14,7 @@ class Acl extends Component
      * @var \Phalcon\Acl\Adapter\Memory
      */
     private $acl;
-    
+
     /**
      *
      * @var boolean
@@ -27,8 +27,8 @@ class Acl extends Component
     }
 
     /**
-     * 
-     * @param array $list
+     *
+     * @param  array                       $list
      * @return \Phalcon\Acl\Adapter\Memory
      */
     public function buildFromArray($list)
@@ -83,9 +83,9 @@ class Acl extends Component
     /**
      * Checks if the current profile is allowed to access a resource
      *
-     * @param string $profile
-     * @param string $controller
-     * @param string $action
+     * @param  string  $profile
+     * @param  string  $controller
+     * @param  string  $action
      * @return boolean
      */
     public function isAllowed($profile, $controller, $action)
@@ -113,6 +113,7 @@ class Acl extends Component
             $acl = apc_fetch(APP_ENV . '_' . self::CACHE_KEY);
             if (is_object($acl)) {
                 $this->acl = $acl;
+
                 return $acl;
             }
         }

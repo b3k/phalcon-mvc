@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \ChannelOut;
-use \ChannelOutQuery;
+use App\Model\ChannelOut;
+use App\Model\ChannelOutQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""channel_out' table.
+ * This class defines the structure of the 'channel_out' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class ChannelOutTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.ChannelOutTableMap';
+    const CLASS_NAME = 'App.Model.Map.ChannelOutTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class ChannelOutTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""channel_out';
+    const TABLE_NAME = 'channel_out';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\ChannelOut';
+    const OM_CLASS = '\\App\\Model\\ChannelOut';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'ChannelOut';
+    const CLASS_DEFAULT = 'App.Model.ChannelOut';
 
     /**
      * The total number of columns
@@ -74,42 +73,42 @@ class ChannelOutTableMap extends TableMap
     /**
      * the column name for the ID_ALERT_OUT field
      */
-    const COL_ID_ALERT_OUT = '""channel_out.ID_ALERT_OUT';
+    const COL_ID_ALERT_OUT = 'channel_out.ID_ALERT_OUT';
 
     /**
      * the column name for the CHANNEL_ID field
      */
-    const COL_CHANNEL_ID = '""channel_out.CHANNEL_ID';
+    const COL_CHANNEL_ID = 'channel_out.CHANNEL_ID';
 
     /**
      * the column name for the TARGET_ID field
      */
-    const COL_TARGET_ID = '""channel_out.TARGET_ID';
+    const COL_TARGET_ID = 'channel_out.TARGET_ID';
 
     /**
      * the column name for the CHANNEL_OUT_PARAMS field
      */
-    const COL_CHANNEL_OUT_PARAMS = '""channel_out.CHANNEL_OUT_PARAMS';
+    const COL_CHANNEL_OUT_PARAMS = 'channel_out.CHANNEL_OUT_PARAMS';
 
     /**
      * the column name for the CHANNEL_OUT_STATUS field
      */
-    const COL_CHANNEL_OUT_STATUS = '""channel_out.CHANNEL_OUT_STATUS';
+    const COL_CHANNEL_OUT_STATUS = 'channel_out.CHANNEL_OUT_STATUS';
 
     /**
      * the column name for the CHANNEL_OUT_PRIORITY field
      */
-    const COL_CHANNEL_OUT_PRIORITY = '""channel_out.CHANNEL_OUT_PRIORITY';
+    const COL_CHANNEL_OUT_PRIORITY = 'channel_out.CHANNEL_OUT_PRIORITY';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = '""channel_out.CREATED_AT';
+    const COL_CREATED_AT = 'channel_out.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = '""channel_out.UPDATED_AT';
+    const COL_UPDATED_AT = 'channel_out.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -156,15 +155,15 @@ class ChannelOutTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""channel_out');
+        $this->setName('channel_out');
         $this->setPhpName('ChannelOut');
-        $this->setClassName('\\ChannelOut');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\ChannelOut');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_ALERT_OUT', 'IdAlertOut', 'INTEGER', true, 10, null);
-        $this->addForeignKey('CHANNEL_ID', 'ChannelId', 'INTEGER', '""channel', 'ID_CHANNEL', true, 10, null);
-        $this->addForeignKey('TARGET_ID', 'TargetId', 'INTEGER', '""target', 'ID_TARGET', true, 10, null);
+        $this->addForeignKey('CHANNEL_ID', 'ChannelId', 'INTEGER', 'channel', 'ID_CHANNEL', true, 10, null);
+        $this->addForeignKey('TARGET_ID', 'TargetId', 'INTEGER', 'target', 'ID_TARGET', true, 10, null);
         $this->addColumn('CHANNEL_OUT_PARAMS', 'ChannelOutParams', 'LONGVARCHAR', true, null, null);
         $this->addColumn('CHANNEL_OUT_STATUS', 'ChannelOutStatus', 'BOOLEAN', true, 1, false);
         $this->addColumn('CHANNEL_OUT_PRIORITY', 'ChannelOutPriority', 'BOOLEAN', true, 1, false);
@@ -177,8 +176,8 @@ class ChannelOutTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Channel', '\\Channel', RelationMap::MANY_TO_ONE, array('channel_id' => 'id_channel', ), 'CASCADE', null);
-        $this->addRelation('Target', '\\Target', RelationMap::MANY_TO_ONE, array('target_id' => 'id_target', ), 'CASCADE', null);
+        $this->addRelation('Channel', '\\App\\Model\\Channel', RelationMap::MANY_TO_ONE, array('channel_id' => 'id_channel', ), 'CASCADE', null);
+        $this->addRelation('Target', '\\App\\Model\\Target', RelationMap::MANY_TO_ONE, array('target_id' => 'id_target', ), 'CASCADE', null);
     } // buildRelations()
 
     /**
@@ -190,7 +189,7 @@ class ChannelOutTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
         );
     } // getBehaviors()
 
@@ -203,7 +202,7 @@ class ChannelOutTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -225,7 +224,7 @@ class ChannelOutTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -246,8 +245,8 @@ class ChannelOutTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -264,8 +263,8 @@ class ChannelOutTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (ChannelOut object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (ChannelOut object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -290,10 +289,10 @@ class ChannelOutTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -327,10 +326,10 @@ class ChannelOutTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -360,7 +359,7 @@ class ChannelOutTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -381,13 +380,13 @@ class ChannelOutTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a ChannelOut or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or ChannelOut object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or ChannelOut object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -398,7 +397,7 @@ class ChannelOutTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \ChannelOut) { // it's a model object
+        } elseif ($values instanceof \App\Model\ChannelOut) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -420,10 +419,10 @@ class ChannelOutTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""channel_out table.
+     * Deletes all rows from the channel_out table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -433,11 +432,11 @@ class ChannelOutTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a ChannelOut or Criteria object.
      *
-     * @param mixed               $criteria Criteria or ChannelOut object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or ChannelOut object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -454,7 +453,6 @@ class ChannelOutTableMap extends TableMap
         if ($criteria->containsKey(ChannelOutTableMap::COL_ID_ALERT_OUT) && $criteria->keyContainsValue(ChannelOutTableMap::COL_ID_ALERT_OUT) ) {
             throw new PropelException('Cannot insert a value for auto-increment primary key ('.ChannelOutTableMap::COL_ID_ALERT_OUT.')');
         }
-
 
         // Set the correct dbName
         $query = ChannelOutQuery::create()->mergeWith($criteria);

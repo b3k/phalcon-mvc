@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \TargetGroup;
-use \TargetGroupQuery;
+use App\Model\TargetGroup;
+use App\Model\TargetGroupQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""target_group' table.
+ * This class defines the structure of the 'target_group' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class TargetGroupTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.TargetGroupTableMap';
+    const CLASS_NAME = 'App.Model.Map.TargetGroupTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class TargetGroupTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""target_group';
+    const TABLE_NAME = 'target_group';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\TargetGroup';
+    const OM_CLASS = '\\App\\Model\\TargetGroup';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'TargetGroup';
+    const CLASS_DEFAULT = 'App.Model.TargetGroup';
 
     /**
      * The total number of columns
@@ -74,27 +73,27 @@ class TargetGroupTableMap extends TableMap
     /**
      * the column name for the ID_TARGET_GROUP field
      */
-    const COL_ID_TARGET_GROUP = '""target_group.ID_TARGET_GROUP';
+    const COL_ID_TARGET_GROUP = 'target_group.ID_TARGET_GROUP';
 
     /**
      * the column name for the TARGET_GROUP_NAME field
      */
-    const COL_TARGET_GROUP_NAME = '""target_group.TARGET_GROUP_NAME';
+    const COL_TARGET_GROUP_NAME = 'target_group.TARGET_GROUP_NAME';
 
     /**
      * the column name for the TARGET_GROUP_ACTIVE field
      */
-    const COL_TARGET_GROUP_ACTIVE = '""target_group.TARGET_GROUP_ACTIVE';
+    const COL_TARGET_GROUP_ACTIVE = 'target_group.TARGET_GROUP_ACTIVE';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = '""target_group.CREATED_AT';
+    const COL_CREATED_AT = 'target_group.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = '""target_group.UPDATED_AT';
+    const COL_UPDATED_AT = 'target_group.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -141,10 +140,10 @@ class TargetGroupTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""target_group');
+        $this->setName('target_group');
         $this->setPhpName('TargetGroup');
-        $this->setClassName('\\TargetGroup');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\TargetGroup');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_TARGET_GROUP', 'IdTargetGroup', 'INTEGER', true, 10, null);
@@ -160,9 +159,9 @@ class TargetGroupTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('StackTestResultPass', '\\StackTestResultPass', RelationMap::ONE_TO_MANY, array('id_target_group' => 'target_group_id', ), null, null, 'StackTestResultPasses');
-        $this->addRelation('Target', '\\Target', RelationMap::ONE_TO_MANY, array('id_target_group' => 'target_group_id', ), null, null, 'Targets');
-        $this->addRelation('UserTargetGroup', '\\UserTargetGroup', RelationMap::ONE_TO_MANY, array('id_target_group' => 'id_target_group', ), 'CASCADE', null, 'UserTargetGroups');
+        $this->addRelation('StackTestResultPass', '\\App\\Model\\StackTestResultPass', RelationMap::ONE_TO_MANY, array('id_target_group' => 'target_group_id', ), null, null, 'StackTestResultPasses');
+        $this->addRelation('Target', '\\App\\Model\\Target', RelationMap::ONE_TO_MANY, array('id_target_group' => 'target_group_id', ), null, null, 'Targets');
+        $this->addRelation('UserTargetGroup', '\\App\\Model\\UserTargetGroup', RelationMap::ONE_TO_MANY, array('id_target_group' => 'id_target_group', ), 'CASCADE', null, 'UserTargetGroups');
     } // buildRelations()
 
     /**
@@ -174,11 +173,11 @@ class TargetGroupTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to ""target_group     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to target_group     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
@@ -196,7 +195,7 @@ class TargetGroupTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -218,7 +217,7 @@ class TargetGroupTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -239,8 +238,8 @@ class TargetGroupTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -257,8 +256,8 @@ class TargetGroupTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (TargetGroup object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (TargetGroup object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -283,10 +282,10 @@ class TargetGroupTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -320,10 +319,10 @@ class TargetGroupTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -347,7 +346,7 @@ class TargetGroupTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -368,13 +367,13 @@ class TargetGroupTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a TargetGroup or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or TargetGroup object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or TargetGroup object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -385,7 +384,7 @@ class TargetGroupTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \TargetGroup) { // it's a model object
+        } elseif ($values instanceof \App\Model\TargetGroup) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -407,10 +406,10 @@ class TargetGroupTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""target_group table.
+     * Deletes all rows from the target_group table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -420,11 +419,11 @@ class TargetGroupTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a TargetGroup or Criteria object.
      *
-     * @param mixed               $criteria Criteria or TargetGroup object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or TargetGroup object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -441,7 +440,6 @@ class TargetGroupTableMap extends TableMap
         if ($criteria->containsKey(TargetGroupTableMap::COL_ID_TARGET_GROUP) && $criteria->keyContainsValue(TargetGroupTableMap::COL_ID_TARGET_GROUP) ) {
             throw new PropelException('Cannot insert a value for auto-increment primary key ('.TargetGroupTableMap::COL_ID_TARGET_GROUP.')');
         }
-
 
         // Set the correct dbName
         $query = TargetGroupQuery::create()->mergeWith($criteria);

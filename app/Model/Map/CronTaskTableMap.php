@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \CronTask;
-use \CronTaskQuery;
+use App\Model\CronTask;
+use App\Model\CronTaskQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""cron_task' table.
+ * This class defines the structure of the 'cron_task' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class CronTaskTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.CronTaskTableMap';
+    const CLASS_NAME = 'App.Model.Map.CronTaskTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class CronTaskTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""cron_task';
+    const TABLE_NAME = 'cron_task';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\CronTask';
+    const OM_CLASS = '\\App\\Model\\CronTask';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'CronTask';
+    const CLASS_DEFAULT = 'App.Model.CronTask';
 
     /**
      * The total number of columns
@@ -74,52 +73,52 @@ class CronTaskTableMap extends TableMap
     /**
      * the column name for the ID_CRON_TASK field
      */
-    const COL_ID_CRON_TASK = '""cron_task.ID_CRON_TASK';
+    const COL_ID_CRON_TASK = 'cron_task.ID_CRON_TASK';
 
     /**
      * the column name for the CRON_TASK_CODE field
      */
-    const COL_CRON_TASK_CODE = '""cron_task.CRON_TASK_CODE';
+    const COL_CRON_TASK_CODE = 'cron_task.CRON_TASK_CODE';
 
     /**
      * the column name for the CRON_TASK_INTERVAL field
      */
-    const COL_CRON_TASK_INTERVAL = '""cron_task.CRON_TASK_INTERVAL';
+    const COL_CRON_TASK_INTERVAL = 'cron_task.CRON_TASK_INTERVAL';
 
     /**
      * the column name for the CRON_TASK_PARAMS field
      */
-    const COL_CRON_TASK_PARAMS = '""cron_task.CRON_TASK_PARAMS';
+    const COL_CRON_TASK_PARAMS = 'cron_task.CRON_TASK_PARAMS';
 
     /**
      * the column name for the CRON_TASK_ACTIVE field
      */
-    const COL_CRON_TASK_ACTIVE = '""cron_task.CRON_TASK_ACTIVE';
+    const COL_CRON_TASK_ACTIVE = 'cron_task.CRON_TASK_ACTIVE';
 
     /**
      * the column name for the CRON_TASK_STATE field
      */
-    const COL_CRON_TASK_STATE = '""cron_task.CRON_TASK_STATE';
+    const COL_CRON_TASK_STATE = 'cron_task.CRON_TASK_STATE';
 
     /**
      * the column name for the CRON_TASK_RUN_AT field
      */
-    const COL_CRON_TASK_RUN_AT = '""cron_task.CRON_TASK_RUN_AT';
+    const COL_CRON_TASK_RUN_AT = 'cron_task.CRON_TASK_RUN_AT';
 
     /**
      * the column name for the CRON_TASK_EXECUTED_AT field
      */
-    const COL_CRON_TASK_EXECUTED_AT = '""cron_task.CRON_TASK_EXECUTED_AT';
+    const COL_CRON_TASK_EXECUTED_AT = 'cron_task.CRON_TASK_EXECUTED_AT';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = '""cron_task.CREATED_AT';
+    const COL_CREATED_AT = 'cron_task.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = '""cron_task.UPDATED_AT';
+    const COL_UPDATED_AT = 'cron_task.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -166,10 +165,10 @@ class CronTaskTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""cron_task');
+        $this->setName('cron_task');
         $this->setPhpName('CronTask');
-        $this->setClassName('\\CronTask');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\CronTask');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_CRON_TASK', 'IdCronTask', 'INTEGER', true, 10, null);
@@ -200,7 +199,7 @@ class CronTaskTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
         );
     } // getBehaviors()
 
@@ -213,7 +212,7 @@ class CronTaskTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -235,7 +234,7 @@ class CronTaskTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -256,8 +255,8 @@ class CronTaskTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -274,8 +273,8 @@ class CronTaskTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (CronTask object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (CronTask object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -300,10 +299,10 @@ class CronTaskTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -337,10 +336,10 @@ class CronTaskTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -374,7 +373,7 @@ class CronTaskTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -395,13 +394,13 @@ class CronTaskTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a CronTask or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or CronTask object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or CronTask object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -412,7 +411,7 @@ class CronTaskTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \CronTask) { // it's a model object
+        } elseif ($values instanceof \App\Model\CronTask) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -434,10 +433,10 @@ class CronTaskTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""cron_task table.
+     * Deletes all rows from the cron_task table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -447,11 +446,11 @@ class CronTaskTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a CronTask or Criteria object.
      *
-     * @param mixed               $criteria Criteria or CronTask object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or CronTask object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -468,7 +467,6 @@ class CronTaskTableMap extends TableMap
         if ($criteria->containsKey(CronTaskTableMap::COL_ID_CRON_TASK) && $criteria->keyContainsValue(CronTaskTableMap::COL_ID_CRON_TASK) ) {
             throw new PropelException('Cannot insert a value for auto-increment primary key ('.CronTaskTableMap::COL_ID_CRON_TASK.')');
         }
-
 
         // Set the correct dbName
         $query = CronTaskQuery::create()->mergeWith($criteria);

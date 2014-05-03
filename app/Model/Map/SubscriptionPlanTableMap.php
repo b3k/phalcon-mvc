@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \SubscriptionPlan;
-use \SubscriptionPlanQuery;
+use App\Model\SubscriptionPlan;
+use App\Model\SubscriptionPlanQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""subscription_plan' table.
+ * This class defines the structure of the 'subscription_plan' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class SubscriptionPlanTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.SubscriptionPlanTableMap';
+    const CLASS_NAME = 'App.Model.Map.SubscriptionPlanTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class SubscriptionPlanTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""subscription_plan';
+    const TABLE_NAME = 'subscription_plan';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\SubscriptionPlan';
+    const OM_CLASS = '\\App\\Model\\SubscriptionPlan';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'SubscriptionPlan';
+    const CLASS_DEFAULT = 'App.Model.SubscriptionPlan';
 
     /**
      * The total number of columns
@@ -74,87 +73,87 @@ class SubscriptionPlanTableMap extends TableMap
     /**
      * the column name for the ID_SUBSCRIPTION_PLAN field
      */
-    const COL_ID_SUBSCRIPTION_PLAN = '""subscription_plan.ID_SUBSCRIPTION_PLAN';
+    const COL_ID_SUBSCRIPTION_PLAN = 'subscription_plan.ID_SUBSCRIPTION_PLAN';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_NAME field
      */
-    const COL_SUBSCRIPTION_PLAN_NAME = '""subscription_plan.SUBSCRIPTION_PLAN_NAME';
+    const COL_SUBSCRIPTION_PLAN_NAME = 'subscription_plan.SUBSCRIPTION_PLAN_NAME';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_DESCRIPTION field
      */
-    const COL_SUBSCRIPTION_PLAN_DESCRIPTION = '""subscription_plan.SUBSCRIPTION_PLAN_DESCRIPTION';
+    const COL_SUBSCRIPTION_PLAN_DESCRIPTION = 'subscription_plan.SUBSCRIPTION_PLAN_DESCRIPTION';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_PRICE field
      */
-    const COL_SUBSCRIPTION_PLAN_PRICE = '""subscription_plan.SUBSCRIPTION_PLAN_PRICE';
+    const COL_SUBSCRIPTION_PLAN_PRICE = 'subscription_plan.SUBSCRIPTION_PLAN_PRICE';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_PERIOD field
      */
-    const COL_SUBSCRIPTION_PLAN_PERIOD = '""subscription_plan.SUBSCRIPTION_PLAN_PERIOD';
+    const COL_SUBSCRIPTION_PLAN_PERIOD = 'subscription_plan.SUBSCRIPTION_PLAN_PERIOD';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_CODE field
      */
-    const COL_SUBSCRIPTION_PLAN_CODE = '""subscription_plan.SUBSCRIPTION_PLAN_CODE';
+    const COL_SUBSCRIPTION_PLAN_CODE = 'subscription_plan.SUBSCRIPTION_PLAN_CODE';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_MAX_TARGET field
      */
-    const COL_SUBSCRIPTION_PLAN_MAX_TARGET = '""subscription_plan.SUBSCRIPTION_PLAN_MAX_TARGET';
+    const COL_SUBSCRIPTION_PLAN_MAX_TARGET = 'subscription_plan.SUBSCRIPTION_PLAN_MAX_TARGET';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_CHECK_INTERVAL field
      */
-    const COL_SUBSCRIPTION_PLAN_CHECK_INTERVAL = '""subscription_plan.SUBSCRIPTION_PLAN_CHECK_INTERVAL';
+    const COL_SUBSCRIPTION_PLAN_CHECK_INTERVAL = 'subscription_plan.SUBSCRIPTION_PLAN_CHECK_INTERVAL';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS field
      */
-    const COL_SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS = '""subscription_plan.SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS';
+    const COL_SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS = 'subscription_plan.SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_RSS field
      */
-    const COL_SUBSCRIPTION_PLAN_RSS = '""subscription_plan.SUBSCRIPTION_PLAN_RSS';
+    const COL_SUBSCRIPTION_PLAN_RSS = 'subscription_plan.SUBSCRIPTION_PLAN_RSS';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS field
      */
-    const COL_SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS = '""subscription_plan.SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS';
+    const COL_SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS = 'subscription_plan.SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS field
      */
-    const COL_SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS = '""subscription_plan.SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS';
+    const COL_SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS = 'subscription_plan.SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_MAX_TRIGGER field
      */
-    const COL_SUBSCRIPTION_PLAN_MAX_TRIGGER = '""subscription_plan.SUBSCRIPTION_PLAN_MAX_TRIGGER';
+    const COL_SUBSCRIPTION_PLAN_MAX_TRIGGER = 'subscription_plan.SUBSCRIPTION_PLAN_MAX_TRIGGER';
 
     /**
      * the column name for the SUBSCRIPTION_PLAN_SMS_IN_PERIOD field
      */
-    const COL_SUBSCRIPTION_PLAN_SMS_IN_PERIOD = '""subscription_plan.SUBSCRIPTION_PLAN_SMS_IN_PERIOD';
+    const COL_SUBSCRIPTION_PLAN_SMS_IN_PERIOD = 'subscription_plan.SUBSCRIPTION_PLAN_SMS_IN_PERIOD';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = '""subscription_plan.CREATED_AT';
+    const COL_CREATED_AT = 'subscription_plan.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = '""subscription_plan.UPDATED_AT';
+    const COL_UPDATED_AT = 'subscription_plan.UPDATED_AT';
 
     /**
      * the column name for the SLUG field
      */
-    const COL_SLUG = '""subscription_plan.SLUG';
+    const COL_SLUG = 'subscription_plan.SLUG';
 
     /**
      * The default string format for model objects of the related table
@@ -201,10 +200,10 @@ class SubscriptionPlanTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""subscription_plan');
+        $this->setName('subscription_plan');
         $this->setPhpName('SubscriptionPlan');
-        $this->setClassName('\\SubscriptionPlan');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\SubscriptionPlan');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_SUBSCRIPTION_PLAN', 'IdSubscriptionPlan', 'INTEGER', true, 10, null);
@@ -232,7 +231,7 @@ class SubscriptionPlanTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('SubscriptionPlanChannel', '\\SubscriptionPlanChannel', RelationMap::ONE_TO_MANY, array('id_subscription_plan' => 'id_subscription_plan', ), 'CASCADE', null, 'SubscriptionPlanChannels');
+        $this->addRelation('SubscriptionPlanChannel', '\\App\\Model\\SubscriptionPlanChannel', RelationMap::ONE_TO_MANY, array('id_subscription_plan' => 'id_subscription_plan', ), 'CASCADE', null, 'SubscriptionPlanChannels');
     } // buildRelations()
 
     /**
@@ -244,12 +243,12 @@ class SubscriptionPlanTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
             'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to ""subscription_plan     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to subscription_plan     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
@@ -267,7 +266,7 @@ class SubscriptionPlanTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -289,7 +288,7 @@ class SubscriptionPlanTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -310,8 +309,8 @@ class SubscriptionPlanTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -328,8 +327,8 @@ class SubscriptionPlanTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (SubscriptionPlan object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (SubscriptionPlan object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -354,10 +353,10 @@ class SubscriptionPlanTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -391,10 +390,10 @@ class SubscriptionPlanTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -442,7 +441,7 @@ class SubscriptionPlanTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -463,13 +462,13 @@ class SubscriptionPlanTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a SubscriptionPlan or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or SubscriptionPlan object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or SubscriptionPlan object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -480,7 +479,7 @@ class SubscriptionPlanTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \SubscriptionPlan) { // it's a model object
+        } elseif ($values instanceof \App\Model\SubscriptionPlan) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -502,10 +501,10 @@ class SubscriptionPlanTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""subscription_plan table.
+     * Deletes all rows from the subscription_plan table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -515,11 +514,11 @@ class SubscriptionPlanTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a SubscriptionPlan or Criteria object.
      *
-     * @param mixed               $criteria Criteria or SubscriptionPlan object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or SubscriptionPlan object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -536,7 +535,6 @@ class SubscriptionPlanTableMap extends TableMap
         if ($criteria->containsKey(SubscriptionPlanTableMap::COL_ID_SUBSCRIPTION_PLAN) && $criteria->keyContainsValue(SubscriptionPlanTableMap::COL_ID_SUBSCRIPTION_PLAN) ) {
             throw new PropelException('Cannot insert a value for auto-increment primary key ('.SubscriptionPlanTableMap::COL_ID_SUBSCRIPTION_PLAN.')');
         }
-
 
         // Set the correct dbName
         $query = SubscriptionPlanQuery::create()->mergeWith($criteria);

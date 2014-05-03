@@ -1,11 +1,11 @@
 <?php
 
-namespace Base;
+namespace app\Model\Base;
 
-use \UserTargetGroup as ChildUserTargetGroup;
-use \UserTargetGroupQuery as ChildUserTargetGroupQuery;
 use \Exception;
-use Map\UserTargetGroupTableMap;
+use App\Model\UserTargetGroup as ChildUserTargetGroup;
+use App\Model\UserTargetGroupQuery as ChildUserTargetGroupQuery;
+use App\Model\Map\UserTargetGroupTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -16,7 +16,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the '""user_target_group' table.
+ * Base class that represents a query for the 'user_target_group' table.
  *
  *
  *
@@ -42,7 +42,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserTargetGroupQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
  * @method     ChildUserTargetGroupQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
  *
- * @method     \TargetGroupQuery|\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Model\TargetGroupQuery|\App\Model\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUserTargetGroup findOne(ConnectionInterface $con = null) Return the first ChildUserTargetGroup matching the query
  * @method     ChildUserTargetGroup findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUserTargetGroup matching the query, or a new ChildUserTargetGroup object populated from the query conditions when no match is found
@@ -64,13 +64,13 @@ abstract class UserTargetGroupQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \Base\UserTargetGroupQuery object.
+     * Initializes internal state of \App\Model\Base\UserTargetGroupQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName     The database name
+     * @param string $modelName  The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\UserTargetGroup', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\App\\Model\\UserTargetGroup', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -78,8 +78,8 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     /**
      * Returns a new ChildUserTargetGroupQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string   $modelAlias The alias of a model in the query
+     * @param Criteria $criteria   Optional Criteria to build the query from
      *
      * @return ChildUserTargetGroupQuery
      */
@@ -108,7 +108,7 @@ abstract class UserTargetGroupQuery extends ModelCriteria
      * $obj  = $c->findPk(12, $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param mixed               $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildUserTargetGroup|array|mixed the result, formatted by the current formatter
@@ -123,8 +123,8 @@ abstract class UserTargetGroupQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(array(12, 56), array(832, 123), array(123, 456)), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array               $keys Primary keys to use for the query
+     * @param ConnectionInterface $con  an optional connection object
      *
      * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
      */
@@ -136,7 +136,7 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
      * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
@@ -148,7 +148,7 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array $keys The list of primary key to use for the query
      *
      * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
@@ -169,11 +169,11 @@ abstract class UserTargetGroupQuery extends ModelCriteria
      *
      * @see       filterByTargetGroup()
      *
-     * @param     mixed $idTargetGroup The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $idTargetGroup The value to use as filter.
+     *                              Use scalar values for equality.
+     *                              Use array values for in_array() equivalent.
+     *                              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison    Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
@@ -212,11 +212,11 @@ abstract class UserTargetGroupQuery extends ModelCriteria
      *
      * @see       filterByUser()
      *
-     * @param     mixed $idUser The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $idUser     The value to use as filter.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
@@ -253,13 +253,13 @@ abstract class UserTargetGroupQuery extends ModelCriteria
      * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $createdAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
@@ -296,13 +296,13 @@ abstract class UserTargetGroupQuery extends ModelCriteria
      * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param mixed  $updatedAt  The value to use as filter.
+     *                           Values can be integers (unix timestamps), DateTime objects, or strings.
+     *                           Empty strings are treated as NULL.
+     *                           Use scalar values for equality.
+     *                           Use array values for in_array() equivalent.
+     *                           Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
@@ -330,16 +330,16 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \TargetGroup object
+     * Filter the query by a related \App\Model\TargetGroup object
      *
-     * @param \TargetGroup|ObjectCollection $targetGroup The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\TargetGroup|ObjectCollection $targetGroup The related object(s) to use as filter
+     * @param string                                  $comparison  Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserTargetGroupQuery The current query, for fluid interface
      */
     public function filterByTargetGroup($targetGroup, $comparison = null)
     {
-        if ($targetGroup instanceof \TargetGroup) {
+        if ($targetGroup instanceof \App\Model\TargetGroup) {
             return $this
                 ->addUsingAlias(UserTargetGroupTableMap::COL_ID_TARGET_GROUP, $targetGroup->getIdTargetGroup(), $comparison);
         } elseif ($targetGroup instanceof ObjectCollection) {
@@ -350,15 +350,15 @@ abstract class UserTargetGroupQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(UserTargetGroupTableMap::COL_ID_TARGET_GROUP, $targetGroup->toKeyValue('PrimaryKey', 'IdTargetGroup'), $comparison);
         } else {
-            throw new PropelException('filterByTargetGroup() only accepts arguments of type \TargetGroup or Collection');
+            throw new PropelException('filterByTargetGroup() only accepts arguments of type \App\Model\TargetGroup or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the TargetGroup relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
@@ -391,30 +391,30 @@ abstract class UserTargetGroupQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \TargetGroupQuery A secondary query class using the current class as primary query
+     * @return \App\Model\TargetGroupQuery A secondary query class using the current class as primary query
      */
     public function useTargetGroupQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinTargetGroup($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'TargetGroup', '\TargetGroupQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'TargetGroup', '\App\Model\TargetGroupQuery');
     }
 
     /**
-     * Filter the query by a related \User object
+     * Filter the query by a related \App\Model\User object
      *
-     * @param \User|ObjectCollection $user The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param \App\Model\User|ObjectCollection $user       The related object(s) to use as filter
+     * @param string                           $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserTargetGroupQuery The current query, for fluid interface
      */
     public function filterByUser($user, $comparison = null)
     {
-        if ($user instanceof \User) {
+        if ($user instanceof \App\Model\User) {
             return $this
                 ->addUsingAlias(UserTargetGroupTableMap::COL_ID_USER, $user->getIdUser(), $comparison);
         } elseif ($user instanceof ObjectCollection) {
@@ -425,15 +425,15 @@ abstract class UserTargetGroupQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(UserTargetGroupTableMap::COL_ID_USER, $user->toKeyValue('PrimaryKey', 'IdUser'), $comparison);
         } else {
-            throw new PropelException('filterByUser() only accepts arguments of type \User or Collection');
+            throw new PropelException('filterByUser() only accepts arguments of type \App\Model\User or Collection');
         }
     }
 
     /**
      * Adds a JOIN clause to the query using the User relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
@@ -466,23 +466,23 @@ abstract class UserTargetGroupQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $relationAlias optional alias for the relation,
+     *                              to be used as main alias in the secondary query
+     * @param string $joinType      Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \UserQuery A secondary query class using the current class as primary query
+     * @return \App\Model\UserQuery A secondary query class using the current class as primary query
      */
     public function useUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\UserQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'User', '\App\Model\UserQuery');
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildUserTargetGroup $userTargetGroup Object to remove from the list of results
+     * @param ChildUserTargetGroup $userTargetGroup Object to remove from the list of results
      *
      * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
@@ -497,10 +497,10 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the ""user_target_group table.
+     * Deletes all rows from the user_target_group table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -526,11 +526,11 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     /**
      * Performs a DELETE on the database based on the current ModelCriteria
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                 if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                 rethrown wrapped into a PropelException.
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -562,9 +562,9 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     /**
      * Filter by the latest updated
      *
-     * @param      int $nbDays Maximum age of the latest update in days
+     * @param int $nbDays Maximum age of the latest update in days
      *
-     * @return     $this|ChildUserTargetGroupQuery The current query, for fluid interface
+     * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
@@ -572,21 +572,9 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     }
 
     /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     $this|ChildUserTargetGroupQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(UserTargetGroupTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
      * Order by update date desc
      *
-     * @return     $this|ChildUserTargetGroupQuery The current query, for fluid interface
+     * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
@@ -596,7 +584,7 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     /**
      * Order by update date asc
      *
-     * @return     $this|ChildUserTargetGroupQuery The current query, for fluid interface
+     * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
@@ -606,7 +594,7 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     /**
      * Order by create date desc
      *
-     * @return     $this|ChildUserTargetGroupQuery The current query, for fluid interface
+     * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
@@ -614,9 +602,21 @@ abstract class UserTargetGroupQuery extends ModelCriteria
     }
 
     /**
+     * Filter by the latest created
+     *
+     * @param int $nbDays Maximum age of in days
+     *
+     * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
+     */
+    public function recentlyCreated($nbDays = 7)
+    {
+        return $this->addUsingAlias(UserTargetGroupTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
      * Order by create date asc
      *
-     * @return     $this|ChildUserTargetGroupQuery The current query, for fluid interface
+     * @return $this|ChildUserTargetGroupQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {

@@ -1,10 +1,11 @@
 <?php
 
-use Base\StackTestResultPassQuery as BaseStackTestResultPassQuery;
+namespace app\Model;
 
+use App\Model\Base\StackTestResultPassQuery as BaseStackTestResultPassQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the '""stack_test_result_pass' table.
+ * Skeleton subclass for performing query and update operations on the 'stack_test_result_pass' table.
  *
  *
  *

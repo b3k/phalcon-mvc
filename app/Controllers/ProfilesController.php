@@ -104,6 +104,7 @@ class ProfilesController extends ControllerBase
         $profile = Profiles::findFirstById($id);
         if (!$profile) {
             $this->flash->error("Profile was not found");
+
             return $this->dispatcher->forward(array(
                 'action' => 'index'
             ));

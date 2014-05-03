@@ -1,10 +1,11 @@
 <?php
 
-use Base\ChannelQuery as BaseChannelQuery;
+namespace app\Model;
 
+use App\Model\Base\ChannelQuery as BaseChannelQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the '""channel' table.
+ * Skeleton subclass for performing query and update operations on the 'channel' table.
  *
  *
  *

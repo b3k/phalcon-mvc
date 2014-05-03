@@ -1,10 +1,11 @@
 <?php
 
-use Base\UserLogQuery as BaseUserLogQuery;
+namespace app\Model;
 
+use App\Model\Base\UserLogQuery as BaseUserLogQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the '""user_log' table.
+ * Skeleton subclass for performing query and update operations on the 'user_log' table.
  *
  *
  *

@@ -38,17 +38,16 @@ try {
      */
     $Response = $Application->handle();
 
-
     /**
      * Put content
      */
     echo $Response->getContent();
-    
+
     /**
      * End application
      */
     exit(0);
-    
+
 } catch (Exception $e) {
     echo $e->getMessage(), '<br />';
     echo nl2br(htmlentities($e->getTraceAsString()));

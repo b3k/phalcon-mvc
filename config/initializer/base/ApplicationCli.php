@@ -2,7 +2,6 @@
 
 namespace \Config\Initializer\Base;
 
-
-class ApplicationCli extends Application {
-
+class ApplicationCli extends Application
+{
 }

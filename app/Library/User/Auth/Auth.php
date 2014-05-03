@@ -13,7 +13,7 @@ class Auth extends Component
     /**
      * Checks the user credentials
      *
-     * @param array $credentials
+     * @param  array  $credentials
      * @return boolan
      */
     public function check($credentials)
@@ -229,6 +229,7 @@ class Auth extends Component
     public function getName()
     {
         $identity = $this->session->get('auth-identity');
+
         return $identity['name'];
     }
 

@@ -15,25 +15,27 @@ use \Phalcon\Mvc\Router as PhalconRouter;
  *
  * @author b3k
  */
-class Router extends PhalconRouter {
-
+class Router extends PhalconRouter
+{
     protected $default_controller = 'index';
     protected $default_action = 'index';
     protected $default_index_action = 'index';
-    
+
     protected $not_found_controller = 'error';
     protected $not_found_action = 'error404';
 
-
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    public function loadApplicationRoutes() {
+    public function loadApplicationRoutes()
+    {
         require_once(APP_ROOT_DIR . '/config/environment/' . APP_ENV . '/routing.php');
     }
 
-    public function loadDefaults() {
+    public function loadDefaults()
+    {
         $this->setDefaultController($this->default_controller);
         $this->setDefaultAction($this->default_action);
 

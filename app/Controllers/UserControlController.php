@@ -2,7 +2,6 @@
 namespace Vokuro\Controllers;
 
 use Vokuro\Models\EmailConfirmations;
-use Vokuro\Models\ResetPasswords;
 
 /**
  * UserControlController
@@ -91,5 +90,4 @@ class UserControlController extends ControllerBase
         ));
     }
 
-  
 }

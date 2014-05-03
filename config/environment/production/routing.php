@@ -8,4 +8,3 @@ $this->add('/reset-password/{code}/{email}', array(
     'controller' => 'user_control',
     'action' => 'resetPassword'
 ));
-

@@ -1,6 +1,8 @@
 <?php
 
-use Base\TargetType as BaseTargetType;
+namespace app\Model;
+
+use App\Model\Base\TargetType as BaseTargetType;
 
 class TargetType extends BaseTargetType
 {

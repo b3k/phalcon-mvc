@@ -2,9 +2,10 @@
 
 namespace App\Library\Utilities;
 
-class Utilities {
-
-    public static function array_merge_recursive_distinct(array $array1, array $array2) {
+class Utilities
+{
+    public static function array_merge_recursive_distinct(array $array1, array $array2)
+    {
         $merged = $array1;
 
         foreach ($array2 as $key => &$value) {

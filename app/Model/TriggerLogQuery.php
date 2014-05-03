@@ -1,10 +1,11 @@
 <?php
 
-use Base\TriggerLogQuery as BaseTriggerLogQuery;
+namespace app\Model;
 
+use App\Model\Base\TriggerLogQuery as BaseTriggerLogQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the '""trigger_log' table.
+ * Skeleton subclass for performing query and update operations on the 'trigger_log' table.
  *
  *
  *

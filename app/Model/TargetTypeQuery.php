@@ -1,10 +1,11 @@
 <?php
 
-use Base\TargetTypeQuery as BaseTargetTypeQuery;
+namespace app\Model;
 
+use App\Model\Base\TargetTypeQuery as BaseTargetTypeQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the '""target_type' table.
+ * Skeleton subclass for performing query and update operations on the 'target_type' table.
  *
  *
  *

@@ -1,6 +1,8 @@
 <?php
 
-use Base\Trigger as BaseTrigger;
+namespace app\Model;
+
+use App\Model\Base\Trigger as BaseTrigger;
 
 class Trigger extends BaseTrigger
 {

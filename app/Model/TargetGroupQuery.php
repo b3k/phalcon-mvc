@@ -1,10 +1,11 @@
 <?php
 
-use Base\TargetGroupQuery as BaseTargetGroupQuery;
+namespace app\Model;
 
+use App\Model\Base\TargetGroupQuery as BaseTargetGroupQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the '""target_group' table.
+ * Skeleton subclass for performing query and update operations on the 'target_group' table.
  *
  *
  *

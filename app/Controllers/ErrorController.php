@@ -11,10 +11,10 @@ class ErrorController extends ControllerBase
     {
         die('404');
     }
-    
+
     public function error500Action()
     {
         die('404');
     }
-    
+
 }

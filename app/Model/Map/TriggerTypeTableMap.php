@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \TriggerType;
-use \TriggerTypeQuery;
+use App\Model\TriggerType;
+use App\Model\TriggerTypeQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""trigger_type' table.
+ * This class defines the structure of the 'trigger_type' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class TriggerTypeTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.TriggerTypeTableMap';
+    const CLASS_NAME = 'App.Model.Map.TriggerTypeTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class TriggerTypeTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""trigger_type';
+    const TABLE_NAME = 'trigger_type';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\TriggerType';
+    const OM_CLASS = '\\App\\Model\\TriggerType';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'TriggerType';
+    const CLASS_DEFAULT = 'App.Model.TriggerType';
 
     /**
      * The total number of columns
@@ -74,42 +73,42 @@ class TriggerTypeTableMap extends TableMap
     /**
      * the column name for the ID_TRIGGER_TYPE field
      */
-    const COL_ID_TRIGGER_TYPE = '""trigger_type.ID_TRIGGER_TYPE';
+    const COL_ID_TRIGGER_TYPE = 'trigger_type.ID_TRIGGER_TYPE';
 
     /**
      * the column name for the CHANNEL_ID field
      */
-    const COL_CHANNEL_ID = '""trigger_type.CHANNEL_ID';
+    const COL_CHANNEL_ID = 'trigger_type.CHANNEL_ID';
 
     /**
      * the column name for the TRIGGER_TYPE_CLASS field
      */
-    const COL_TRIGGER_TYPE_CLASS = '""trigger_type.TRIGGER_TYPE_CLASS';
+    const COL_TRIGGER_TYPE_CLASS = 'trigger_type.TRIGGER_TYPE_CLASS';
 
     /**
      * the column name for the TRIGGER_TYPE_NAME field
      */
-    const COL_TRIGGER_TYPE_NAME = '""trigger_type.TRIGGER_TYPE_NAME';
+    const COL_TRIGGER_TYPE_NAME = 'trigger_type.TRIGGER_TYPE_NAME';
 
     /**
      * the column name for the TRIGGER_TYPE_DESCRIPTION field
      */
-    const COL_TRIGGER_TYPE_DESCRIPTION = '""trigger_type.TRIGGER_TYPE_DESCRIPTION';
+    const COL_TRIGGER_TYPE_DESCRIPTION = 'trigger_type.TRIGGER_TYPE_DESCRIPTION';
 
     /**
      * the column name for the TRIGGER_TYPE_ACTIVE field
      */
-    const COL_TRIGGER_TYPE_ACTIVE = '""trigger_type.TRIGGER_TYPE_ACTIVE';
+    const COL_TRIGGER_TYPE_ACTIVE = 'trigger_type.TRIGGER_TYPE_ACTIVE';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = '""trigger_type.CREATED_AT';
+    const COL_CREATED_AT = 'trigger_type.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = '""trigger_type.UPDATED_AT';
+    const COL_UPDATED_AT = 'trigger_type.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -156,14 +155,14 @@ class TriggerTypeTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""trigger_type');
+        $this->setName('trigger_type');
         $this->setPhpName('TriggerType');
-        $this->setClassName('\\TriggerType');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\TriggerType');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_TRIGGER_TYPE', 'IdTriggerType', 'INTEGER', true, 10, null);
-        $this->addForeignKey('CHANNEL_ID', 'ChannelId', 'INTEGER', '""channel', 'ID_CHANNEL', true, 10, null);
+        $this->addForeignKey('CHANNEL_ID', 'ChannelId', 'INTEGER', 'channel', 'ID_CHANNEL', true, 10, null);
         $this->addColumn('TRIGGER_TYPE_CLASS', 'TriggerTypeClass', 'VARCHAR', true, 255, null);
         $this->addColumn('TRIGGER_TYPE_NAME', 'TriggerTypeName', 'VARCHAR', true, 255, null);
         $this->getColumn('TRIGGER_TYPE_NAME', false)->setPrimaryString(true);
@@ -178,8 +177,8 @@ class TriggerTypeTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Channel', '\\Channel', RelationMap::MANY_TO_ONE, array('channel_id' => 'id_channel', ), null, null);
-        $this->addRelation('Trigger', '\\Trigger', RelationMap::ONE_TO_MANY, array('id_trigger_type' => 'trigger_type_id', ), null, null, 'Triggers');
+        $this->addRelation('Channel', '\\App\\Model\\Channel', RelationMap::MANY_TO_ONE, array('channel_id' => 'id_channel', ), null, null);
+        $this->addRelation('Trigger', '\\App\\Model\\Trigger', RelationMap::ONE_TO_MANY, array('id_trigger_type' => 'trigger_type_id', ), null, null, 'Triggers');
     } // buildRelations()
 
     /**
@@ -191,7 +190,7 @@ class TriggerTypeTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
         );
     } // getBehaviors()
 
@@ -204,7 +203,7 @@ class TriggerTypeTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -226,7 +225,7 @@ class TriggerTypeTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -247,8 +246,8 @@ class TriggerTypeTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -265,8 +264,8 @@ class TriggerTypeTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (TriggerType object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (TriggerType object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -291,10 +290,10 @@ class TriggerTypeTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -328,10 +327,10 @@ class TriggerTypeTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -361,7 +360,7 @@ class TriggerTypeTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -382,13 +381,13 @@ class TriggerTypeTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a TriggerType or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or TriggerType object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or TriggerType object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -399,7 +398,7 @@ class TriggerTypeTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \TriggerType) { // it's a model object
+        } elseif ($values instanceof \App\Model\TriggerType) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -421,10 +420,10 @@ class TriggerTypeTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""trigger_type table.
+     * Deletes all rows from the trigger_type table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -434,11 +433,11 @@ class TriggerTypeTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a TriggerType or Criteria object.
      *
-     * @param mixed               $criteria Criteria or TriggerType object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or TriggerType object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -455,7 +454,6 @@ class TriggerTypeTableMap extends TableMap
         if ($criteria->containsKey(TriggerTypeTableMap::COL_ID_TRIGGER_TYPE) && $criteria->keyContainsValue(TriggerTypeTableMap::COL_ID_TRIGGER_TYPE) ) {
             throw new PropelException('Cannot insert a value for auto-increment primary key ('.TriggerTypeTableMap::COL_ID_TRIGGER_TYPE.')');
         }
-
 
         // Set the correct dbName
         $query = TriggerTypeQuery::create()->mergeWith($criteria);

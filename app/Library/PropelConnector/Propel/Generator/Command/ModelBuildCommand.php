@@ -13,7 +13,7 @@ namespace App\Library\PropelConnector\Propel\Generator\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Propel\Generator\Manager\ModelManager;
+use App\Library\PropelConnector\Propel\Generator\Manager\ModelManager;
 
 /**
  * @author Florian Klein <florian.klein@free.fr>
@@ -21,9 +21,8 @@ use Propel\Generator\Manager\ModelManager;
  */
 class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
 {
-
-    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../app/Model/';
-    const DEFAULT_INPUT_DIRECTORY = '/../../../../../config/db';
+    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../app/Model/';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db';
     const DEFAULT_MYSQL_ENGINE = 'InnoDB';
     const DEFAULT_OBJECT_BUILDER = '\Propel\Generator\Builder\Om\ObjectBuilder';
     const DEFAULT_OBJECT_STUB_BUILDER = '\Propel\Generator\Builder\Om\ExtensionObjectBuilder';
@@ -40,11 +39,11 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
      */
     protected function configure()
     {
-        parent::configure();
-
         $this
+                ->addOption('platform', null, InputOption::VALUE_REQUIRED, 'The platform', self::DEFAULT_PLATFORM)
+                ->addOption('recursive', null, InputOption::VALUE_NONE, 'Search for schema.xml inside the input directory')
                 ->addOption('mysql-engine', null, InputOption::VALUE_REQUIRED, 'MySQL engine (MyISAM, InnoDB, ...)', self::DEFAULT_MYSQL_ENGINE)
-                ->Option('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
+                ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
                 ->addOption('output-dir', null, InputOption::VALUE_REQUIRED, 'The output directory', __DIR__ . self::DEFAULT_OUTPUT_DIRECTORY)
                 ->addOption('object-class', null, InputOption::VALUE_REQUIRED, 'The object class generator name', self::DEFAULT_OBJECT_BUILDER)
                 ->addOption('object-stub-class', null, InputOption::VALUE_REQUIRED, 'The object stub class generator name', self::DEFAULT_OBJECT_STUB_BUILDER)
@@ -93,11 +92,10 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
             'propel.addTimeStamp' => false,
             'propel.addValidateMethod' => true,
             'propel.addHooks' => true,
-            'propel.classPrefix' => "\\App\\Model\\",
             'propel.namespace.map' => 'Map',
             'propel.useLeftJoinsInDoJoinMethods' => true,
             'propel.emulateForeignKeyConstraints' => false,
-            'propel.schema.autoPrefix' => false,
+            'propel.schema.autoPrefix' => true,
             'propel.dateTimeClass' => '\DateTime',
             // MySQL specific
             'propel.mysql.tableType' => $input->getOption('mysql-engine'),
@@ -110,7 +108,7 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
         $manager->setFilesystem($this->getFilesystem());
         $manager->setGeneratorConfig($generatorConfig);
         $manager->setSchemas($this->getSchemas($input->getOption('input-dir'), $input->getOption('recursive')));
-        $manager->setLoggerClosure(function($message) use ($input, $output) {
+        $manager->setLoggerClosure(function ($message) use ($input, $output) {
             if ($input->getOption('verbose')) {
                 $output->writeln($message);
             }

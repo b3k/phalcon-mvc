@@ -18,10 +18,10 @@ use Propel\Generator\Config\ArrayToPhpConverter;
 
 class ConfigConvertXmlCommand extends \Propel\Generator\Command\ConfigConvertXmlCommand
 {
-    const DEFAULT_INPUT_DIRECTORY   = '.';
     const DEFAULT_INPUT_FILE        = 'runtime-conf.xml';
-    const DEFAULT_OUTPUT_DIRECTORY  = './generated-conf';
+    const DEFAULT_OUTPUT_DIRECTORY  = '/../../../../../../config';
     const DEFAULT_OUTPUT_FILE       = 'config.php';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db';
 
     /**
      * {@inheritdoc}
@@ -29,9 +29,9 @@ class ConfigConvertXmlCommand extends \Propel\Generator\Command\ConfigConvertXml
     protected function configure()
     {
         $this
-            ->addOption('input-dir',   null, InputOption::VALUE_REQUIRED,  'The input directory',   self::DEFAULT_INPUT_DIRECTORY)
+            ->addOption('input-dir',   null, InputOption::VALUE_REQUIRED,  'The input directory',   __DIR__.self::DEFAULT_INPUT_DIRECTORY)
             ->addOption('input-file',  null, InputOption::VALUE_REQUIRED,  'The input file',        self::DEFAULT_INPUT_FILE)
-            ->addOption('output-dir',  null, InputOption::VALUE_REQUIRED,  'The output directory',  self::DEFAULT_OUTPUT_DIRECTORY)
+            ->addOption('output-dir',  null, InputOption::VALUE_REQUIRED,  'The output directory',  __DIR__.self::DEFAULT_OUTPUT_DIRECTORY)
             ->addOption('output-file', null, InputOption::VALUE_REQUIRED,  'The output file',       self::DEFAULT_OUTPUT_FILE)
             ->setName('propel:config:convert-xml')
             ->setAliases(array('convert-conf'))

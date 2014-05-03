@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \TriggerLog;
-use \TriggerLogQuery;
+use App\Model\TriggerLog;
+use App\Model\TriggerLogQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""trigger_log' table.
+ * This class defines the structure of the 'trigger_log' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class TriggerLogTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.TriggerLogTableMap';
+    const CLASS_NAME = 'App.Model.Map.TriggerLogTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class TriggerLogTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""trigger_log';
+    const TABLE_NAME = 'trigger_log';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\TriggerLog';
+    const OM_CLASS = '\\App\\Model\\TriggerLog';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'TriggerLog';
+    const CLASS_DEFAULT = 'App.Model.TriggerLog';
 
     /**
      * The total number of columns
@@ -74,27 +73,27 @@ class TriggerLogTableMap extends TableMap
     /**
      * the column name for the ID_TRIGGER_LOG field
      */
-    const COL_ID_TRIGGER_LOG = '""trigger_log.ID_TRIGGER_LOG';
+    const COL_ID_TRIGGER_LOG = 'trigger_log.ID_TRIGGER_LOG';
 
     /**
      * the column name for the TRIGGER_ID field
      */
-    const COL_TRIGGER_ID = '""trigger_log.TRIGGER_ID';
+    const COL_TRIGGER_ID = 'trigger_log.TRIGGER_ID';
 
     /**
      * the column name for the TRIGGER_LOG_EXECUTED_ON field
      */
-    const COL_TRIGGER_LOG_EXECUTED_ON = '""trigger_log.TRIGGER_LOG_EXECUTED_ON';
+    const COL_TRIGGER_LOG_EXECUTED_ON = 'trigger_log.TRIGGER_LOG_EXECUTED_ON';
 
     /**
      * the column name for the TRIGGER_LOG_RESULT field
      */
-    const COL_TRIGGER_LOG_RESULT = '""trigger_log.TRIGGER_LOG_RESULT';
+    const COL_TRIGGER_LOG_RESULT = 'trigger_log.TRIGGER_LOG_RESULT';
 
     /**
      * the column name for the EXECUTED_AT field
      */
-    const COL_EXECUTED_AT = '""trigger_log.EXECUTED_AT';
+    const COL_EXECUTED_AT = 'trigger_log.EXECUTED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -141,14 +140,14 @@ class TriggerLogTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""trigger_log');
+        $this->setName('trigger_log');
         $this->setPhpName('TriggerLog');
-        $this->setClassName('\\TriggerLog');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\TriggerLog');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_TRIGGER_LOG', 'IdTriggerLog', 'INTEGER', true, 15, null);
-        $this->addForeignKey('TRIGGER_ID', 'TriggerId', 'INTEGER', '""trigger', 'ID_TRIGGER', true, 10, null);
+        $this->addForeignKey('TRIGGER_ID', 'TriggerId', 'INTEGER', 'trigger', 'ID_TRIGGER', true, 10, null);
         $this->addColumn('TRIGGER_LOG_EXECUTED_ON', 'TriggerLogExecutedOn', 'VARCHAR', true, 30, null);
         $this->addColumn('TRIGGER_LOG_RESULT', 'TriggerLogResult', 'VARCHAR', true, 30, null);
         $this->addColumn('EXECUTED_AT', 'ExecutedAt', 'TIMESTAMP', true, null, null);
@@ -159,7 +158,7 @@ class TriggerLogTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Trigger', '\\Trigger', RelationMap::MANY_TO_ONE, array('trigger_id' => 'id_trigger', ), 'CASCADE', null);
+        $this->addRelation('Trigger', '\\App\\Model\\Trigger', RelationMap::MANY_TO_ONE, array('trigger_id' => 'id_trigger', ), 'CASCADE', null);
     } // buildRelations()
 
     /**
@@ -171,7 +170,7 @@ class TriggerLogTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -193,7 +192,7 @@ class TriggerLogTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -214,8 +213,8 @@ class TriggerLogTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -232,8 +231,8 @@ class TriggerLogTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (TriggerLog object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (TriggerLog object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -258,10 +257,10 @@ class TriggerLogTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -295,10 +294,10 @@ class TriggerLogTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -322,7 +321,7 @@ class TriggerLogTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -343,13 +342,13 @@ class TriggerLogTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a TriggerLog or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or TriggerLog object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or TriggerLog object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -360,7 +359,7 @@ class TriggerLogTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \TriggerLog) { // it's a model object
+        } elseif ($values instanceof \App\Model\TriggerLog) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -382,10 +381,10 @@ class TriggerLogTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""trigger_log table.
+     * Deletes all rows from the trigger_log table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -395,11 +394,11 @@ class TriggerLogTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a TriggerLog or Criteria object.
      *
-     * @param mixed               $criteria Criteria or TriggerLog object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or TriggerLog object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -416,7 +415,6 @@ class TriggerLogTableMap extends TableMap
         if ($criteria->containsKey(TriggerLogTableMap::COL_ID_TRIGGER_LOG) && $criteria->keyContainsValue(TriggerLogTableMap::COL_ID_TRIGGER_LOG) ) {
             throw new PropelException('Cannot insert a value for auto-increment primary key ('.TriggerLogTableMap::COL_ID_TRIGGER_LOG.')');
         }
-
 
         // Set the correct dbName
         $query = TriggerLogQuery::create()->mergeWith($criteria);

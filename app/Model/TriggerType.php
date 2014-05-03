@@ -1,6 +1,8 @@
 <?php
 
-use Base\TriggerType as BaseTriggerType;
+namespace app\Model;
+
+use App\Model\Base\TriggerType as BaseTriggerType;
 
 class TriggerType extends BaseTriggerType
 {

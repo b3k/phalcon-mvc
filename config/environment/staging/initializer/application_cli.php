@@ -3,10 +3,11 @@ namespace \Config\Envirnoment\Staging;
 
 use \Config\ApplicationCli as BaseApplication;
 
-class ApplicationCli extends BaseApplication {
-    
-    public function __construct() {
+class application_cli extends BaseApplication
+{
+    public function __construct()
+    {
         parent::__construct();
     }
-    
+
 }

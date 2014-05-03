@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \StackTestResultPass;
-use \StackTestResultPassQuery;
+use App\Model\StackTestResultPass;
+use App\Model\StackTestResultPassQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""stack_test_result_pass' table.
+ * This class defines the structure of the 'stack_test_result_pass' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class StackTestResultPassTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.StackTestResultPassTableMap';
+    const CLASS_NAME = 'App.Model.Map.StackTestResultPassTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class StackTestResultPassTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""stack_test_result_pass';
+    const TABLE_NAME = 'stack_test_result_pass';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\StackTestResultPass';
+    const OM_CLASS = '\\App\\Model\\StackTestResultPass';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'StackTestResultPass';
+    const CLASS_DEFAULT = 'App.Model.StackTestResultPass';
 
     /**
      * The total number of columns
@@ -74,42 +73,42 @@ class StackTestResultPassTableMap extends TableMap
     /**
      * the column name for the ID_TEST_RESULT_PASS field
      */
-    const COL_ID_TEST_RESULT_PASS = '""stack_test_result_pass.ID_TEST_RESULT_PASS';
+    const COL_ID_TEST_RESULT_PASS = 'stack_test_result_pass.ID_TEST_RESULT_PASS';
 
     /**
      * the column name for the TARGET_ID field
      */
-    const COL_TARGET_ID = '""stack_test_result_pass.TARGET_ID';
+    const COL_TARGET_ID = 'stack_test_result_pass.TARGET_ID';
 
     /**
      * the column name for the TARGET_GROUP_ID field
      */
-    const COL_TARGET_GROUP_ID = '""stack_test_result_pass.TARGET_GROUP_ID';
+    const COL_TARGET_GROUP_ID = 'stack_test_result_pass.TARGET_GROUP_ID';
 
     /**
      * the column name for the TARGET_TYPE_ID field
      */
-    const COL_TARGET_TYPE_ID = '""stack_test_result_pass.TARGET_TYPE_ID';
+    const COL_TARGET_TYPE_ID = 'stack_test_result_pass.TARGET_TYPE_ID';
 
     /**
      * the column name for the STACK_TEST_RESULT_PASS_INFO field
      */
-    const COL_STACK_TEST_RESULT_PASS_INFO = '""stack_test_result_pass.STACK_TEST_RESULT_PASS_INFO';
+    const COL_STACK_TEST_RESULT_PASS_INFO = 'stack_test_result_pass.STACK_TEST_RESULT_PASS_INFO';
 
     /**
      * the column name for the STACK_TEST_RESULT_PASS_PRIORITY field
      */
-    const COL_STACK_TEST_RESULT_PASS_PRIORITY = '""stack_test_result_pass.STACK_TEST_RESULT_PASS_PRIORITY';
+    const COL_STACK_TEST_RESULT_PASS_PRIORITY = 'stack_test_result_pass.STACK_TEST_RESULT_PASS_PRIORITY';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = '""stack_test_result_pass.CREATED_AT';
+    const COL_CREATED_AT = 'stack_test_result_pass.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = '""stack_test_result_pass.UPDATED_AT';
+    const COL_UPDATED_AT = 'stack_test_result_pass.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -156,16 +155,16 @@ class StackTestResultPassTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""stack_test_result_pass');
+        $this->setName('stack_test_result_pass');
         $this->setPhpName('StackTestResultPass');
-        $this->setClassName('\\StackTestResultPass');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\StackTestResultPass');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_TEST_RESULT_PASS', 'IdTestResultPass', 'INTEGER', true, 10, null);
-        $this->addForeignKey('TARGET_ID', 'TargetId', 'INTEGER', '""target', 'ID_TARGET', true, 10, null);
-        $this->addForeignKey('TARGET_GROUP_ID', 'TargetGroupId', 'INTEGER', '""target_group', 'ID_TARGET_GROUP', true, 10, null);
-        $this->addForeignKey('TARGET_TYPE_ID', 'TargetTypeId', 'INTEGER', '""target_type', 'ID_TARGET_TYPE', true, 10, null);
+        $this->addForeignKey('TARGET_ID', 'TargetId', 'INTEGER', 'target', 'ID_TARGET', true, 10, null);
+        $this->addForeignKey('TARGET_GROUP_ID', 'TargetGroupId', 'INTEGER', 'target_group', 'ID_TARGET_GROUP', true, 10, null);
+        $this->addForeignKey('TARGET_TYPE_ID', 'TargetTypeId', 'INTEGER', 'target_type', 'ID_TARGET_TYPE', true, 10, null);
         $this->addColumn('STACK_TEST_RESULT_PASS_INFO', 'StackTestResultPassInfo', 'LONGVARCHAR', true, null, null);
         $this->addColumn('STACK_TEST_RESULT_PASS_PRIORITY', 'StackTestResultPassPriority', 'BOOLEAN', true, 1, false);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
@@ -177,9 +176,9 @@ class StackTestResultPassTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Target', '\\Target', RelationMap::MANY_TO_ONE, array('target_id' => 'id_target', ), null, null);
-        $this->addRelation('TargetGroup', '\\TargetGroup', RelationMap::MANY_TO_ONE, array('target_group_id' => 'id_target_group', ), null, null);
-        $this->addRelation('TargetType', '\\TargetType', RelationMap::MANY_TO_ONE, array('target_type_id' => 'id_target_type', ), null, null);
+        $this->addRelation('Target', '\\App\\Model\\Target', RelationMap::MANY_TO_ONE, array('target_id' => 'id_target', ), null, null);
+        $this->addRelation('TargetGroup', '\\App\\Model\\TargetGroup', RelationMap::MANY_TO_ONE, array('target_group_id' => 'id_target_group', ), null, null);
+        $this->addRelation('TargetType', '\\App\\Model\\TargetType', RelationMap::MANY_TO_ONE, array('target_type_id' => 'id_target_type', ), null, null);
     } // buildRelations()
 
     /**
@@ -191,7 +190,7 @@ class StackTestResultPassTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
         );
     } // getBehaviors()
 
@@ -204,7 +203,7 @@ class StackTestResultPassTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -226,7 +225,7 @@ class StackTestResultPassTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -247,8 +246,8 @@ class StackTestResultPassTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -265,8 +264,8 @@ class StackTestResultPassTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (StackTestResultPass object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (StackTestResultPass object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -291,10 +290,10 @@ class StackTestResultPassTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -328,10 +327,10 @@ class StackTestResultPassTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -361,7 +360,7 @@ class StackTestResultPassTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -382,13 +381,13 @@ class StackTestResultPassTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a StackTestResultPass or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or StackTestResultPass object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or StackTestResultPass object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -399,7 +398,7 @@ class StackTestResultPassTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \StackTestResultPass) { // it's a model object
+        } elseif ($values instanceof \App\Model\StackTestResultPass) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -421,10 +420,10 @@ class StackTestResultPassTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""stack_test_result_pass table.
+     * Deletes all rows from the stack_test_result_pass table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -434,11 +433,11 @@ class StackTestResultPassTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a StackTestResultPass or Criteria object.
      *
-     * @param mixed               $criteria Criteria or StackTestResultPass object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or StackTestResultPass object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -455,7 +454,6 @@ class StackTestResultPassTableMap extends TableMap
         if ($criteria->containsKey(StackTestResultPassTableMap::COL_ID_TEST_RESULT_PASS) && $criteria->keyContainsValue(StackTestResultPassTableMap::COL_ID_TEST_RESULT_PASS) ) {
             throw new PropelException('Cannot insert a value for auto-increment primary key ('.StackTestResultPassTableMap::COL_ID_TEST_RESULT_PASS.')');
         }
-
 
         // Set the correct dbName
         $query = StackTestResultPassQuery::create()->mergeWith($criteria);

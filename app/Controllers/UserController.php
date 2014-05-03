@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace app\Controllers;
 
 use Phalcon\Tag;
 use Phalcon\Mvc\Model\Criteria;
@@ -15,16 +15,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
  * Vokuro\Controllers\UsersController
  * CRUD to manage users
  */
-class UserController extends ControllerBase {
-
-    public function initialize() {
+class UserController extends ControllerBase
+{
+    public function initialize()
+    {
         $this->view->setTemplateBefore('private');
     }
 
     /**
      * Default action, shows the search form
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->persistent->conditions = null;
         $this->view->form = new UsersForm();
     }
@@ -32,7 +34,8 @@ class UserController extends ControllerBase {
     /**
      * Searches for users
      */
-    public function searchAction() {
+    public function searchAction()
+    {
         $numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, 'Vokuro\Models\Users', $this->request->getPost());
@@ -49,6 +52,7 @@ class UserController extends ControllerBase {
         $users = Users::find($parameters);
         if (count($users) == 0) {
             $this->flash->notice("The search did not find any users");
+
             return $this->dispatcher->forward(array(
                         "action" => "index"
             ));
@@ -66,7 +70,8 @@ class UserController extends ControllerBase {
     /**
      * Creates a User
      */
-    public function createAction() {
+    public function createAction()
+    {
         if ($this->request->isPost()) {
 
             $user = new Users();
@@ -93,10 +98,12 @@ class UserController extends ControllerBase {
     /**
      * Saves the user from the 'edit' action
      */
-    public function editAction($id) {
+    public function editAction($id)
+    {
         $user = Users::findFirstById($id);
         if (!$user) {
             $this->flash->error("User was not found");
+
             return $this->dispatcher->forward(array(
                         'action' => 'index'
             ));
@@ -135,10 +142,12 @@ class UserController extends ControllerBase {
      *
      * @param int $id
      */
-    public function deleteAction($id) {
+    public function deleteAction($id)
+    {
         $user = Users::findFirstById($id);
         if (!$user) {
             $this->flash->error("User was not found");
+
             return $this->dispatcher->forward(array(
                         'action' => 'index'
             ));
@@ -155,11 +164,12 @@ class UserController extends ControllerBase {
         ));
     }
 
-    public function logoutAction() {
-        
+    public function logoutAction()
+    {
     }
 
-    public function resetPasswordAction() {
+    public function resetPasswordAction()
+    {
         $code = $this->dispatcher->getParam('code');
 
         $resetPassword = ResetPasswords::findFirstByCode($code);
@@ -208,14 +218,15 @@ class UserController extends ControllerBase {
         ));
     }
 
-    public function loginAction() {
-        
+    public function loginAction()
+    {
     }
 
     /**
      * Users must use this action to change its password
      */
-    public function changePasswordAction() {
+    public function changePasswordAction()
+    {
         $form = new ChangePasswordForm();
 
         if ($this->request->isPost()) {

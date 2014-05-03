@@ -30,6 +30,7 @@ $di->set('config', $config);
 $di->set('url', function () use ($config) {
     $url = new UrlResolver();
     $url->setBaseUri($config->application->baseUri);
+
     return $url;
 }, true);
 
@@ -86,6 +87,7 @@ $di->set('modelsMetadata', function () use ($config) {
 $di->set('session', function () {
     $session = new SessionAdapter();
     $session->start();
+
     return $session;
 });
 
@@ -95,6 +97,7 @@ $di->set('session', function () {
 $di->set('crypt', function () use ($config) {
     $crypt = new Crypt();
     $crypt->setKey($config->application->cryptSalt);
+
     return $crypt;
 });
 
@@ -104,6 +107,7 @@ $di->set('crypt', function () use ($config) {
 $di->set('dispatcher', function () {
     $dispatcher = new Dispatcher();
     $dispatcher->setDefaultNamespace('Vokuro\Controllers');
+
     return $dispatcher;
 });
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Map;
+namespace app\Model\Map;
 
-use \Channel;
-use \ChannelQuery;
+use App\Model\Channel;
+use App\Model\ChannelQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -14,9 +14,8 @@ use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
 
-
 /**
- * This class defines the structure of the '""channel' table.
+ * This class defines the structure of the 'channel' table.
  *
  *
  *
@@ -34,7 +33,7 @@ class ChannelTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.ChannelTableMap';
+    const CLASS_NAME = 'App.Model.Map.ChannelTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +43,17 @@ class ChannelTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = '""channel';
+    const TABLE_NAME = 'channel';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Channel';
+    const OM_CLASS = '\\App\\Model\\Channel';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Channel';
+    const CLASS_DEFAULT = 'App.Model.Channel';
 
     /**
      * The total number of columns
@@ -74,42 +73,42 @@ class ChannelTableMap extends TableMap
     /**
      * the column name for the ID_CHANNEL field
      */
-    const COL_ID_CHANNEL = '""channel.ID_CHANNEL';
+    const COL_ID_CHANNEL = 'channel.ID_CHANNEL';
 
     /**
      * the column name for the CHANNEL_CLASS field
      */
-    const COL_CHANNEL_CLASS = '""channel.CHANNEL_CLASS';
+    const COL_CHANNEL_CLASS = 'channel.CHANNEL_CLASS';
 
     /**
      * the column name for the CHANNEL_NAME field
      */
-    const COL_CHANNEL_NAME = '""channel.CHANNEL_NAME';
+    const COL_CHANNEL_NAME = 'channel.CHANNEL_NAME';
 
     /**
      * the column name for the CHANNEL_DESCRIPTION field
      */
-    const COL_CHANNEL_DESCRIPTION = '""channel.CHANNEL_DESCRIPTION';
+    const COL_CHANNEL_DESCRIPTION = 'channel.CHANNEL_DESCRIPTION';
 
     /**
      * the column name for the CHANNEL_ACTIVE field
      */
-    const COL_CHANNEL_ACTIVE = '""channel.CHANNEL_ACTIVE';
+    const COL_CHANNEL_ACTIVE = 'channel.CHANNEL_ACTIVE';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = '""channel.CREATED_AT';
+    const COL_CREATED_AT = 'channel.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = '""channel.UPDATED_AT';
+    const COL_UPDATED_AT = 'channel.UPDATED_AT';
 
     /**
      * the column name for the SLUG field
      */
-    const COL_SLUG = '""channel.SLUG';
+    const COL_SLUG = 'channel.SLUG';
 
     /**
      * The default string format for model objects of the related table
@@ -156,10 +155,10 @@ class ChannelTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('""channel');
+        $this->setName('channel');
         $this->setPhpName('Channel');
-        $this->setClassName('\\Channel');
-        $this->setPackage('');
+        $this->setClassName('\\App\\Model\\Channel');
+        $this->setPackage('App.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_CHANNEL', 'IdChannel', 'INTEGER', true, 10, null);
@@ -178,9 +177,9 @@ class ChannelTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('ChannelOut', '\\ChannelOut', RelationMap::ONE_TO_MANY, array('id_channel' => 'channel_id', ), 'CASCADE', null, 'ChannelOuts');
-        $this->addRelation('SubscriptionPlanChannel', '\\SubscriptionPlanChannel', RelationMap::ONE_TO_MANY, array('id_channel' => 'id_channel', ), 'CASCADE', null, 'SubscriptionPlanChannels');
-        $this->addRelation('TriggerType', '\\TriggerType', RelationMap::ONE_TO_MANY, array('id_channel' => 'channel_id', ), null, null, 'TriggerTypes');
+        $this->addRelation('ChannelOut', '\\App\\Model\\ChannelOut', RelationMap::ONE_TO_MANY, array('id_channel' => 'channel_id', ), 'CASCADE', null, 'ChannelOuts');
+        $this->addRelation('SubscriptionPlanChannel', '\\App\\Model\\SubscriptionPlanChannel', RelationMap::ONE_TO_MANY, array('id_channel' => 'id_channel', ), 'CASCADE', null, 'SubscriptionPlanChannels');
+        $this->addRelation('TriggerType', '\\App\\Model\\TriggerType', RelationMap::ONE_TO_MANY, array('id_channel' => 'channel_id', ), null, null, 'TriggerTypes');
     } // buildRelations()
 
     /**
@@ -192,12 +191,12 @@ class ChannelTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
             'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to ""channel     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to channel     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
@@ -216,7 +215,7 @@ class ChannelTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return string The primary key hash of the row
      */
@@ -238,7 +237,7 @@ class ChannelTableMap extends TableMap
      * @param array  $row       resultset row.
      * @param int    $offset    The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
-     *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
+     *                          TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
@@ -259,8 +258,8 @@ class ChannelTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @param  boolean $withPrefix Whether or not to return the path with the class name
+     * @return string  path.to.ClassName
      */
     public static function getOMClass($withPrefix = true)
     {
@@ -277,8 +276,8 @@ class ChannelTableMap extends TableMap
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
-     * @return array (Channel object, last column rank)
+     *                         rethrown wrapped into a PropelException.
+     * @return array           (Channel object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
@@ -303,10 +302,10 @@ class ChannelTableMap extends TableMap
      * The returned array will contain objects of the default type or
      * objects that inherit from the default.
      *
-     * @param DataFetcherInterface $dataFetcher
+     * @param  DataFetcherInterface $dataFetcher
      * @return array
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @throws PropelException      Any exceptions caught during processing will be
+     *                                          rethrown wrapped into a PropelException.
      */
     public static function populateObjects(DataFetcherInterface $dataFetcher)
     {
@@ -340,10 +339,10 @@ class ChannelTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
+     * @param  Criteria        $criteria object containing the columns to add.
+     * @param  string          $alias    optional table alias
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                                  rethrown wrapped into a PropelException.
      */
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
@@ -373,7 +372,7 @@ class ChannelTableMap extends TableMap
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
      * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     *                         rethrown wrapped into a PropelException.
      */
     public static function getTableMap()
     {
@@ -394,13 +393,13 @@ class ChannelTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a Channel or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Channel object or primary key or array of primary keys
-     *              which is used to create the DELETE statement
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
-     *                if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $values Criteria or Channel object or primary key or array of primary keys
+     *                                     which is used to create the DELETE statement
+     * @param  ConnectionInterface $con    the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     *                                    if supported by native driver or if emulated using Propel.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                    rethrown wrapped into a PropelException.
      */
      public static function doDelete($values, ConnectionInterface $con = null)
      {
@@ -411,7 +410,7 @@ class ChannelTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Channel) { // it's a model object
+        } elseif ($values instanceof \App\Model\Channel) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
@@ -433,10 +432,10 @@ class ChannelTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the ""channel table.
+     * Deletes all rows from the channel table.
      *
-     * @param ConnectionInterface $con the connection to use
-     * @return int The number of affected rows (if supported by underlying database driver).
+     * @param  ConnectionInterface $con the connection to use
+     * @return int                 The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
@@ -446,11 +445,11 @@ class ChannelTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a Channel or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Channel object containing data that is used to create the INSERT statement.
-     * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @param  mixed               $criteria Criteria or Channel object containing data that is used to create the INSERT statement.
+     * @param  ConnectionInterface $con      the ConnectionInterface connection to use
+     * @return mixed               The new primary key.
+     * @throws PropelException     Any exceptions caught during processing will be
+     *                                      rethrown wrapped into a PropelException.
      */
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
@@ -467,7 +466,6 @@ class ChannelTableMap extends TableMap
         if ($criteria->containsKey(ChannelTableMap::COL_ID_CHANNEL) && $criteria->keyContainsValue(ChannelTableMap::COL_ID_CHANNEL) ) {
             throw new PropelException('Cannot insert a value for auto-increment primary key ('.ChannelTableMap::COL_ID_CHANNEL.')');
         }
-
 
         // Set the correct dbName
         $query = ChannelQuery::create()->mergeWith($criteria);

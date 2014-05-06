@@ -34,6 +34,7 @@ return array(
                 ),
                 'ATTR_STATEMENT_CLASS' => 'PDOStatement',
                 'ATTR_ERRMODE' => 'PDO::ERRMODE_WARNING',
+                'pdo_driver' => 'mysql'
             ),
             'init_query' => array(
                 'select * from table1;',

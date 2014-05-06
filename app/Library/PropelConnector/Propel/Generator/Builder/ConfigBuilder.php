@@ -17,6 +17,7 @@ class ConfigBuilder
     const CONF_KEY_DATASOURCES = 'datasources';
     const CONF_KEY_DATASOURCES_ADAPTER = 'adapter';
     const CONF_KEY_DATASOURCES_HOST = 'host';
+    const CONF_KEY_DATASOURCES_PORT = 'port';
     const CONF_KEY_DATASOURCES_USERNAME = 'username';
     const CONF_KEY_DATASOURCES_PASSWORD = 'password';
     const CONF_KEY_DATASOURCES_DBNAME = 'dbname';
@@ -73,6 +74,48 @@ class ConfigBuilder
             $XmlDatasource->addChild('adapter', $datasource_arr[self::CONF_KEY_DATASOURCES_ADAPTER]);
             $XmlDatasourceConnection = $XmlDatasource->addChild('connection');
             $XmlDatasourceConnection->addChild('classname', 'DebugPDO');
+
+            switch ($datasource_arr[self::CONF_KEY_DATASOURCES_ADAPTER]) {
+                case 'sqlite':
+                case 'sqlite2':
+                    $DsnString = $datasource_arr[self::CONF_KEY_DATASOURCES_ADAPTER] . ':';
+                    if (strtolower($datasource_arr[self::CONF_KEY_DATASOURCES_DBNAME]) === 'memory') {
+                        $DsnString .= ':memory:';
+                        break;
+                    } else {
+                        $DsnString .= $datasource_arr[self::CONF_KEY_DATASOURCES_DBNAME];
+                    }
+                    break;
+                case 'mysql':
+                    $DsnString = $datasource_arr[self::CONF_KEY_DATASOURCES_ADAPTER] . ':';
+                    if (substr(strtolower($datasource_arr[self::CONF_KEY_DATASOURCES_HOST]), 0, 11) === 'unix_socket') {
+                        $DsnString .= $datasource_arr[self::CONF_KEY_DATASOURCES_HOST] . ';';
+                    } else {
+                        $DsnString .= 'host=' . $datasource_arr[self::CONF_KEY_DATASOURCES_HOST] . ';';
+                    }
+                    if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_PORT])) {
+                        $DsnString .= 'port=' . $datasource_arr[self::CONF_KEY_DATASOURCES_PORT] . ';';
+                    }
+                    $DsnString .= 'dbname=' . $datasource_arr[self::CONF_KEY_DATASOURCES_DBNAME];
+                    break;
+                case 'pgsql':
+                    $DsnString = $datasource_arr[self::CONF_KEY_DATASOURCES_ADAPTER] . ':';
+                    $DsnString .= 'host=' . $datasource_arr[self::CONF_KEY_DATASOURCES_HOST] . ';';
+                    if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_PORT])) {
+                        $DsnString .= 'port=' . $datasource_arr[self::CONF_KEY_DATASOURCES_PORT] . ';';
+                    }
+                    $DsnString .= 'dbname=' . $datasource_arr[self::CONF_KEY_DATASOURCES_DBNAME] . ';';
+                    if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_USERNAME])) {
+                        $DsnString .= 'user=' . $datasource_arr[self::CONF_KEY_DATASOURCES_USERNAME] . ';';
+                    }
+                    if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_PASSWORD])) {
+                        $DsnString .= 'password=' . $datasource_arr[self::CONF_KEY_DATASOURCES_PASSWORD];
+                    }
+                    break;
+                default:
+
+                    break;
+            }
             $XmlDatasourceConnection->addChild('dsn', 'mysql:host=localhost;dbname=bookstore');
             $XmlDatasourceConnection->addChild('user', 'mysql:host=localhost;dbname=bookstore');
             $XmlDatasourceConnection->addChild('password', 'mysql:host=localhost;dbname=bookstore');

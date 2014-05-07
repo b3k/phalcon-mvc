@@ -12,7 +12,7 @@ class Config extends BaseConfig
 
     protected $default_config_values = array(
         'database' => array(
-            'adapter' => 'Mysql',
+            'adapter' => 'mysql',
             'host' => 'localhost',
             'dbname' => 'test_db',
             'username' => 'root',

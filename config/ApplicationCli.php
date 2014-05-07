@@ -1,7 +1,7 @@
 <?php
 namespace Config;
 
-require_once(APP_ROOT_DIR . '/config/initializer/base/Application.php');
+require_once(APP_ROOT_DIR . '/config/initializer/base/ApplicationCli.php');
 
 use \Config\Initializer\Base\ApplicationCli as BaseApplication;
 

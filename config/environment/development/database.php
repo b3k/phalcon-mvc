@@ -6,8 +6,8 @@ return array(
         'class' => '\Runtime\Runtime\Util\Profiler',
         'slow_treshold' => 0.2,
         'details' => array(
-            array('name' => 'Time', 'precision' => 3, 'pad' => 8),
-            array('name' => 'Memory', 'precision' => 3, 'pad' => 8)
+            'time' => array('name' => 'Time', 'precision' => 3, 'pad' => 8),
+            'mem' => array('name' => 'Memory', 'precision' => 3, 'pad' => 8)
         ),
         'inner_glue' => ': ',
         'outer_glue' => ' | '
@@ -28,12 +28,15 @@ return array(
             'dbname' => 'upcheck',
             'charset' => 'utf-8',
             'cache_query' => true,
+            'persistent' => false,
             'options' => array(
-                'pdo' => array(
-                    'ATTR_PERSISTENT' => false
+                'pdo' => '',
+                'attributes' => array(
+                    'ATTR_STATEMENT_CLASS' => 'PDOStatement',
+                    'ATTR_ERRMODE' => 'PDO::ERRMODE_WARNING',
+                    'ATTR_AUTOCOMMIT' => FALSE,
+                    'ATTR_TIMEOUT' => 10
                 ),
-                'ATTR_STATEMENT_CLASS' => 'PDOStatement',
-                'ATTR_ERRMODE' => 'PDO::ERRMODE_WARNING',
                 'pdo_driver' => 'mysql'
             ),
             'init_query' => array(

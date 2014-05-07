@@ -2,11 +2,9 @@
 
 namespace Config\Initializer\Base;
 
-/**
- *
- */
 class Application extends \Phalcon\Mvc\Application
 {
+
     const SERVICE_CONFIG = 'config';
     const SERVICE_VIEW = 'view';
     const SERVICE_LOADER = 'loader';
@@ -120,7 +118,6 @@ class Application extends \Phalcon\Mvc\Application
     {
         $this->di->set(self::SERVICE_ACL, function () {
             $Acl = new \App\Library\User\Acl\Acl();
-
             return $Acl;
         });
     }
@@ -129,7 +126,6 @@ class Application extends \Phalcon\Mvc\Application
     {
         $this->di->set(self::SERVICE_AUTH, function () {
             $Auth = new \App\Library\User\Auth\Auth();
-
             return $Auth;
         });
     }
@@ -170,18 +166,14 @@ class Application extends \Phalcon\Mvc\Application
                     switch ($exception->getCode()) {
                         case \Phalcon\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
                         case \Phalcon\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
-                            //var_dump($dispatcher->getNamespaceName());
-                            //var_dump($dispatcher->getActionName());
                             $dispatcher->forward(array(
                                 'controller' => 'error',
                                 'action' => 'error404'
                             ));
-
                             return FALSE;
                     }
                 }
             });
-
             $Dispatcher = new \Phalcon\Mvc\Dispatcher();
             $Dispatcher->setDefaultNamespace('App\Controllers');
             $Dispatcher->setEventsManager($EventsManager);
@@ -234,7 +226,6 @@ class Application extends \Phalcon\Mvc\Application
             }, $path);
             $result['App\\' . str_replace('.php', '', implode('\\', $path))] = $file->getRealpath();
         }
-        //var_dump($result);
     }
 
     /**

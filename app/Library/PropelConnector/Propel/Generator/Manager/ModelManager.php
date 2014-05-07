@@ -13,8 +13,7 @@ namespace App\Library\PropelConnector\Propel\Generator\Manager;
 use Propel\Generator\Builder\Om\AbstractOMBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ModelManager
-        extends \Propel\Generator\Manager\ModelManager
+class ModelManager extends \Propel\Generator\Manager\ModelManager
 {
 
     protected $filesystem;

@@ -61,6 +61,8 @@ class ConfigBuildCommand extends \Propel\Generator\Command\AbstractCommand
             throw new \RuntimeException(sprintf('Unable to write the "%s" output file', $outputFilePath));
         }
 
+        var_dump(\Phalcon\DI::getDefault()->get('config')->toArray()); die();
+        
         $mainConf = require($inputFilePath);
         $arrayConf = XmlToArrayConverter::convert($stringConf);
         $phpConf = ArrayToPhpConverter::convert($arrayConf);

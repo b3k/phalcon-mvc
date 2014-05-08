@@ -2,7 +2,8 @@
 
 namespace Config\Initializer\Base;
 
-class Application extends \Phalcon\Mvc\Application
+class Application
+        extends \Phalcon\Mvc\Application
 {
 
     const SERVICE_CONFIG = 'config';
@@ -21,6 +22,7 @@ class Application extends \Phalcon\Mvc\Application
     const SERVICE_CRYPT = 'crypt';
     const SERVICE_ACL = 'acl';
     const SERVICE_AUTH = 'auth';
+    const SERVICE_CLI_APP = 'cli';
 
     protected $di;
     protected $config;
@@ -56,28 +58,6 @@ class Application extends \Phalcon\Mvc\Application
     );
     protected $response;
 
-    /**
-     * @var array
-     */
-    protected static $used_services = array(
-        self::SERVICE_CONFIG,
-        'errorHandler',
-        'exceptionHandler',
-        self::SERVICE_DISPATCHER,
-        self::SERVICE_SECURITY,
-        self::SERVICE_URL,
-        self::SERVICE_COOKIES,
-        self::SERVICE_SESSION,
-        self::SERVICE_FLASH,
-        self::SERVICE_FLASH_SESSION,
-        self::SERVICE_CRYPT,
-        self::SERVICE_VIEWS_CACHE,
-        self::SERVICE_VIEW,
-        self::SERVICE_ROUTER,
-        self::SERVICE_ACL,
-        self::SERVICE_AUTH,
-    );
-
     public function __construct($di = null)
     {
         $this->config = require_once APP_CONFIG_DIR . DS . 'Config.php';
@@ -87,16 +67,16 @@ class Application extends \Phalcon\Mvc\Application
 
         $this->di = $di ? $di : new \Phalcon\DI\FactoryDefault();
 
-        $this->loadServices();
+        $this->loadServices(static::$used_services);
 
         $this->di->set('app', $this);
 
         parent::__construct($this->di);
     }
 
-    protected function loadServices()
+    protected function loadServices($services)
     {
-        foreach (self::$used_services as $service) {
+        foreach ($services as $service) {
             $method = 'init' . ucfirst($service);
             if (method_exists($this, $method)) {
                 $this->$method();
@@ -112,6 +92,28 @@ class Application extends \Phalcon\Mvc\Application
     protected function initConfig()
     {
         $this->di->set(self::SERVICE_CONFIG, $this->config);
+    }
+
+    protected function initCli()
+    {
+        
+        $this->di->set(self::SERVICE_CLI_APP, function () {
+
+            $finder = new \Symfony\Component\Finder\Finder();
+            $finder->files()->name('*Command.php')->path('Command' . DS)->in(APP_APPLICATION_DIR . DS);
+
+            $app = new \Symfony\Component\Console\Application('Falconidae', APP_VERSION);
+
+            foreach ($finder as $file) {
+                $class = '\\App\\' . strtr($file->getRelativePath() . '\\' . $file->getBasename('.php'), '/', '\\');
+                $r = new \ReflectionClass($class);
+                if ($r->isSubclassOf('Symfony\\Component\\Console\\Command\\Command') && !$r->isAbstract()) {
+                    $app->add($r->newInstance());
+                }
+            }
+
+            return $app;
+        });
     }
 
     protected function initAcl()

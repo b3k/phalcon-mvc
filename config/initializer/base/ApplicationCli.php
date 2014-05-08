@@ -2,7 +2,9 @@
 
 namespace Config\Initializer\Base;
 
-class ApplicationCli extends Config\Initializer\Base\Application
+require_once(APP_ROOT_DIR . '/config/initializer/base/Application.php');
+
+class ApplicationCli extends Application
 {
 
     protected static $used_services = array(
@@ -14,6 +16,7 @@ class ApplicationCli extends Config\Initializer\Base\Application
         self::SERVICE_ROUTER,
         self::SERVICE_ACL,
         self::SERVICE_AUTH,
+        self::SERVICE_CLI_APP
     );
 
     public function __construct($di = null)
@@ -24,7 +27,7 @@ class ApplicationCli extends Config\Initializer\Base\Application
 
     public function handle()
     {
-        return FALSE;
+        $this->di->get(self::SERVICE_CLI_APP)->run();
     }
 
 }

@@ -1,4 +1,6 @@
 <?php
+umask(0);
+
 define('APP_ENV_PRODUCTION', 'production');
 define('APP_ENV_STAGING', 'staging');
 define('APP_ENV_TEST', 'test');
@@ -30,21 +32,6 @@ if (!class_exists('\Symfony\Component\Console\Application')) {
     }
 }
 
+$ApplicationCli = new \Config\ApplicationCli();
 
-
-$finder = new \Symfony\Component\Finder\Finder();
-$finder->files()->name('*Command.php')->path('Command/')->in(__DIR__ . '/../../');
-
-$app = new \Symfony\Component\Console\Application('Falconidae', '1.0');
-
-foreach ($finder as $file) {
-
-    $class = '\\App\\' . strtr($file->getRelativePath() . '\\' . $file->getBasename('.php'), '/', '\\');
-
-    $r = new \ReflectionClass($class);
-    if ($r->isSubclassOf('Symfony\\Component\\Console\\Command\\Command') && !$r->isAbstract()) {
-        $app->add($r->newInstance());
-    }
-}
-
-$app->run();
+$ApplicationCli->handle();

@@ -15,22 +15,29 @@ use \Phalcon\Config as PhalconConfig;
  *
  * @author b3k
  */
-class Config extends PhalconConfig
+class Config
+        extends PhalconConfig
 {
+
     protected $env = null;
     protected $base_path = null;
     protected $loadable_config_groups = array(
         'database', 'application', 'models', 'common', 'mailer'
     );
-    protected $config_cache_file = 'cache/config.php';
+    protected static $config_cache_file = 'compiled_config.php';
 
     public function __construct()
     {
-        $this->env = APP_ENV;
-        $this->base_path = APP_ROOT_DIR . DS . 'config' . DS . 'environment' . DS . strtolower($this->env) . DS;
-        if (is_readable($this->config_cache_file)) {
-            return parent::__construct(require(APP_TMP_DIR . DS . $this->config_cache_file));
+        if (is_readable(APP_TMP_DIR . DS . static::$config_cache_file)) {
+            return parent::__construct(require(APP_TMP_DIR . DS . static::$config_cache_file));
         }
+        $this->env = APP_ENV;
+        $this->base_path = APP_CONFIG_DIR . DS . 'environment' . DS . strtolower($this->env) . DS;
+
+        if (!file_exists($this->base_path)) {
+            mkdir($this->base_path, 0777, true);
+        }
+        
         $config = array();
 
         // make all values strtolower
@@ -51,7 +58,7 @@ class Config extends PhalconConfig
 
     public function warmupCache($config)
     {
-        file_put_contents(APP_TMP_DIR . DS . $this->config_cache_file, $this->dumpAsString($config));
+        file_put_contents(APP_TMP_DIR . DS . static::$config_cache_file, $this->dumpAsString($config));
     }
 
     protected function dumpAsString($array)

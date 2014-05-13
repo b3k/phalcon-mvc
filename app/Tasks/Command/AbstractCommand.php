@@ -8,31 +8,22 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Propel\Generator\Exception\RuntimeException;
 
-/**
- * @author William Durand <william.durand1@gmail.com>
- */
 abstract class AbstractCommand extends Command
 {
 
     const DEFAULT_INPUT_DIRECTORY = '.';
+    const DEFAULT_INPUT_ENV = 'development';
 
     protected $filesystem;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this
+                ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Application environment', self::DEFAULT_INPUT_ENV)
                 ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', self::DEFAULT_INPUT_DIRECTORY)
         ;
     }
 
-    /**
-     * Returns a Filesystem instance.
-     *
-     * @return Filesystem
-     */
     protected function getFilesystem()
     {
         if (null === $this->filesystem) {

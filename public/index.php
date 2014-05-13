@@ -19,7 +19,7 @@ define('APP_ROOT_DIR', dirname(__DIR__));
 define('APP_APPLICATION_DIR', APP_ROOT_DIR . DS . 'app');
 define('APP_CONFIG_DIR', APP_ROOT_DIR . DS . 'config');
 define('APP_VIEWS_DIR', APP_APPLICATION_DIR . DS . 'Views');
-define('APP_TMP_DIR', APP_ROOT_DIR . DS . 'tmp');
+define('APP_TMP_DIR', APP_ROOT_DIR . DS . 'tmp' . DS . APP_ENV);
 define('APP_PUBLIC_DIR', APP_ROOT_DIR . DS . 'public');
 
 require_once APP_ROOT_DIR . '/config/exceptions/exceptions.php';
@@ -47,7 +47,6 @@ try {
      * End application
      */
     exit(0);
-
 } catch (Exception $e) {
     echo $e->getMessage(), '<br />';
     echo nl2br(htmlentities($e->getTraceAsString()));

@@ -15,27 +15,25 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Propel\Generator\Config\XmlToArrayConverter;
 use Propel\Generator\Config\ArrayToPhpConverter;
+use App\Library\PropelConnector\Propel\Generator\Builder\ConfigBuilder;
 
-class ConfigBuildCommand extends \Propel\Generator\Command\AbstractCommand
+class ConfigBuildCommand
+        extends \App\Tasks\Command\AbstractCommand
 {
 
-    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../config/db';
-    const DEFAULT_OUTPUT_FILE = 'database.php';
-    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/environment/';
-    const DEFAULT_INPUT_FILE = 'database.php';
-    const DEFAULT_DEFAULT_ENVIRONMENT = 'development';
+    const DEFAULT_OUTPUT_FILE = 'service.php';
 
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
+        
+        parent::configure();
+        
         $this
-                ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
-                ->addOption('input-file', null, InputOption::VALUE_REQUIRED, 'The input file', self::DEFAULT_INPUT_FILE)
-                ->addOption('output-dir', null, InputOption::VALUE_REQUIRED, 'The output directory', __DIR__ . self::DEFAULT_OUTPUT_DIRECTORY)
+                ->addOption('output-dir', null, InputOption::VALUE_REQUIRED, 'The output directory', APP_CONFIG_DIR . DS . 'environment')
                 ->addOption('output-file', null, InputOption::VALUE_REQUIRED, 'The output file', self::DEFAULT_OUTPUT_FILE)
-                ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Used environment', self::DEFAULT_DEFAULT_ENVIRONMENT)
                 ->setName('falconidae:config:database')
                 ->setAliases(array('db-config'))
                 ->setDescription('Transform configuration of database into proper adapter config.')
@@ -47,13 +45,7 @@ class ConfigBuildCommand extends \Propel\Generator\Command\AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $inputFilePath = $input->getOption('input-dir') . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . $input->getOption('input-file');
-        
-        if (!file_exists($inputFilePath)) {
-            throw new \RuntimeException(sprintf('Unable to find the "%s" configuration file', $inputFilePath));
-        }
-        
-        $this->createDirectory($input->getOption('output-dir') . DIRECTORY_SEPARATOR . $input->getOption('env'));
+        $this->createDirectory($input->getOption('output-dir') . DIRECTORY_SEPARATOR . $input->getOption('env') . DS . 'propel');
 
         $outputFilePath = $input->getOption('output-dir') . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . $input->getOption('output-file');
 
@@ -61,9 +53,16 @@ class ConfigBuildCommand extends \Propel\Generator\Command\AbstractCommand
             throw new \RuntimeException(sprintf('Unable to write the "%s" output file', $outputFilePath));
         }
 
-        var_dump(\Phalcon\DI::getDefault()->get('config')->toArray()); die();
-        
-        $mainConf = require($inputFilePath);
+        $mainConf = \Phalcon\DI::getDefault()->get('config')->toArray();
+
+        if (!isset($mainConf['database'])) {
+            throw new Exception('No database config');
+        }
+
+        print_r($mainConf['database']);
+        $ConfigBuilder = new ConfigBuilder($mainConf['database']);
+        $ConfigBuilder->saveXml($input->getOption('output-dir') . DS . 'runtime-conf.build.xml');
+
         $arrayConf = XmlToArrayConverter::convert($stringConf);
         $phpConf = ArrayToPhpConverter::convert($arrayConf);
         $phpConf = "<?php

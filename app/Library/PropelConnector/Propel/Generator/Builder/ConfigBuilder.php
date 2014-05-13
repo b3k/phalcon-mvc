@@ -265,14 +265,14 @@ class ConfigBuilder
 
     public function validateLog()
     {
-        if (isset($this->database_config[self::CONF_KEY_LOG]) && is_array($this->database_config[self::CONF_KEY_LOG])) {
-            if (!isset($this->database_config[self::CONF_KEY_LOG][self::CONF_KEY_CONF_TYPE])) {
+        if (isset($this->input_config[self::CONF_KEY_LOG]) && is_array($this->input_config[self::CONF_KEY_LOG])) {
+            if (!isset($this->input_config[self::CONF_KEY_LOG][self::CONF_KEY_CONF_TYPE])) {
                 throw new \Exception("Log should have set type.");
             }
-            if (!isset($this->database_config[self::CONF_KEY_LOG][self::CONF_KEY_CONF_IDENT])) {
+            if (!isset($this->input_config[self::CONF_KEY_LOG][self::CONF_KEY_CONF_IDENT])) {
                 throw new \Exception("Log should have set ident.");
             }
-            if (!isset($this->database_config[self::CONF_KEY_LOG][self::CONF_KEY_CONF_LEVEL])) {
+            if (!isset($this->input_config[self::CONF_KEY_LOG][self::CONF_KEY_CONF_LEVEL])) {
                 throw new \Exception("Log should have set level.");
             }
         }
@@ -280,8 +280,8 @@ class ConfigBuilder
 
     public function validateProfiler()
     {
-        if (isset($this->database_config[self::CONF_KEY_PROFILER]) && is_array($this->database_config[self::CONF_KEY_PROFILER])) {
-            if (!isset($this->database_config[self::CONF_KEY_PROFILER][self::CONF_KEY_PROFILER_CLASS])) {
+        if (isset($this->input_config[self::CONF_KEY_PROFILER]) && is_array($this->input_config[self::CONF_KEY_PROFILER])) {
+            if (!isset($this->input_config[self::CONF_KEY_PROFILER][self::CONF_KEY_PROFILER_CLASS])) {
                 throw new \Exception("Profiler should have set class.");
             }
         }
@@ -290,17 +290,19 @@ class ConfigBuilder
     public function validateDatasources()
     {
 
-        if (!isset($this->database_config[self::CONF_KEY_DATASOURCES]) || count($this->database_config[self::CONF_KEY_DATASOURCES]) == 0) {
+        print_r($this->input_config[self::CONF_KEY_DATASOURCES]);
+        
+        if (!isset($this->input_config[self::CONF_KEY_DATASOURCES]) || count($this->input_config[self::CONF_KEY_DATASOURCES]) == 0) {
             throw new \Exception("Database should have at least one datasource.");
         }
 
-        $this->default_datasource = isset($this->database_config[self::CONF_DEFAULT_DATASOURCE]) ? $this->database_config[self::CONF_KEY_DEFAULT_DATASOURCE] : self::CONF_DEFAULT_DATASOURCE;
+        $this->default_datasource = isset($this->input_config[self::CONF_DEFAULT_DATASOURCE]) ? $this->input_config[self::CONF_KEY_DEFAULT_DATASOURCE] : self::CONF_DEFAULT_DATASOURCE;
 
-        if (!isset($this->database_config[$this->default_datasource]) || !isset($this->database_config[self::CONF_KEY_DATASOURCES][$this->default_datasource])) {
+        if (!isset($this->input_config[$this->input_config]) || !isset($this->input_config[self::CONF_KEY_DATASOURCES][$this->input_config])) {
             throw new \Exception("Not defined or unknown key in default_datasource.");
         }
 
-        foreach ($this->database_config[self::CONF_KEY_DATASOURCES] as $datasource_key => $datasource) {
+        foreach ($this->input_config[self::CONF_KEY_DATASOURCES] as $datasource_key => $datasource) {
             if (!isset($datasource[self::CONF_KEY_DATASOURCES_ADAPTER])) {
                 throw new \Exception('No adapter defined');
             }

@@ -15,6 +15,7 @@ class ApplicationCli
         'errorHandler',
         'exceptionHandler',
         self::SERVICE_URL,
+        self::SERVICE_CACHE,
         self::SERVICE_CRYPT,
         self::SERVICE_ROUTER,
         self::SERVICE_ACL,

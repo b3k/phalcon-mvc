@@ -6,10 +6,12 @@ require_once(APP_ROOT_DIR . '/config/initializer/base/Config.php');
 
 use \Config\Initializer\Base\Config as BaseConfig;
 
-class Config extends BaseConfig
+class Config
+        extends BaseConfig
 {
-    protected $config_cache_file = 'cache/config.php';
 
+    protected static $config_cache_file = 'compiled_config.php';
+    
     protected $default_config_values = array(
         'database' => array(
             'adapter' => 'mysql',
@@ -40,7 +42,7 @@ class Config extends BaseConfig
      * @var array
      */
     protected $force_config_values = array(
-        //'database' => array('adapter' => 'Mysql')
+            //'database' => array('adapter' => 'Mysql')
     );
 
 }

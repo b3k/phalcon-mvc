@@ -23,6 +23,8 @@ class Application
     const SERVICE_ACL = 'acl';
     const SERVICE_AUTH = 'auth';
     const SERVICE_CLI_APP = 'cli';
+    const SERVICE_PROPEL = 'propel';
+    const SERVICE_FILESYSTEM = 'filesystem';
 
     protected $di;
     protected $config;
@@ -96,7 +98,7 @@ class Application
 
     protected function initCli()
     {
-        
+
         $this->di->set(self::SERVICE_CLI_APP, function () {
 
             $finder = new \Symfony\Component\Finder\Finder();
@@ -113,6 +115,22 @@ class Application
             }
 
             return $app;
+        });
+    }
+
+    protected function initFilesystem()
+    {
+        $this->di->set(self::SERVICE_FILESYSTEM, function() {
+            $Filesystem = new Symfony\Component\Filesystem\Filesystem();
+            return $Filesystem;
+        });
+    }
+
+    protected function initPropel()
+    {
+        $this->di->set(self::SERVICE_PROPEL, function () {
+            $Acl = new \App\Library\User\Acl\Acl();
+            return $Acl;
         });
     }
 
@@ -192,6 +210,22 @@ class Application
             $Security->setDefaultHash($config->application->security->key);
 
             return $Security;
+        });
+    }
+
+    protected function initCache()
+    {
+        $config = $this->config;
+        $this->di->set(self::SERVICE_CACHE, function () use ($config) {
+            $frontCache = new Phalcon\Cache\Frontend\Data(array(
+                "lifetime" => 3600
+            ));
+
+            $Cache = new Phalcon\Cache\Backend\File($frontCache, array(
+                "cacheDir" => APP_TMP_DIR . DS
+            ));
+
+            return $Cache;
         });
     }
 

@@ -23,3 +23,5 @@ $serviceContainer->setProfilerConfiguration(array (
   'innerGlue' => ': ',
   'outerGlue' => ' | ',
 ));
+
+return $serviceContainer;

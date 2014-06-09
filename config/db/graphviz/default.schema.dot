@@ -1,0 +1,38 @@
+digraph G {
+nodechannel [label="{<table>channel|<cols>id_channel (INTEGER) [PK]\lchannel_class (VARCHAR)\lchannel_name (VARCHAR)\lchannel_description (LONGVARCHAR)\lchannel_active (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\lslug (VARCHAR)\l}", shape=record];
+nodechannel_out [label="{<table>channel_out|<cols>id_alert_out (INTEGER) [PK]\lchannel_id (INTEGER) [FK]\ltarget_id (INTEGER) [FK]\lchannel_out_params (LONGVARCHAR)\lchannel_out_status (BOOLEAN)\lchannel_out_priority (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodecron_task [label="{<table>cron_task|<cols>id_cron_task (INTEGER) [PK]\lcron_task_code (VARCHAR)\lcron_task_interval (INTEGER)\lcron_task_params (LONGVARCHAR)\lcron_task_active (BOOLEAN)\lcron_task_state (CHAR)\lcron_task_run_at (TIMESTAMP)\lcron_task_executed_at (TIMESTAMP)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodestack_test_result_fail [label="{<table>stack_test_result_fail|<cols>id_test_result_fail (INTEGER) [PK]\ltarget_id (INTEGER) [FK]\ltarget_group_id (INTEGER) [FK]\ltarget_type_id (INTEGER) [FK]\lstack_test_result_fail_info (LONGVARCHAR)\lstack_test_result_fail_priority (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodestack_test_result_pass [label="{<table>stack_test_result_pass|<cols>id_test_result_pass (INTEGER) [PK]\ltarget_id (INTEGER) [FK]\ltarget_group_id (INTEGER) [FK]\ltarget_type_id (INTEGER) [FK]\lstack_test_result_pass_info (LONGVARCHAR)\lstack_test_result_pass_priority (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodesubscription_plan [label="{<table>subscription_plan|<cols>id_subscription_plan (INTEGER) [PK]\lsubscription_plan_name (VARCHAR)\lsubscription_plan_description (LONGVARCHAR)\lsubscription_plan_price (DECIMAL)\lsubscription_plan_period (INTEGER)\lsubscription_plan_code (VARCHAR)\lsubscription_plan_max_target (INTEGER)\lsubscription_plan_check_interval (INTEGER)\lsubscription_plan_max_localizations (INTEGER)\lsubscription_plan_rss (BOOLEAN)\lsubscription_plan_max_sub_accounts (INTEGER)\lsubscription_plan_max_alert_receivers (INTEGER)\lsubscription_plan_max_trigger (INTEGER)\lsubscription_plan_sms_in_period (INTEGER)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\lslug (VARCHAR)\l}", shape=record];
+nodesubscription_plan_channel [label="{<table>subscription_plan_channel|<cols>id_subscription_plan (INTEGER) [FK]\lid_channel (INTEGER) [FK]\l}", shape=record];
+nodetarget [label="{<table>target|<cols>id_target (INTEGER) [PK]\ltarget_type_id (INTEGER) [FK]\ltarget_group_id (INTEGER) [FK]\ltarget_target (LONGVARCHAR)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodetarget_group [label="{<table>target_group|<cols>id_target_group (INTEGER) [PK]\ltarget_group_name (VARCHAR)\ltarget_group_active (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodetarget_type [label="{<table>target_type|<cols>id_target_type (INTEGER) [PK]\ltarget_type_class (VARCHAR)\ltarget_type_name (VARCHAR)\ltarget_type_description (LONGVARCHAR)\ltarget_type_active (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodetrigger [label="{<table>trigger|<cols>id_trigger (INTEGER) [PK]\ltarget_id (INTEGER) [FK]\luser_id (INTEGER) [FK]\ltrigger_type_id (INTEGER) [FK]\ltrigger_params (LONGVARCHAR)\ltrigger_invoke_on (ARRAY)\ltrigger_name (VARCHAR)\ltrigger_active (BOOLEAN)\ltrigger_last_executed_at (TIMESTAMP)\ltrigger_last_executed_result (VARCHAR)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodetrigger_log [label="{<table>trigger_log|<cols>id_trigger_log (INTEGER) [PK]\ltrigger_id (INTEGER) [FK]\ltrigger_log_executed_on (VARCHAR)\ltrigger_log_result (VARCHAR)\lexecuted_at (TIMESTAMP)\l}", shape=record];
+nodetrigger_type [label="{<table>trigger_type|<cols>id_trigger_type (INTEGER) [PK]\lchannel_id (INTEGER) [FK]\ltrigger_type_class (VARCHAR)\ltrigger_type_name (VARCHAR)\ltrigger_type_description (LONGVARCHAR)\ltrigger_type_active (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodeuser [label="{<table>user|<cols>id_user (INTEGER) [PK]\luser_username (VARCHAR)\luser_password (CHAR)\luser_salt (CHAR)\luser_firstname (VARCHAR)\luser_lastname (VARCHAR)\luser_email (VARCHAR)\luser_active (BOOLEAN)\luser_roles (ARRAY)\luser_expire_at (TIMESTAMP)\luser_expired (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodeuser_log [label="{<table>user_log|<cols>id_user_log (INTEGER) [PK]\luser_id (INTEGER)\luser_log_action (VARCHAR)\luser_log_params (LONGVARCHAR)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodeuser_target_group [label="{<table>user_target_group|<cols>id_target_group (INTEGER) [FK]\lid_user (INTEGER) [FK]\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+
+nodechannel_out:cols -> nodechannel:table [label="channel_id=id_channel ", color=gray];
+nodechannel_out:cols -> nodetarget:table [label="target_id=id_target ", color=gray];
+nodestack_test_result_fail:cols -> nodetarget:table [label="target_id=id_target ", color=gray];
+nodestack_test_result_fail:cols -> nodetarget:table [label="target_group_id=target_group_id ", color=gray];
+nodestack_test_result_fail:cols -> nodetarget:table [label="target_type_id=target_type_id ", color=gray];
+nodestack_test_result_pass:cols -> nodetarget:table [label="target_id=id_target ", color=gray];
+nodestack_test_result_pass:cols -> nodetarget_group:table [label="target_group_id=id_target_group ", color=gray];
+nodestack_test_result_pass:cols -> nodetarget_type:table [label="target_type_id=id_target_type ", color=gray];
+nodesubscription_plan_channel:cols -> nodechannel:table [label="id_channel=id_channel ", color=gray];
+nodesubscription_plan_channel:cols -> nodesubscription_plan:table [label="id_subscription_plan=id_subscription_plan ", color=gray];
+nodetarget:cols -> nodetarget_type:table [label="target_type_id=id_target_type ", color=gray];
+nodetarget:cols -> nodetarget_group:table [label="target_group_id=id_target_group ", color=gray];
+nodetrigger:cols -> nodetarget:table [label="target_id=id_target ", color=gray];
+nodetrigger:cols -> nodeuser:table [label="user_id=id_user ", color=gray];
+nodetrigger:cols -> nodetrigger_type:table [label="trigger_type_id=id_trigger_type ", color=gray];
+nodetrigger_log:cols -> nodetrigger:table [label="trigger_id=id_trigger ", color=gray];
+nodetrigger_type:cols -> nodechannel:table [label="channel_id=id_channel ", color=gray];
+nodeuser_target_group:cols -> nodetarget_group:table [label="id_target_group=id_target_group ", color=gray];
+nodeuser_target_group:cols -> nodeuser:table [label="id_user=id_user ", color=gray];
+}

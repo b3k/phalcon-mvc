@@ -20,36 +20,63 @@ use Propel\Generator\Model\Database;
 use Propel\Generator\Model\Diff\DatabaseComparator;
 use Propel\Generator\Model\IdMethod;
 use Propel\Generator\Model\Schema;
+use Propel\Generator\Config\GeneratorConfig;
+use App\Tasks\Command\AbstractCommand;
 
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
 class MigrationDiffCommand extends \Propel\Generator\Command\MigrationDiffCommand
 {
-    const DEFAULT_OUTPUT_DIRECTORY  = 'generated-migrations';
 
-    const DEFAULT_MIGRATION_TABLE   = 'propel_migration';
+    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../config/db/migrations';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db';
+    const DEFAULT_PLATFORM = 'MysqlPlatform';
+    const DEFAULT_MIGRATION_TABLE = 'propel_migration';
 
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        parent::configure();
-
         $this
-            ->addOption('output-dir',         null, InputOption::VALUE_REQUIRED,  'The output directory where the migration files are located', self::DEFAULT_OUTPUT_DIRECTORY)
-            ->addOption('migration-table',    null, InputOption::VALUE_REQUIRED,  'Migration table name', self::DEFAULT_MIGRATION_TABLE)
-            ->addOption('connection',         null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Connection to use. Example: \'bookstore=mysql:host=127.0.0.1;dbname=test;user=root;password=foobar\' where "bookstore" is your propel database name (used in your schema.xml)', array())
-            ->addOption('table-renaming',     null, InputOption::VALUE_NONE,      'Detect table renaming', null)
-            ->addOption('editor',             null, InputOption::VALUE_OPTIONAL,  'The text editor to use to open diff files', null)
-            ->addOption('skip-removed-table', null, InputOption::VALUE_NONE,      'Option to skip removed table from the migration')
-            ->addOption('skip-tables',        null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'List of excluded tables', array())
-            ->addOption('comment',            "m",  InputOption::VALUE_OPTIONAL,  'A comment for the migration', '')
-            ->setName('propel:migration:diff')
-            ->setAliases(array('diff'))
-            ->setDescription('Generate diff classes')
-            ;
+                ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Application environment', AbstractCommand::DEFAULT_INPUT_ENV)
+                ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
+                ->addOption('platform', null, InputOption::VALUE_REQUIRED, 'The platform', self::DEFAULT_PLATFORM)
+                ->addOption('recursive', null, InputOption::VALUE_NONE, 'Search for schema.xml inside the input directory')
+                ->addOption('output-dir', null, InputOption::VALUE_REQUIRED, 'The output directory where the migration files are located', __DIR__ . self::DEFAULT_OUTPUT_DIRECTORY)
+                ->addOption('migration-table', null, InputOption::VALUE_REQUIRED, 'Migration table name', self::DEFAULT_MIGRATION_TABLE)
+                ->addOption('connection', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Connection to use. Example: \'bookstore=mysql:host=127.0.0.1;dbname=test;user=root;password=foobar\' where "bookstore" is your propel database name (used in your schema.xml)', array())
+                ->addOption('table-renaming', null, InputOption::VALUE_NONE, 'Detect table renaming', null)
+                ->addOption('editor', null, InputOption::VALUE_OPTIONAL, 'The text editor to use to open diff files', null)
+                ->addOption('skip-removed-table', null, InputOption::VALUE_NONE, 'Option to skip removed table from the migration')
+                ->addOption('skip-tables', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'List of excluded tables', array())
+                ->addOption('comment', "m", InputOption::VALUE_OPTIONAL, 'A comment for the migration', '')
+                ->setName('propel:migration:diff')
+                ->setAliases(array('diff'))
+                ->setDescription('Generate diff classes')
+        ;
+    }
+
+    /**
+     * Returns a new `GeneratorConfig` object with your `$properties` merged with
+     * the build.properties in the `input-dir` folder.
+     *
+     * @param array $properties
+     * @param       $input
+     *
+     * @return GeneratorConfig
+     */
+    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
+    {
+        $options = $properties;
+        if ($input && $input->hasOption('input-dir')) {
+            $options = array_merge(
+                    $properties, $this->getBuildProperties(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
+            );
+        }
+
+        return new GeneratorConfig($options);
     }
 
     /**
@@ -58,10 +85,10 @@ class MigrationDiffCommand extends \Propel\Generator\Command\MigrationDiffComman
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $generatorConfig = $this->getGeneratorConfig(array(
-            'propel.platform.class'       => $input->getOption('platform'),
+            'propel.platform.class' => $input->getOption('platform'),
             'propel.reverse.parser.class' => $this->getReverseClass($input),
-            'propel.migration.table'      => $input->getOption('migration-table')
-        ), $input);
+            'propel.migration.table' => $input->getOption('migration-table')
+                ), $input);
 
         $this->createDirectory($input->getOption('output-dir'));
 
@@ -72,7 +99,7 @@ class MigrationDiffCommand extends \Propel\Generator\Command\MigrationDiffComman
         $connections = array();
         $optionConnections = $input->getOption('connection');
         if (!$optionConnections) {
-            $connections = $generatorConfig->getBuildConnections($input->getOption('input-dir'));
+            $connections = $generatorConfig->getBuildConnections(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel');
         } else {
             foreach ($optionConnections as $connection) {
                 list($name, $dsn, $infos) = $this->parseConnection($connection);
@@ -102,7 +129,7 @@ class MigrationDiffCommand extends \Propel\Generator\Command\MigrationDiffComman
                 $output->writeln(sprintf('Connecting to database "%s" using DSN "%s"', $name, $params['dsn']));
             }
 
-            $conn     = $manager->getAdapterConnection($name);
+            $conn = $manager->getAdapterConnection($name);
             $platform = $generatorConfig->getConfiguredPlatform($conn, $name);
 
             if (!$platform->supportsMigrations()) {
@@ -122,7 +149,7 @@ class MigrationDiffCommand extends \Propel\Generator\Command\MigrationDiffComman
             $database->setSchema($appDatabase->getSchema());
             $database->setDefaultIdMethod(IdMethod::NATIVE);
 
-            $parser   = $generatorConfig->getConfiguredSchemaParser($conn);
+            $parser = $generatorConfig->getConfiguredSchemaParser($conn);
             $nbTables = $parser->parse($database, $additionalTables);
 
             $reversedSchema->addDatabase($database);
@@ -143,7 +170,7 @@ class MigrationDiffCommand extends \Propel\Generator\Command\MigrationDiffComman
         $output->writeln('Comparing models...');
         $tableRenaming = $input->getOption('table-renaming');
 
-        $migrationsUp   = array();
+        $migrationsUp = array();
         $migrationsDown = array();
         $removeTable = !$input->getOption('skip-removed-table');
         $excludedTables = $input->getOption('skip-tables');
@@ -172,14 +199,13 @@ class MigrationDiffCommand extends \Propel\Generator\Command\MigrationDiffComman
 
             foreach ($databaseDiff->getPossibleRenamedTables() as $fromTableName => $toTableName) {
                 $output->writeln(sprintf(
-                    '<info>Possible table renaming detected: "%s" to "%s". It will be deleted and recreated. Use --table-renaming to only rename it.</info>',
-                        $fromTableName, $toTableName
+                                '<info>Possible table renaming detected: "%s" to "%s". It will be deleted and recreated. Use --table-renaming to only rename it.</info>', $fromTableName, $toTableName
                 ));
             }
 
-            $platform               = $generatorConfig->getConfiguredPlatform(null, $name);
-            $migrationsUp[$name]    = $platform->getModifyDatabaseDDL($databaseDiff);
-            $migrationsDown[$name]  = $platform->getModifyDatabaseDDL($databaseDiff->getReverseDiff());
+            $platform = $generatorConfig->getConfiguredPlatform(null, $name);
+            $migrationsUp[$name] = $platform->getModifyDatabaseDDL($databaseDiff);
+            $migrationsDown[$name] = $platform->getModifyDatabaseDDL($databaseDiff->getReverseDiff());
         }
 
         if (!$migrationsUp) {
@@ -189,7 +215,7 @@ class MigrationDiffCommand extends \Propel\Generator\Command\MigrationDiffComman
         }
 
         $timestamp = time();
-        $migrationFileName  = $manager->getMigrationFileName($timestamp);
+        $migrationFileName = $manager->getMigrationFileName($timestamp);
         $migrationClassBody = $manager->getMigrationClassBody($migrationsUp, $migrationsDown, $timestamp, $input->getOption('comment'));
 
         $file = $input->getOption('output-dir') . DIRECTORY_SEPARATOR . $migrationFileName;
@@ -219,4 +245,5 @@ class MigrationDiffCommand extends \Propel\Generator\Command\MigrationDiffComman
 
         return $reverse;
     }
+
 }

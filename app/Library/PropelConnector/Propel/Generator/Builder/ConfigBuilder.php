@@ -16,6 +16,7 @@ class ConfigBuilder
     const CONF_KEY_DATASOURCES = 'datasources';
     const CONF_KEY_DATASOURCES_ADAPTER = 'adapter';
     const CONF_KEY_DATASOURCES_HOST = 'host';
+    const CONF_KEY_DATASOURCES_CLASS = 'class';
     const CONF_KEY_DATASOURCES_PORT = 'port';
     const CONF_KEY_DATASOURCES_USERNAME = 'username';
     const CONF_KEY_DATASOURCES_PASSWORD = 'password';
@@ -43,6 +44,7 @@ class ConfigBuilder
     const CONF_KEY_LOG_IDENT = 'ident';
     const CONF_KEY_LOG_NAME = 'name';
     const CONF_KEY_LOG_LEVEL = 'level';
+    const CONF_DEFAULT_CONNECTION_CLASS = '\Propel\Runtime\Connection\PropelPDO';
 
     public function __construct(Array $database_config)
     {
@@ -104,7 +106,7 @@ class ConfigBuilder
             $XmlDatasource->addAttribute('id', $datasource_key);
             $XmlDatasource->addChild('adapter', $datasource_arr[self::CONF_KEY_DATASOURCES_ADAPTER]);
             $XmlDatasourceConnection = $XmlDatasource->addChild('connection');
-            $XmlDatasourceConnection->addChild('classname', 'DebugPDO');
+            $XmlDatasourceConnection->addChild('classname', isset($datasource_arr[self::CONF_KEY_DATASOURCES_CLASS]) ? $datasource_arr[self::CONF_KEY_DATASOURCES_CLASS] : self::CONF_DEFAULT_CONNECTION_CLASS);
 
             $DsnString = $this->getDsnStringFromDatasource($datasource_arr);
 

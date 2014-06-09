@@ -9,14 +9,14 @@
 namespace Config\Initializer\Base;
 
 use \Phalcon\Config as PhalconConfig;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Description of Config
  *
  * @author b3k
  */
-class Config
-        extends PhalconConfig
+class Config extends PhalconConfig
 {
 
     protected $env = null;
@@ -25,6 +25,7 @@ class Config
         'database', 'application', 'models', 'common', 'mailer'
     );
     protected static $config_cache_file = 'compiled_config.php';
+    protected $filesystem;
 
     public function __construct()
     {
@@ -33,7 +34,7 @@ class Config
         }
         $this->env = APP_ENV;
         $this->base_path = APP_CONFIG_DIR . DS . 'environment' . DS . strtolower($this->env) . DS;
-
+        $this->filesystem = new Filesystem();
         if (!file_exists($this->base_path)) {
             mkdir($this->base_path, 0777, true);
         }
@@ -65,7 +66,8 @@ class Config
 
     public function warmupCache($config)
     {
-        file_put_contents(APP_TMP_DIR . DS . static::$config_cache_file, $this->dumpAsString($config));
+        $this->filesystem->mkdir(dirname(APP_TMP_DIR . DS . static::$config_cache_file));
+        $this->filesystem->dumpFile(APP_TMP_DIR . DS . static::$config_cache_file, $this->dumpAsString($config));
     }
 
     protected function dumpAsString($array)

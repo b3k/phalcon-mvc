@@ -14,6 +14,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Library\PropelConnector\Propel\Generator\Manager\ModelManager;
+use App\Tasks\Command\AbstractCommand;
+use Propel\Generator\Config\GeneratorConfig;
 
 /**
  * @author Florian Klein <florian.klein@free.fr>
@@ -21,8 +23,9 @@ use App\Library\PropelConnector\Propel\Generator\Manager\ModelManager;
  */
 class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
 {
+
     const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../app/Model/';
-    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/';
     const DEFAULT_MYSQL_ENGINE = 'InnoDB';
     const DEFAULT_OBJECT_BUILDER = '\Propel\Generator\Builder\Om\ObjectBuilder';
     const DEFAULT_OBJECT_STUB_BUILDER = '\Propel\Generator\Builder\Om\ExtensionObjectBuilder';
@@ -40,6 +43,7 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
     protected function configure()
     {
         $this
+                ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Application environment', AbstractCommand::DEFAULT_INPUT_ENV)
                 ->addOption('platform', null, InputOption::VALUE_REQUIRED, 'The platform', self::DEFAULT_PLATFORM)
                 ->addOption('recursive', null, InputOption::VALUE_NONE, 'Search for schema.xml inside the input directory')
                 ->addOption('mysql-engine', null, InputOption::VALUE_REQUIRED, 'MySQL engine (MyISAM, InnoDB, ...)', self::DEFAULT_MYSQL_ENGINE)
@@ -63,6 +67,27 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
                 ->setAliases(array('build'))
                 ->setDescription('Build the model classes based on Propel XML schemas')
         ;
+    }
+
+    /**
+     * Returns a new `GeneratorConfig` object with your `$properties` merged with
+     * the build.properties in the `input-dir` folder.
+     *
+     * @param array $properties
+     * @param       $input
+     *
+     * @return GeneratorConfig
+     */
+    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
+    {
+        $options = $properties;
+        if ($input && $input->hasOption('input-dir')) {
+            $options = array_merge(
+                    $properties, $this->getBuildProperties($input->getOption('input-dir') . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
+            );
+        }
+
+        return new GeneratorConfig($options);
     }
 
     /**
@@ -107,7 +132,7 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
         $manager = new ModelManager();
         $manager->setFilesystem($this->getFilesystem());
         $manager->setGeneratorConfig($generatorConfig);
-        $manager->setSchemas($this->getSchemas($input->getOption('input-dir'), $input->getOption('recursive')));
+        $manager->setSchemas($this->getSchemas($input->getOption('input-dir') . 'db', $input->getOption('recursive')));
         $manager->setLoggerClosure(function ($message) use ($input, $output) {
             if ($input->getOption('verbose')) {
                 $output->writeln($message);

@@ -14,27 +14,55 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Propel\Generator\Manager\GraphvizManager;
+use Propel\Generator\Config\GeneratorConfig;
+use App\Tasks\Command\AbstractCommand;
 
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
 class GraphvizGenerateCommand extends \Propel\Generator\Command\GraphvizGenerateCommand
 {
-    const DEFAULT_OUTPUT_DIRECTORY  = 'generated-graphviz';
+
+    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../config/db/graphviz';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db';
+    const DEFAULT_PLATFORM = 'MysqlPlatform';
 
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        parent::configure();
-
         $this
-            ->addOption('output-dir',   null, InputOption::VALUE_REQUIRED,  'The output directory', self::DEFAULT_OUTPUT_DIRECTORY)
-            ->setName('propel:graphviz:generate')
-            ->setAliases(array('graphviz'))
-            ->setDescription('Generate Graphviz files (.dot)')
+                ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Application environment', AbstractCommand::DEFAULT_INPUT_ENV)
+                ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
+                ->addOption('output-dir', null, InputOption::VALUE_REQUIRED, 'The output directory', __DIR__ . self::DEFAULT_OUTPUT_DIRECTORY)
+                ->addOption('platform', null, InputOption::VALUE_REQUIRED, 'The platform', self::DEFAULT_PLATFORM)
+                ->addOption('recursive', null, InputOption::VALUE_NONE, 'Search for schema.xml inside the input directory')
+                ->setName('propel:graphviz:generate')
+                ->setAliases(array('graphviz'))
+                ->setDescription('Generate Graphviz files (.dot)')
         ;
+    }
+
+    /**
+     * Returns a new `GeneratorConfig` object with your `$properties` merged with
+     * the build.properties in the `input-dir` folder.
+     *
+     * @param array $properties
+     * @param       $input
+     *
+     * @return GeneratorConfig
+     */
+    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
+    {
+        $options = $properties;
+        if ($input && $input->hasOption('input-dir')) {
+            $options = array_merge(
+                    $properties, $this->getBuildProperties(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
+            );
+        }
+
+        return new GeneratorConfig($options);
     }
 
     /**
@@ -43,9 +71,9 @@ class GraphvizGenerateCommand extends \Propel\Generator\Command\GraphvizGenerate
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $generatorConfig = $this->getGeneratorConfig(array(
-            'propel.platform.class'     => $input->getOption('platform'),
+            'propel.platform.class' => $input->getOption('platform'),
             'propel.packageObjectModel' => true,
-        ), $input);
+                ), $input);
 
         $this->createDirectory($input->getOption('output-dir'));
 
@@ -61,4 +89,5 @@ class GraphvizGenerateCommand extends \Propel\Generator\Command\GraphvizGenerate
 
         $manager->build();
     }
+
 }

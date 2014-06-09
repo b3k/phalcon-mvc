@@ -16,31 +16,58 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Propel\Generator\Manager\MigrationManager;
 use Propel\Generator\Util\SqlParser;
+use Propel\Generator\Config\GeneratorConfig;
+use App\Tasks\Command\AbstractCommand;
 
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
 class MigrationUpCommand extends \Propel\Generator\Command\MigrationUpCommand
 {
-    const DEFAULT_OUTPUT_DIRECTORY  = 'generated-migrations';
 
-    const DEFAULT_MIGRATION_TABLE   = 'propel_migration';
+    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../config/db/migrations';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db';
+    const DEFAULT_MIGRATION_TABLE = 'propel_migration';
+    const DEFAULT_PLATFORM = 'MysqlPlatform';
 
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        parent::configure();
-
         $this
-            ->addOption('output-dir',       null, InputOption::VALUE_REQUIRED,  'The output directory', self::DEFAULT_OUTPUT_DIRECTORY)
-            ->addOption('migration-table',  null, InputOption::VALUE_REQUIRED,  'Migration table name', self::DEFAULT_MIGRATION_TABLE)
-            ->addOption('connection',       null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Connection to use', array())
-            ->setName('propel:migration:up')
-            ->setAliases(array('up'))
-            ->setDescription('Execute migrations up')
+                ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Application environment', AbstractCommand::DEFAULT_INPUT_ENV)
+                ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
+                ->addOption('platform', null, InputOption::VALUE_REQUIRED, 'The platform', self::DEFAULT_PLATFORM)
+                ->addOption('recursive', null, InputOption::VALUE_NONE, 'Search for schema.xml inside the input directory')
+                ->addOption('output-dir', null, InputOption::VALUE_REQUIRED, 'The output directory', __DIR__ . self::DEFAULT_OUTPUT_DIRECTORY)
+                ->addOption('migration-table', null, InputOption::VALUE_REQUIRED, 'Migration table name', self::DEFAULT_MIGRATION_TABLE)
+                ->addOption('connection', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Connection to use', array())
+                ->setName('propel:migration:up')
+                ->setAliases(array('up'))
+                ->setDescription('Execute migrations up')
         ;
+    }
+
+    /**
+     * Returns a new `GeneratorConfig` object with your `$properties` merged with
+     * the build.properties in the `input-dir` folder.
+     *
+     * @param array $properties
+     * @param       $input
+     *
+     * @return GeneratorConfig
+     */
+    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
+    {
+        $options = $properties;
+        if ($input && $input->hasOption('input-dir')) {
+            $options = array_merge(
+                    $properties, $this->getBuildProperties(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
+            );
+        }
+
+        return new GeneratorConfig($options);
     }
 
     /**
@@ -50,7 +77,7 @@ class MigrationUpCommand extends \Propel\Generator\Command\MigrationUpCommand
     {
         $generatorConfig = $this->getGeneratorConfig(array(
             'propel.platform.class' => $input->getOption('platform')
-        ), $input);
+                ), $input);
 
         $this->createDirectory($input->getOption('output-dir'));
 
@@ -60,7 +87,7 @@ class MigrationUpCommand extends \Propel\Generator\Command\MigrationUpCommand
         $connections = array();
         $optionConnections = $input->getOption('connection');
         if (!$optionConnections) {
-            $connections = $generatorConfig->getBuildConnections($input->getOption('input-dir'));
+            $connections = $generatorConfig->getBuildConnections(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel');
         } else {
             foreach ($optionConnections as $connection) {
                 list($name, $dsn, $infos) = $this->parseConnection($connection);
@@ -78,8 +105,7 @@ class MigrationUpCommand extends \Propel\Generator\Command\MigrationUpCommand
             return false;
         }
         $output->writeln(sprintf(
-            'Executing migration %s up',
-            $manager->getMigrationClassName($nextMigrationTimestamp)
+                        'Executing migration %s up', $manager->getMigrationClassName($nextMigrationTimestamp)
         ));
 
         $migration = $manager->getMigrationObject($nextMigrationTimestamp);
@@ -94,9 +120,7 @@ class MigrationUpCommand extends \Propel\Generator\Command\MigrationUpCommand
 
             if ($input->getOption('verbose')) {
                 $output->writeln(sprintf(
-                    'Connecting to database "%s" using DSN "%s"',
-                    $datasource,
-                    $connection['dsn']
+                                'Connecting to database "%s" using DSN "%s"', $datasource, $connection['dsn']
                 ));
             }
 
@@ -119,25 +143,19 @@ class MigrationUpCommand extends \Propel\Generator\Command\MigrationUpCommand
             if (!$res) {
                 $output->writeln('No statement was executed. The version was not updated.');
                 $output->writeln(sprintf(
-                    'Please review the code in "%s"',
-                    $manager->getMigrationDir() . DIRECTORY_SEPARATOR . $manager->getMigrationClassName($nextMigrationTimestamp)
+                                'Please review the code in "%s"', $manager->getMigrationDir() . DIRECTORY_SEPARATOR . $manager->getMigrationClassName($nextMigrationTimestamp)
                 ));
                 $output->writeln('<error>Migration aborted</error>', Project::MSG_ERR);
 
                 return false;
             }
             $output->writeln(sprintf(
-                '%d of %d SQL statements executed successfully on datasource "%s"',
-                $res,
-                count($statements),
-                $datasource
+                            '%d of %d SQL statements executed successfully on datasource "%s"', $res, count($statements), $datasource
             ));
             $manager->updateLatestMigrationTimestamp($datasource, $nextMigrationTimestamp);
             if ($input->getOption('verbose')) {
                 $output->writeln(sprintf(
-                    'Updated latest migration date to %d for datasource "%s"',
-                    $nextMigrationTimestamp,
-                    $datasource
+                                'Updated latest migration date to %d for datasource "%s"', $nextMigrationTimestamp, $datasource
                 ));
             }
         }
@@ -146,11 +164,11 @@ class MigrationUpCommand extends \Propel\Generator\Command\MigrationUpCommand
 
         if ($timestamps = $manager->getValidMigrationTimestamps()) {
             $output->writeln(sprintf(
-                'Migration complete. %d migrations left to execute.',
-                count($timestamps)
+                            'Migration complete. %d migrations left to execute.', count($timestamps)
             ));
         } else {
             $output->writeln('Migration complete. No further migration to execute.');
         }
     }
+
 }

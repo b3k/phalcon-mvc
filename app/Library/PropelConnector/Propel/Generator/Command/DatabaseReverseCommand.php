@@ -15,28 +15,55 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Propel\Generator\Manager\ReverseManager;
+use App\Tasks\Command\AbstractCommand;
 
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
 class DatabaseReverseCommand extends \Propel\Generator\Command\DatabaseReverseCommand
 {
+
+    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../config/db';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config';
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        parent::configure();
-
         $this
-            ->addOption('output-dir',    null, InputOption::VALUE_REQUIRED, 'The output directory', self::DEFAULT_OUTPUT_DIRECTORY)
-            ->addOption('database-name', null, InputOption::VALUE_REQUIRED, 'The database name used in the created schema.xml', self::DEFAULT_DATABASE_NAME)
-            ->addOption('schema-name',   null, InputOption::VALUE_REQUIRED, 'The schema name to generate', self::DEFAULT_SCHEMA_NAME)
-            ->addOption('connection',       null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Connection to use', array())
-            ->setName('propel:database:reverse')
-            ->setAliases(array('reverse'))
-            ->setDescription('Reverse-engineer a XML schema file based on given database')
+                ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Application environment', AbstractCommand::DEFAULT_INPUT_ENV)
+                ->addOption('output-dir', null, InputOption::VALUE_REQUIRED, 'The output directory', __DIR__ . self::DEFAULT_OUTPUT_DIRECTORY)
+                ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
+                ->addOption('database-name', null, InputOption::VALUE_REQUIRED, 'The database name used in the created schema.xml', self::DEFAULT_DATABASE_NAME)
+                ->addOption('schema-name', null, InputOption::VALUE_REQUIRED, 'The schema name to generate', self::DEFAULT_SCHEMA_NAME)
+                ->addOption('connection', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Connection to use', array())
+                ->setName('propel:database:reverse')
+                ->setAliases(array('reverse'))
+                ->setDescription('Reverse-engineer a XML schema file based on given database')
         ;
+    }
+    
+    /**
+     * Returns a new `GeneratorConfig` object with your `$properties` merged with
+     * the build.properties in the `input-dir` folder.
+     *
+     * @param array $properties
+     * @param       $input
+     *
+     * @return GeneratorConfig
+     */
+    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
+    {
+        $options = $properties;
+        if ($input && $input->hasOption('input-dir')) {
+            $options = array_merge(
+                $properties,
+                $this->getBuildProperties($input->getOption('input-dir') . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
+            );
+        }
+
+        return new GeneratorConfig($options);
     }
 
     /**
@@ -49,9 +76,9 @@ class DatabaseReverseCommand extends \Propel\Generator\Command\DatabaseReverseCo
         $vendor = ucfirst($vendor[0]);
 
         $generatorConfig = $this->getGeneratorConfig(array(
-            'propel.platform.class'         => $input->getOption('platform'),
-            'propel.reverse.parser.class'   => sprintf('\\Propel\\Generator\\Reverse\\%sSchemaParser', $vendor),
-        ), $input);
+            'propel.platform.class' => $input->getOption('platform'),
+            'propel.reverse.parser.class' => sprintf('\\Propel\\Generator\\Reverse\\%sSchemaParser', $vendor),
+                ), $input);
 
         $this->createDirectory($input->getOption('output-dir'));
 
@@ -81,4 +108,5 @@ class DatabaseReverseCommand extends \Propel\Generator\Command\DatabaseReverseCo
             return 1;
         }
     }
+
 }

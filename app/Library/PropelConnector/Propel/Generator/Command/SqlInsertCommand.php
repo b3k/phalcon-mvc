@@ -14,12 +14,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Propel\Generator\Manager\SqlManager;
+use App\Tasks\Command\AbstractCommand;
 
 /**
  * @author William Durand <william.durand1@gmail.com>
  */
-class SqlInsertCommand
-        extends \Propel\Generator\Command\SqlInsertCommand
+class SqlInsertCommand extends \Propel\Generator\Command\SqlInsertCommand
 {
 
     const DEFAULT_SQL_DIRECTORY = '/../../../../../../config/db/sql';
@@ -31,6 +31,7 @@ class SqlInsertCommand
     protected function configure()
     {
         $this
+                ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Application environment', AbstractCommand::DEFAULT_INPUT_ENV)
                 ->addOption('platform', null, InputOption::VALUE_REQUIRED, 'The platform', self::DEFAULT_PLATFORM)
                 ->addOption('recursive', null, InputOption::VALUE_NONE, 'Search for schema.xml inside the input directory')
                 ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
@@ -54,7 +55,7 @@ class SqlInsertCommand
         $connections = array();
         $optionConnections = $input->getOption('connection');
         if (!$optionConnections) {
-            $connections = $generatorConfig->getBuildConnections($input->getOption('input-dir'));
+            $connections = $generatorConfig->getBuildConnections(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel');
         } else {
             foreach ($optionConnections as $connection) {
                 list($name, $dsn, $infos) = $this->parseConnection($connection);

@@ -62,7 +62,8 @@ class ConfigBuildCommand
         }
 
         $ConfigBuilder = new ConfigBuilder($mainConf['database']);
-        $ConfigBuilder->saveXml($configPath . DS . 'runtime-conf.build.xml');
+        $ConfigBuilder->saveXml($configPath . DS . 'runtime-conf.xml');
+        $ConfigBuilder->saveXml($configPath . DS . 'buildtime-conf.xml');
 
         $arrayConf = XmlToArrayConverter::convert($ConfigBuilder->getXml());
         $phpConf = ArrayToPhpConverter::convert($arrayConf);

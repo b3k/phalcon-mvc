@@ -37,7 +37,7 @@ class Config
         if (!file_exists($this->base_path)) {
             mkdir($this->base_path, 0777, true);
         }
-        
+
         $config = array();
 
         // make all values strtolower
@@ -48,7 +48,14 @@ class Config
         // get the config
         foreach ($this->loadable_config_groups as $group) {
             if (is_readable($this->base_path . $group . '.php')) {
-                $config[$group] = array_merge($this->default_config_values[$group], require($this->base_path . strtolower($group) . '.php'), isset($this->force_config_values[$group]) ? $this->force_config_values[$group] : array());
+                $config[$group] = array_merge(
+                        // default values
+                        isset($this->default_config_values[$group]) ? $this->default_config_values[$group] : array(),
+                        // set values
+                        require($this->base_path . strtolower($group) . '.php'),
+                        // force config values
+                        isset($this->force_config_values[$group]) ? $this->force_config_values[$group] : array()
+                );
             }
         }
         $this->warmupCache($config);

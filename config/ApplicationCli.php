@@ -20,6 +20,7 @@ class ApplicationCli
         self::SERVICE_ROUTER,
         self::SERVICE_ACL,
         self::SERVICE_AUTH,
+        self::SERVICE_PROPEL,
         self::SERVICE_CLI_APP
     );
 

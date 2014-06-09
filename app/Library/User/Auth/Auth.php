@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Library\User\Auth;
 
 use Phalcon\Mvc\User\Component;
@@ -7,8 +8,11 @@ use Phalcon\Mvc\User\Component;
  * Vokuro\Auth\Auth
  * Manages Authentication/Identity Management in Vokuro
  */
-class Auth extends Component
+class Auth
+        extends Component
 {
+    
+    const AUTH_IDENT_SESSION_KEY = 'auth_ident';
 
     /**
      * Checks the user credentials
@@ -82,11 +86,11 @@ class Auth extends Component
         $failedLogin->save();
 
         $attempts = FailedLogins::count(array(
-            'ipAddress = ?0 AND attempted >= ?1',
-            'bind' => array(
-                $this->request->getClientAddress(),
-                time() - 3600 * 6
-            )
+                    'ipAddress = ?0 AND attempted >= ?1',
+                    'bind' => array(
+                        $this->request->getClientAddress(),
+                        time() - 3600 * 6
+                    )
         ));
 
         switch ($attempts) {
@@ -155,11 +159,11 @@ class Auth extends Component
             if ($cookieToken == $token) {
 
                 $remember = RememberTokens::findFirst(array(
-                    'usersId = ?0 AND token = ?1',
-                    'bind' => array(
-                        $user->id,
-                        $token
-                    )
+                            'usersId = ?0 AND token = ?1',
+                            'bind' => array(
+                                $user->id,
+                                $token
+                            )
                 ));
                 if ($remember) {
 
@@ -289,4 +293,5 @@ class Auth extends Component
 
         return false;
     }
+
 }

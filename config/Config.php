@@ -13,13 +13,6 @@ class Config
     protected static $config_cache_file = 'compiled_config.php';
     
     protected $default_config_values = array(
-        'database' => array(
-            'adapter' => 'mysql',
-            'host' => 'localhost',
-            'dbname' => 'test_db',
-            'username' => 'root',
-            'password' => ''
-        ),
         'application' => array(
             'controllersDir' => '/../app/controllers/',
             'modelsDir' => '/../app/models/',

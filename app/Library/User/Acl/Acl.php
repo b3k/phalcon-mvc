@@ -93,11 +93,6 @@ class Acl extends Component
         return $this->getAcl()->isAllowed($profile, $controller, $action);
     }
 
-    public function isPrivate()
-    {
-        return TRUE;
-    }
-
     /**
      * Returns the ACL list
      *

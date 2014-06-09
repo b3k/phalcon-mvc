@@ -10,9 +10,9 @@ class ConfigBuilder
     private $default_datasource;
     private $adapters = array('sqlite', 'pgsql', 'mysql', 'oracle', 'mssql');
 
-    const CONF_DEFAULT_DATASOURCE = 'default_datasource';
+    const CONF_DEFAULT_DATASOURCE = 'default';
     const CONF_DEFAULT_CHARSET = 'utf-8';
-    const CONF_KEY_DEFAULT_DATASOURCE = 'default';
+    const CONF_KEY_DEFAULT_DATASOURCE = 'default_datasource';
     const CONF_KEY_DATASOURCES = 'datasources';
     const CONF_KEY_DATASOURCES_ADAPTER = 'adapter';
     const CONF_KEY_DATASOURCES_HOST = 'host';
@@ -29,7 +29,7 @@ class ConfigBuilder
     const CONF_KEY_DATASOURCES_PERSISTENT = 'persistent';
     const CONF_KEY_DATASOURCES_SLAVES = 'slaves';
     const CONF_KEY_PROFILER = 'profiler';
-    const CONF_KEY_PROFILER_CLASS = 'type';
+    const CONF_KEY_PROFILER_CLASS = 'class';
     const CONF_KEY_PROFILER_SLOW_TRESHOLD = 'slow_treshold';
     const CONF_KEY_PROFILER_DETAILS = 'details';
     const CONF_KEY_PROFILER_DETAILS_NAME = 'name';
@@ -54,9 +54,14 @@ class ConfigBuilder
 
         try {
             $this->validate();
-            $this->buildXml();
         } catch (\Exception $ex) {
             throw new \RuntimeException("Database config is not valid: " . $ex->getMessage());
+        }
+        
+        try {
+            $this->buildXml();
+        } catch (Exception $ex) {
+            throw new \RuntimeException("Bild exception: " . $ex->getMessage());
         }
     }
 
@@ -64,7 +69,7 @@ class ConfigBuilder
     {
         $this->output_xml = '';
         try {
-            $Xml = \SimpleXMLElement('<config></config>');
+            $Xml = new \SimpleXMLElement('<config></config>');
             foreach (array('datasources', 'log', 'profiler') as $part) {
                 $method = 'buildXml' . ucfirst(strtolower($part));
                 if (method_exists($this, $method)) {
@@ -82,6 +87,10 @@ class ConfigBuilder
     {
         return file_put_contents($filepath, $this->output_xml);
     }
+    
+    public function getXml() {
+        return $this->output_xml;
+    }
 
     public function buildXmlDatasources(\SimpleXMLElement $BaseXml)
     {
@@ -90,13 +99,14 @@ class ConfigBuilder
         $XmlDatasources->addAttribute('default', $this->default_datasource);
 
         foreach ($this->input_config[self::CONF_KEY_DATASOURCES] as $datasource_key => $datasource_arr) {
+
             $XmlDatasource = $XmlDatasources->addChild('datasource');
             $XmlDatasource->addAttribute('id', $datasource_key);
             $XmlDatasource->addChild('adapter', $datasource_arr[self::CONF_KEY_DATASOURCES_ADAPTER]);
             $XmlDatasourceConnection = $XmlDatasource->addChild('connection');
             $XmlDatasourceConnection->addChild('classname', 'DebugPDO');
 
-            $DsnString = getDsnStringFromDatasource($datasource_arr);
+            $DsnString = $this->getDsnStringFromDatasource($datasource_arr);
 
             $XmlDatasourceConnection->addChild('dsn', $DsnString);
             $XmlDatasourceConnection->addChild('user', $datasource_arr[self::CONF_KEY_DATASOURCES_USERNAME]);
@@ -124,20 +134,20 @@ class ConfigBuilder
             }
 
             // set other pdo connection options
-            if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS]) && isset($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_PDO]) && count($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_PDO]) > 0) {
+            if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS]) && isset($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_PDO]) && is_array($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_PDO]) && count($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_PDO]) > 0) {
                 $XmlOptions = isset($XmlOptions) && is_object($XmlOptions) ? $XmlOptions : $XmlDatasourceConnection->addChild('options');
                 foreach ($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_PDO] as $option_key => $option_val) {
                     $XmlOption = $XmlOptions->addChild('option', ($option_val === true ? 'true' : ($option_val === false ? 'false' : (string) $option_val)));
-                    $XmlOption->addAtribute('id', strtoupper($option_key));
+                    $XmlOption->addAttribute('id', strtoupper($option_key));
                 }
             }
 
             // set pdo attributes
-            if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS]) && isset($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_SETTINGS]) && count($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_ATTRIBUTES]) > 0) {
+            if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS]) && isset($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_ATTRIBUTES]) && count($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_ATTRIBUTES]) > 0) {
                 $XmlAttributes = isset($XmlAttributes) && is_object($XmlAttributes) ? $XmlAttributes : $XmlDatasourceConnection->addChild('attributes');
                 foreach ($datasource_arr[self::CONF_KEY_DATASOURCES_OPTIONS][self::CONF_KEY_DATASOURCES_OPTIONS_ATTRIBUTES] as $option_key => $option_val) {
-                    $XmlOption = $XmlOptions->addChild('option', ($option_val === true ? 'true' : ($option_val === false ? 'false' : (string) $option_val)));
-                    $XmlOption->addAtribute('id', strtoupper($option_key));
+                    $XmlAttribute = $XmlAttributes->addChild('option', ($option_val === true ? 'true' : ($option_val === false ? 'false' : (string) $option_val)));
+                    $XmlAttribute->addAttribute('id', strtoupper($option_key));
                 }
             }
 
@@ -145,12 +155,12 @@ class ConfigBuilder
             if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_INIT_QUERY]) && count($datasource_arr[self::CONF_KEY_DATASOURCES_INIT_QUERY]) > 0) {
                 $XmlSettings = isset($XmlSettings) && is_object($XmlSettings) ? $XmlSettings : $XmlDatasourceConnection->addChild('settings');
                 $XmlQueries = $XmlSettings->addChild('setting');
-                $XmlQueries->addAtribute('id', 'queries');
+                $XmlQueries->addAttribute('id', 'queries');
                 foreach ($datasource_arr[self::CONF_KEY_DATASOURCES_INIT_QUERY] as $query_val) {
                     $XmlQuery = $XmlQueries->addChild('query', $query_val);
                 }
             }
-
+            
             if (isset($datasource_arr[self::CONF_KEY_DATASOURCES_SLAVES]) && count($datasource_arr[self::CONF_KEY_DATASOURCES_SLAVES]) > 0) {
                 $XmlSlaves = $XmlDatasource->addChild('slaves');
                 foreach ($datasource_arr[self::CONF_KEY_DATASOURCES_SLAVES] as $slave) {
@@ -160,7 +170,6 @@ class ConfigBuilder
                 }
             }
         }
-
         return $BaseXml;
     }
 
@@ -266,16 +275,17 @@ class ConfigBuilder
     public function validateLog()
     {
         if (isset($this->input_config[self::CONF_KEY_LOG]) && is_array($this->input_config[self::CONF_KEY_LOG])) {
-            if (!isset($this->input_config[self::CONF_KEY_LOG][self::CONF_KEY_CONF_TYPE])) {
+            if (!isset($this->input_config[self::CONF_KEY_LOG][self::CONF_KEY_LOG_TYPE])) {
                 throw new \Exception("Log should have set type.");
             }
-            if (!isset($this->input_config[self::CONF_KEY_LOG][self::CONF_KEY_CONF_IDENT])) {
+            if (!isset($this->input_config[self::CONF_KEY_LOG][self::CONF_KEY_LOG_IDENT])) {
                 throw new \Exception("Log should have set ident.");
             }
-            if (!isset($this->input_config[self::CONF_KEY_LOG][self::CONF_KEY_CONF_LEVEL])) {
+            if (!isset($this->input_config[self::CONF_KEY_LOG][self::CONF_KEY_LOG_LEVEL])) {
                 throw new \Exception("Log should have set level.");
             }
         }
+        
     }
 
     public function validateProfiler()
@@ -290,15 +300,17 @@ class ConfigBuilder
     public function validateDatasources()
     {
 
-        print_r($this->input_config[self::CONF_KEY_DATASOURCES]);
+        
         
         if (!isset($this->input_config[self::CONF_KEY_DATASOURCES]) || count($this->input_config[self::CONF_KEY_DATASOURCES]) == 0) {
             throw new \Exception("Database should have at least one datasource.");
         }
 
-        $this->default_datasource = isset($this->input_config[self::CONF_DEFAULT_DATASOURCE]) ? $this->input_config[self::CONF_KEY_DEFAULT_DATASOURCE] : self::CONF_DEFAULT_DATASOURCE;
+        $this->default_datasource = isset($this->input_config[self::CONF_KEY_DEFAULT_DATASOURCE]) ? $this->input_config[self::CONF_KEY_DEFAULT_DATASOURCE] : self::CONF_DEFAULT_DATASOURCE;
 
-        if (!isset($this->input_config[$this->input_config]) || !isset($this->input_config[self::CONF_KEY_DATASOURCES][$this->input_config])) {
+        print_r($this->default_datasource);
+        
+        if (!isset($this->input_config[self::CONF_KEY_DATASOURCES]) || !isset($this->input_config[self::CONF_KEY_DATASOURCES][$this->default_datasource])) {
             throw new \Exception("Not defined or unknown key in default_datasource.");
         }
 

@@ -45,9 +45,11 @@ class ConfigBuildCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->createDirectory($input->getOption('output-dir') . DIRECTORY_SEPARATOR . $input->getOption('env') . DS . 'propel');
+        $configPath = $input->getOption('output-dir') . DIRECTORY_SEPARATOR . $input->getOption('env') . DS . 'propel';
+        
+        $this->createDirectory($configPath);
 
-        $outputFilePath = $input->getOption('output-dir') . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . $input->getOption('output-file');
+        $outputFilePath = $configPath . DIRECTORY_SEPARATOR . $input->getOption('output-file');
 
         if (!is_writable(dirname($outputFilePath))) {
             throw new \RuntimeException(sprintf('Unable to write the "%s" output file', $outputFilePath));
@@ -56,14 +58,13 @@ class ConfigBuildCommand
         $mainConf = \Phalcon\DI::getDefault()->get('config')->toArray();
 
         if (!isset($mainConf['database'])) {
-            throw new Exception('No database config');
+            throw new \Exception('No database config');
         }
 
-        print_r($mainConf['database']);
         $ConfigBuilder = new ConfigBuilder($mainConf['database']);
-        $ConfigBuilder->saveXml($input->getOption('output-dir') . DS . 'runtime-conf.build.xml');
+        $ConfigBuilder->saveXml($configPath . DS . 'runtime-conf.build.xml');
 
-        $arrayConf = XmlToArrayConverter::convert($stringConf);
+        $arrayConf = XmlToArrayConverter::convert($ConfigBuilder->getXml());
         $phpConf = ArrayToPhpConverter::convert($arrayConf);
         $phpConf = "<?php
 " . $phpConf;

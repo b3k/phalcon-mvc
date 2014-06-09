@@ -8,6 +8,8 @@ use \PDO;
 use App\Model\Trigger as ChildTrigger;
 use App\Model\TriggerQuery as ChildTriggerQuery;
 use App\Model\User as ChildUser;
+use App\Model\UserLog as ChildUserLog;
+use App\Model\UserLogQuery as ChildUserLogQuery;
 use App\Model\UserQuery as ChildUserQuery;
 use App\Model\UserTargetGroup as ChildUserTargetGroup;
 use App\Model\UserTargetGroupQuery as ChildUserTargetGroupQuery;
@@ -136,6 +138,18 @@ abstract class User implements ActiveRecordInterface
     protected $user_expired;
 
     /**
+     * The value for the user_remember_token field.
+     * @var        string
+     */
+    protected $user_remember_token;
+
+    /**
+     * The value for the user_remember_token_validity field.
+     * @var        \DateTime
+     */
+    protected $user_remember_token_validity;
+
+    /**
      * The value for the created_at field.
      * @var        \DateTime
      */
@@ -152,6 +166,12 @@ abstract class User implements ActiveRecordInterface
      */
     protected $collTriggers;
     protected $collTriggersPartial;
+
+    /**
+     * @var        ObjectCollection|ChildUserLog[] Collection to store aggregation of ChildUserLog objects.
+     */
+    protected $collUserLogs;
+    protected $collUserLogsPartial;
 
     /**
      * @var        ObjectCollection|ChildUserTargetGroup[] Collection to store aggregation of ChildUserTargetGroup objects.
@@ -172,6 +192,12 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildTrigger[]
      */
     protected $triggersScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildUserLog[]
+     */
+    protected $userLogsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -570,6 +596,36 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [user_remember_token] column value.
+     *
+     * @return string
+     */
+    public function getUserRememberToken()
+    {
+        return $this->user_remember_token;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [user_remember_token_validity] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *
+     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getUserRememberTokenValidity($format = NULL)
+    {
+        if ($format === null) {
+            return $this->user_remember_token_validity;
+        } else {
+            return $this->user_remember_token_validity instanceof \DateTime ? $this->user_remember_token_validity->format($format) : null;
+        }
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -690,13 +746,22 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('UserExpired', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_expired = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('UserRememberToken', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->user_remember_token = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('UserRememberTokenValidity', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->user_remember_token_validity = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -709,7 +774,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 13; // 13 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 15; // 15 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Model\\User'), 0, $e);
@@ -1001,6 +1066,46 @@ abstract class User implements ActiveRecordInterface
     } // setUserExpired()
 
     /**
+     * Set the value of [user_remember_token] column.
+     *
+     * @param  string $v new value
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserRememberToken($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_remember_token !== $v) {
+            $this->user_remember_token = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_REMEMBER_TOKEN] = true;
+        }
+
+        return $this;
+    } // setUserRememberToken()
+
+    /**
+     * Sets the value of [user_remember_token_validity] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function setUserRememberTokenValidity($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->user_remember_token_validity !== null || $dt !== null) {
+            if ($dt !== $this->user_remember_token_validity) {
+                $this->user_remember_token_validity = $dt;
+                $this->modifiedColumns[UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setUserRememberTokenValidity()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
@@ -1078,6 +1183,8 @@ abstract class User implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->collTriggers = null;
+
+            $this->collUserLogs = null;
 
             $this->collUserTargetGroups = null;
 
@@ -1220,6 +1327,23 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
+            if ($this->userLogsScheduledForDeletion !== null) {
+                if (!$this->userLogsScheduledForDeletion->isEmpty()) {
+                    \App\Model\UserLogQuery::create()
+                        ->filterByPrimaryKeys($this->userLogsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->userLogsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collUserLogs !== null) {
+                foreach ($this->collUserLogs as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->userTargetGroupsScheduledForDeletion !== null) {
                 if (!$this->userTargetGroupsScheduledForDeletion->isEmpty()) {
                     \App\Model\UserTargetGroupQuery::create()
@@ -1296,6 +1420,12 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_USER_EXPIRED)) {
             $modifiedColumns[':p' . $index++]  = 'USER_EXPIRED';
         }
+        if ($this->isColumnModified(UserTableMap::COL_USER_REMEMBER_TOKEN)) {
+            $modifiedColumns[':p' . $index++]  = 'USER_REMEMBER_TOKEN';
+        }
+        if ($this->isColumnModified(UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY)) {
+            $modifiedColumns[':p' . $index++]  = 'USER_REMEMBER_TOKEN_VALIDITY';
+        }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
         }
@@ -1345,6 +1475,12 @@ abstract class User implements ActiveRecordInterface
                         break;
                     case 'USER_EXPIRED':
                         $stmt->bindValue($identifier, (int) $this->user_expired, PDO::PARAM_INT);
+                        break;
+                    case 'USER_REMEMBER_TOKEN':
+                        $stmt->bindValue($identifier, $this->user_remember_token, PDO::PARAM_STR);
+                        break;
+                    case 'USER_REMEMBER_TOKEN_VALIDITY':
+                        $stmt->bindValue($identifier, $this->user_remember_token_validity ? $this->user_remember_token_validity->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                     case 'CREATED_AT':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1448,9 +1584,15 @@ abstract class User implements ActiveRecordInterface
                 return $this->getUserExpired();
                 break;
             case 11:
-                return $this->getCreatedAt();
+                return $this->getUserRememberToken();
                 break;
             case 12:
+                return $this->getUserRememberTokenValidity();
+                break;
+            case 13:
+                return $this->getCreatedAt();
+                break;
+            case 14:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1493,8 +1635,10 @@ abstract class User implements ActiveRecordInterface
             $keys[8] => $this->getUserRoles(),
             $keys[9] => $this->getUserExpireAt(),
             $keys[10] => $this->getUserExpired(),
-            $keys[11] => $this->getCreatedAt(),
-            $keys[12] => $this->getUpdatedAt(),
+            $keys[11] => $this->getUserRememberToken(),
+            $keys[12] => $this->getUserRememberTokenValidity(),
+            $keys[13] => $this->getCreatedAt(),
+            $keys[14] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1504,6 +1648,9 @@ abstract class User implements ActiveRecordInterface
         if ($includeForeignObjects) {
             if (null !== $this->collTriggers) {
                 $result['Triggers'] = $this->collTriggers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collUserLogs) {
+                $result['UserLogs'] = $this->collUserLogs->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUserTargetGroups) {
                 $result['UserTargetGroups'] = $this->collUserTargetGroups->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1580,9 +1727,15 @@ abstract class User implements ActiveRecordInterface
                 $this->setUserExpired($value);
                 break;
             case 11:
-                $this->setCreatedAt($value);
+                $this->setUserRememberToken($value);
                 break;
             case 12:
+                $this->setUserRememberTokenValidity($value);
+                break;
+            case 13:
+                $this->setCreatedAt($value);
+                break;
+            case 14:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1645,10 +1798,16 @@ abstract class User implements ActiveRecordInterface
             $this->setUserExpired($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setCreatedAt($arr[$keys[11]]);
+            $this->setUserRememberToken($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setUpdatedAt($arr[$keys[12]]);
+            $this->setUserRememberTokenValidity($arr[$keys[12]]);
+        }
+        if (array_key_exists($keys[13], $arr)) {
+            $this->setCreatedAt($arr[$keys[13]]);
+        }
+        if (array_key_exists($keys[14], $arr)) {
+            $this->setUpdatedAt($arr[$keys[14]]);
         }
     }
 
@@ -1717,6 +1876,12 @@ abstract class User implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_EXPIRED)) {
             $criteria->add(UserTableMap::COL_USER_EXPIRED, $this->user_expired);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_USER_REMEMBER_TOKEN)) {
+            $criteria->add(UserTableMap::COL_USER_REMEMBER_TOKEN, $this->user_remember_token);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY)) {
+            $criteria->add(UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY, $this->user_remember_token_validity);
         }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
             $criteria->add(UserTableMap::COL_CREATED_AT, $this->created_at);
@@ -1820,6 +1985,8 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setUserRoles($this->getUserRoles());
         $copyObj->setUserExpireAt($this->getUserExpireAt());
         $copyObj->setUserExpired($this->getUserExpired());
+        $copyObj->setUserRememberToken($this->getUserRememberToken());
+        $copyObj->setUserRememberTokenValidity($this->getUserRememberTokenValidity());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
 
@@ -1831,6 +1998,12 @@ abstract class User implements ActiveRecordInterface
             foreach ($this->getTriggers() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addTrigger($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getUserLogs() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addUserLog($relObj->copy($deepCopy));
                 }
             }
 
@@ -1883,6 +2056,9 @@ abstract class User implements ActiveRecordInterface
     {
         if ('Trigger' == $relationName) {
             return $this->initTriggers();
+        }
+        if ('UserLog' == $relationName) {
+            return $this->initUserLogs();
         }
         if ('UserTargetGroup' == $relationName) {
             return $this->initUserTargetGroups();
@@ -2158,6 +2334,224 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collUserLogs collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addUserLogs()
+     */
+    public function clearUserLogs()
+    {
+        $this->collUserLogs = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collUserLogs collection loaded partially.
+     */
+    public function resetPartialUserLogs($v = true)
+    {
+        $this->collUserLogsPartial = $v;
+    }
+
+    /**
+     * Initializes the collUserLogs collection.
+     *
+     * By default this just sets the collUserLogs collection to an empty array (like clearcollUserLogs());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initUserLogs($overrideExisting = true)
+    {
+        if (null !== $this->collUserLogs && !$overrideExisting) {
+            return;
+        }
+        $this->collUserLogs = new ObjectCollection();
+        $this->collUserLogs->setModel('\App\Model\UserLog');
+    }
+
+    /**
+     * Gets an array of ChildUserLog objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildUserLog[] List of ChildUserLog objects
+     * @throws PropelException
+     */
+    public function getUserLogs(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collUserLogsPartial && !$this->isNew();
+        if (null === $this->collUserLogs || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collUserLogs) {
+                // return empty collection
+                $this->initUserLogs();
+            } else {
+                $collUserLogs = ChildUserLogQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collUserLogsPartial && count($collUserLogs)) {
+                        $this->initUserLogs(false);
+
+                        foreach ($collUserLogs as $obj) {
+                            if (false == $this->collUserLogs->contains($obj)) {
+                                $this->collUserLogs->append($obj);
+                            }
+                        }
+
+                        $this->collUserLogsPartial = true;
+                    }
+
+                    return $collUserLogs;
+                }
+
+                if ($partial && $this->collUserLogs) {
+                    foreach ($this->collUserLogs as $obj) {
+                        if ($obj->isNew()) {
+                            $collUserLogs[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collUserLogs = $collUserLogs;
+                $this->collUserLogsPartial = false;
+            }
+        }
+
+        return $this->collUserLogs;
+    }
+
+    /**
+     * Sets a collection of ChildUserLog objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $userLogs A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setUserLogs(Collection $userLogs, ConnectionInterface $con = null)
+    {
+        /** @var ChildUserLog[] $userLogsToDelete */
+        $userLogsToDelete = $this->getUserLogs(new Criteria(), $con)->diff($userLogs);
+
+
+        $this->userLogsScheduledForDeletion = $userLogsToDelete;
+
+        foreach ($userLogsToDelete as $userLogRemoved) {
+            $userLogRemoved->setUser(null);
+        }
+
+        $this->collUserLogs = null;
+        foreach ($userLogs as $userLog) {
+            $this->addUserLog($userLog);
+        }
+
+        $this->collUserLogs = $userLogs;
+        $this->collUserLogsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related UserLog objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related UserLog objects.
+     * @throws PropelException
+     */
+    public function countUserLogs(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collUserLogsPartial && !$this->isNew();
+        if (null === $this->collUserLogs || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUserLogs) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getUserLogs());
+            }
+
+            $query = ChildUserLogQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collUserLogs);
+    }
+
+    /**
+     * Method called to associate a ChildUserLog object to this object
+     * through the ChildUserLog foreign key attribute.
+     *
+     * @param  ChildUserLog $l ChildUserLog
+     * @return $this|\App\Model\User The current object (for fluent API support)
+     */
+    public function addUserLog(ChildUserLog $l)
+    {
+        if ($this->collUserLogs === null) {
+            $this->initUserLogs();
+            $this->collUserLogsPartial = true;
+        }
+
+        if (!$this->collUserLogs->contains($l)) {
+            $this->doAddUserLog($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildUserLog $userLog The ChildUserLog object to add.
+     */
+    protected function doAddUserLog(ChildUserLog $userLog)
+    {
+        $this->collUserLogs[]= $userLog;
+        $userLog->setUser($this);
+    }
+
+    /**
+     * @param  ChildUserLog $userLog The ChildUserLog object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeUserLog(ChildUserLog $userLog)
+    {
+        if ($this->getUserLogs()->contains($userLog)) {
+            $pos = $this->collUserLogs->search($userLog);
+            $this->collUserLogs->remove($pos);
+            if (null === $this->userLogsScheduledForDeletion) {
+                $this->userLogsScheduledForDeletion = clone $this->collUserLogs;
+                $this->userLogsScheduledForDeletion->clear();
+            }
+            $this->userLogsScheduledForDeletion[]= clone $userLog;
+            $userLog->setUser(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears out the collUserTargetGroups collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -2419,6 +2813,8 @@ abstract class User implements ActiveRecordInterface
         $this->user_roles_unserialized = null;
         $this->user_expire_at = null;
         $this->user_expired = null;
+        $this->user_remember_token = null;
+        $this->user_remember_token_validity = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
@@ -2445,6 +2841,11 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collUserLogs) {
+                foreach ($this->collUserLogs as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collUserTargetGroups) {
                 foreach ($this->collUserTargetGroups as $o) {
                     $o->clearAllReferences($deep);
@@ -2453,6 +2854,7 @@ abstract class User implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collTriggers = null;
+        $this->collUserLogs = null;
         $this->collUserTargetGroups = null;
     }
 

@@ -10,6 +10,7 @@ use App\Model\Map\UserLogTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -23,6 +24,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserLogQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  * @method     ChildUserLogQuery orderByUserLogAction($order = Criteria::ASC) Order by the user_log_action column
  * @method     ChildUserLogQuery orderByUserLogParams($order = Criteria::ASC) Order by the user_log_params column
+ * @method     ChildUserLogQuery orderByUserLogIp($order = Criteria::ASC) Order by the user_log_ip column
+ * @method     ChildUserLogQuery orderByUserLogHttpUserAgent($order = Criteria::ASC) Order by the user_log_http_user_agent column
  * @method     ChildUserLogQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildUserLogQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
@@ -30,12 +33,20 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserLogQuery groupByUserId() Group by the user_id column
  * @method     ChildUserLogQuery groupByUserLogAction() Group by the user_log_action column
  * @method     ChildUserLogQuery groupByUserLogParams() Group by the user_log_params column
+ * @method     ChildUserLogQuery groupByUserLogIp() Group by the user_log_ip column
+ * @method     ChildUserLogQuery groupByUserLogHttpUserAgent() Group by the user_log_http_user_agent column
  * @method     ChildUserLogQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildUserLogQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method     ChildUserLogQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildUserLogQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildUserLogQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     ChildUserLogQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
+ * @method     ChildUserLogQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
+ * @method     ChildUserLogQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ *
+ * @method     \App\Model\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUserLog findOne(ConnectionInterface $con = null) Return the first ChildUserLog matching the query
  * @method     ChildUserLog findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUserLog matching the query, or a new ChildUserLog object populated from the query conditions when no match is found
@@ -44,6 +55,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserLog findOneByUserId(int $user_id) Return the first ChildUserLog filtered by the user_id column
  * @method     ChildUserLog findOneByUserLogAction(string $user_log_action) Return the first ChildUserLog filtered by the user_log_action column
  * @method     ChildUserLog findOneByUserLogParams(string $user_log_params) Return the first ChildUserLog filtered by the user_log_params column
+ * @method     ChildUserLog findOneByUserLogIp(string $user_log_ip) Return the first ChildUserLog filtered by the user_log_ip column
+ * @method     ChildUserLog findOneByUserLogHttpUserAgent(string $user_log_http_user_agent) Return the first ChildUserLog filtered by the user_log_http_user_agent column
  * @method     ChildUserLog findOneByCreatedAt(string $created_at) Return the first ChildUserLog filtered by the created_at column
  * @method     ChildUserLog findOneByUpdatedAt(string $updated_at) Return the first ChildUserLog filtered by the updated_at column
  *
@@ -52,6 +65,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserLog[]|ObjectCollection findByUserId(int $user_id) Return ChildUserLog objects filtered by the user_id column
  * @method     ChildUserLog[]|ObjectCollection findByUserLogAction(string $user_log_action) Return ChildUserLog objects filtered by the user_log_action column
  * @method     ChildUserLog[]|ObjectCollection findByUserLogParams(string $user_log_params) Return ChildUserLog objects filtered by the user_log_params column
+ * @method     ChildUserLog[]|ObjectCollection findByUserLogIp(string $user_log_ip) Return ChildUserLog objects filtered by the user_log_ip column
+ * @method     ChildUserLog[]|ObjectCollection findByUserLogHttpUserAgent(string $user_log_http_user_agent) Return ChildUserLog objects filtered by the user_log_http_user_agent column
  * @method     ChildUserLog[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUserLog objects filtered by the created_at column
  * @method     ChildUserLog[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildUserLog objects filtered by the updated_at column
  * @method     ChildUserLog[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -143,7 +158,7 @@ abstract class UserLogQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_USER_LOG, USER_ID, USER_LOG_ACTION, USER_LOG_PARAMS, CREATED_AT, UPDATED_AT FROM user_log WHERE ID_USER_LOG = :p0';
+        $sql = 'SELECT ID_USER_LOG, USER_ID, USER_LOG_ACTION, USER_LOG_PARAMS, USER_LOG_IP, USER_LOG_HTTP_USER_AGENT, CREATED_AT, UPDATED_AT FROM user_log WHERE ID_USER_LOG = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -284,6 +299,8 @@ abstract class UserLogQuery extends ModelCriteria
      * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
      * </code>
      *
+     * @see       filterByUser()
+     *
      * @param     mixed $userId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -374,6 +391,64 @@ abstract class UserLogQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the user_log_ip column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserLogIp('fooValue');   // WHERE user_log_ip = 'fooValue'
+     * $query->filterByUserLogIp('%fooValue%'); // WHERE user_log_ip LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userLogIp The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserLogQuery The current query, for fluid interface
+     */
+    public function filterByUserLogIp($userLogIp = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userLogIp)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userLogIp)) {
+                $userLogIp = str_replace('*', '%', $userLogIp);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserLogTableMap::COL_USER_LOG_IP, $userLogIp, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_log_http_user_agent column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserLogHttpUserAgent('fooValue');   // WHERE user_log_http_user_agent = 'fooValue'
+     * $query->filterByUserLogHttpUserAgent('%fooValue%'); // WHERE user_log_http_user_agent LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userLogHttpUserAgent The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserLogQuery The current query, for fluid interface
+     */
+    public function filterByUserLogHttpUserAgent($userLogHttpUserAgent = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userLogHttpUserAgent)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userLogHttpUserAgent)) {
+                $userLogHttpUserAgent = str_replace('*', '%', $userLogHttpUserAgent);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserLogTableMap::COL_USER_LOG_HTTP_USER_AGENT, $userLogHttpUserAgent, $comparison);
+    }
+
+    /**
      * Filter the query on the created_at column
      *
      * Example usage:
@@ -457,6 +532,81 @@ abstract class UserLogQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserLogTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \App\Model\User object
+     *
+     * @param \App\Model\User|ObjectCollection $user The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserLogQuery The current query, for fluid interface
+     */
+    public function filterByUser($user, $comparison = null)
+    {
+        if ($user instanceof \App\Model\User) {
+            return $this
+                ->addUsingAlias(UserLogTableMap::COL_USER_ID, $user->getIdUser(), $comparison);
+        } elseif ($user instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(UserLogTableMap::COL_USER_ID, $user->toKeyValue('PrimaryKey', 'IdUser'), $comparison);
+        } else {
+            throw new PropelException('filterByUser() only accepts arguments of type \App\Model\User or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the User relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserLogQuery The current query, for fluid interface
+     */
+    public function joinUser($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('User');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'User');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the User relation User object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Model\UserQuery A secondary query class using the current class as primary query
+     */
+    public function useUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinUser($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'User', '\App\Model\UserQuery');
     }
 
     /**

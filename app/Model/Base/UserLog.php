@@ -5,8 +5,10 @@ namespace App\Model\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use App\Model\User as ChildUser;
 use App\Model\UserLog as ChildUserLog;
 use App\Model\UserLogQuery as ChildUserLogQuery;
+use App\Model\UserQuery as ChildUserQuery;
 use App\Model\Map\UserLogTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -80,6 +82,18 @@ abstract class UserLog implements ActiveRecordInterface
     protected $user_log_params;
 
     /**
+     * The value for the user_log_ip field.
+     * @var        string
+     */
+    protected $user_log_ip;
+
+    /**
+     * The value for the user_log_http_user_agent field.
+     * @var        string
+     */
+    protected $user_log_http_user_agent;
+
+    /**
      * The value for the created_at field.
      * @var        \DateTime
      */
@@ -90,6 +104,11 @@ abstract class UserLog implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $updated_at;
+
+    /**
+     * @var        ChildUser
+     */
+    protected $aUser;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -357,6 +376,26 @@ abstract class UserLog implements ActiveRecordInterface
     }
 
     /**
+     * Get the [user_log_ip] column value.
+     *
+     * @return string
+     */
+    public function getUserLogIp()
+    {
+        return $this->user_log_ip;
+    }
+
+    /**
+     * Get the [user_log_http_user_agent] column value.
+     *
+     * @return string
+     */
+    public function getUserLogHttpUserAgent()
+    {
+        return $this->user_log_http_user_agent;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -444,13 +483,19 @@ abstract class UserLog implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserLogTableMap::translateFieldName('UserLogParams', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_log_params = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserLogTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserLogTableMap::translateFieldName('UserLogIp', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->user_log_ip = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserLogTableMap::translateFieldName('UserLogHttpUserAgent', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->user_log_http_user_agent = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserLogTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserLogTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserLogTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -463,7 +508,7 @@ abstract class UserLog implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = UserLogTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = UserLogTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Model\\UserLog'), 0, $e);
@@ -485,6 +530,9 @@ abstract class UserLog implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aUser !== null && $this->user_id !== $this->aUser->getIdUser()) {
+            $this->aUser = null;
+        }
     } // ensureConsistency
 
     /**
@@ -522,6 +570,10 @@ abstract class UserLog implements ActiveRecordInterface
         if ($this->user_id !== $v) {
             $this->user_id = $v;
             $this->modifiedColumns[UserLogTableMap::COL_USER_ID] = true;
+        }
+
+        if ($this->aUser !== null && $this->aUser->getIdUser() !== $v) {
+            $this->aUser = null;
         }
 
         return $this;
@@ -566,6 +618,46 @@ abstract class UserLog implements ActiveRecordInterface
 
         return $this;
     } // setUserLogParams()
+
+    /**
+     * Set the value of [user_log_ip] column.
+     *
+     * @param  string $v new value
+     * @return $this|\App\Model\UserLog The current object (for fluent API support)
+     */
+    public function setUserLogIp($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_log_ip !== $v) {
+            $this->user_log_ip = $v;
+            $this->modifiedColumns[UserLogTableMap::COL_USER_LOG_IP] = true;
+        }
+
+        return $this;
+    } // setUserLogIp()
+
+    /**
+     * Set the value of [user_log_http_user_agent] column.
+     *
+     * @param  string $v new value
+     * @return $this|\App\Model\UserLog The current object (for fluent API support)
+     */
+    public function setUserLogHttpUserAgent($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_log_http_user_agent !== $v) {
+            $this->user_log_http_user_agent = $v;
+            $this->modifiedColumns[UserLogTableMap::COL_USER_LOG_HTTP_USER_AGENT] = true;
+        }
+
+        return $this;
+    } // setUserLogHttpUserAgent()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
@@ -644,6 +736,7 @@ abstract class UserLog implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aUser = null;
         } // if (deep)
     }
 
@@ -755,6 +848,18 @@ abstract class UserLog implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aUser !== null) {
+                if ($this->aUser->isModified() || $this->aUser->isNew()) {
+                    $affectedRows += $this->aUser->save($con);
+                }
+                $this->setUser($this->aUser);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -804,6 +909,12 @@ abstract class UserLog implements ActiveRecordInterface
         if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_PARAMS)) {
             $modifiedColumns[':p' . $index++]  = 'USER_LOG_PARAMS';
         }
+        if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_IP)) {
+            $modifiedColumns[':p' . $index++]  = 'USER_LOG_IP';
+        }
+        if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_HTTP_USER_AGENT)) {
+            $modifiedColumns[':p' . $index++]  = 'USER_LOG_HTTP_USER_AGENT';
+        }
         if ($this->isColumnModified(UserLogTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
         }
@@ -832,6 +943,12 @@ abstract class UserLog implements ActiveRecordInterface
                         break;
                     case 'USER_LOG_PARAMS':
                         $stmt->bindValue($identifier, $this->user_log_params, PDO::PARAM_STR);
+                        break;
+                    case 'USER_LOG_IP':
+                        $stmt->bindValue($identifier, $this->user_log_ip, PDO::PARAM_STR);
+                        break;
+                    case 'USER_LOG_HTTP_USER_AGENT':
+                        $stmt->bindValue($identifier, $this->user_log_http_user_agent, PDO::PARAM_STR);
                         break;
                     case 'CREATED_AT':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -914,9 +1031,15 @@ abstract class UserLog implements ActiveRecordInterface
                 return $this->getUserLogParams();
                 break;
             case 4:
-                return $this->getCreatedAt();
+                return $this->getUserLogIp();
                 break;
             case 5:
+                return $this->getUserLogHttpUserAgent();
+                break;
+            case 6:
+                return $this->getCreatedAt();
+                break;
+            case 7:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -936,10 +1059,11 @@ abstract class UserLog implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
         if (isset($alreadyDumpedObjects['UserLog'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
@@ -951,14 +1075,21 @@ abstract class UserLog implements ActiveRecordInterface
             $keys[1] => $this->getUserId(),
             $keys[2] => $this->getUserLogAction(),
             $keys[3] => $this->getUserLogParams(),
-            $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getUpdatedAt(),
+            $keys[4] => $this->getUserLogIp(),
+            $keys[5] => $this->getUserLogHttpUserAgent(),
+            $keys[6] => $this->getCreatedAt(),
+            $keys[7] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aUser) {
+                $result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1005,9 +1136,15 @@ abstract class UserLog implements ActiveRecordInterface
                 $this->setUserLogParams($value);
                 break;
             case 4:
-                $this->setCreatedAt($value);
+                $this->setUserLogIp($value);
                 break;
             case 5:
+                $this->setUserLogHttpUserAgent($value);
+                break;
+            case 6:
+                $this->setCreatedAt($value);
+                break;
+            case 7:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1049,10 +1186,16 @@ abstract class UserLog implements ActiveRecordInterface
             $this->setUserLogParams($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setCreatedAt($arr[$keys[4]]);
+            $this->setUserLogIp($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUpdatedAt($arr[$keys[5]]);
+            $this->setUserLogHttpUserAgent($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setCreatedAt($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setUpdatedAt($arr[$keys[7]]);
         }
     }
 
@@ -1100,6 +1243,12 @@ abstract class UserLog implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_PARAMS)) {
             $criteria->add(UserLogTableMap::COL_USER_LOG_PARAMS, $this->user_log_params);
+        }
+        if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_IP)) {
+            $criteria->add(UserLogTableMap::COL_USER_LOG_IP, $this->user_log_ip);
+        }
+        if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_HTTP_USER_AGENT)) {
+            $criteria->add(UserLogTableMap::COL_USER_LOG_HTTP_USER_AGENT, $this->user_log_http_user_agent);
         }
         if ($this->isColumnModified(UserLogTableMap::COL_CREATED_AT)) {
             $criteria->add(UserLogTableMap::COL_CREATED_AT, $this->created_at);
@@ -1196,6 +1345,8 @@ abstract class UserLog implements ActiveRecordInterface
         $copyObj->setUserId($this->getUserId());
         $copyObj->setUserLogAction($this->getUserLogAction());
         $copyObj->setUserLogParams($this->getUserLogParams());
+        $copyObj->setUserLogIp($this->getUserLogIp());
+        $copyObj->setUserLogHttpUserAgent($this->getUserLogHttpUserAgent());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         if ($makeNew) {
@@ -1227,16 +1378,72 @@ abstract class UserLog implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildUser object.
+     *
+     * @param  ChildUser $v
+     * @return $this|\App\Model\UserLog The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setUser(ChildUser $v = null)
+    {
+        if ($v === null) {
+            $this->setUserId(NULL);
+        } else {
+            $this->setUserId($v->getIdUser());
+        }
+
+        $this->aUser = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildUser object, it will not be re-added.
+        if ($v !== null) {
+            $v->addUserLog($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildUser object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildUser The associated ChildUser object.
+     * @throws PropelException
+     */
+    public function getUser(ConnectionInterface $con = null)
+    {
+        if ($this->aUser === null && ($this->user_id !== null)) {
+            $this->aUser = ChildUserQuery::create()->findPk($this->user_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aUser->addUserLogs($this);
+             */
+        }
+
+        return $this->aUser;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aUser) {
+            $this->aUser->removeUserLog($this);
+        }
         $this->id_user_log = null;
         $this->user_id = null;
         $this->user_log_action = null;
         $this->user_log_params = null;
+        $this->user_log_ip = null;
+        $this->user_log_http_user_agent = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
@@ -1259,6 +1466,7 @@ abstract class UserLog implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aUser = null;
     }
 
     /**

@@ -14,6 +14,10 @@ return array(
         'mode' => 'cbc',
         'padding' => \Phalcon\Crypt::PADDING_DEFAULT
     ),
+    'users' => array(
+        'repository_class' => 'App\Model\UserQuery',
+        'user_throttling' => TRUE
+    ),
     'cookies' => array(
         'encrypt' => TRUE
     ),

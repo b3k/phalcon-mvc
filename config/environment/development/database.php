@@ -25,7 +25,7 @@ return array(
             'host' => '127.0.0.1',
             'username' => 'root',
             'password' => '1769root',
-            'dbname' => 'pkinguin',
+            'dbname' => 'upcheck',
             'charset' => 'utf-8',
             'class' => '\Propel\Runtime\Connection\DebugPDO',
             'cache_query' => true,
@@ -48,14 +48,14 @@ return array(
                 array(
                     'adapter' => 'mysql',
                     'host' => '127.0.0.2',
-                    'dbname' => 'pkinguin',
+                    'dbname' => 'upcheck',
                     'username' => 'slave1',
                     'password' => 'slave1',
                 ),
                 array(
                     'adapter' => 'mysql',
                     'host' => '127.0.0.3',
-                    'dbname' => 'pkinguin',
+                    'dbname' => 'upcheck',
                     'username' => 'slave1',
                     'password' => 'slave1',
                 )

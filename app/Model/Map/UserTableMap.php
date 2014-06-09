@@ -59,7 +59,7 @@ class UserTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 13;
+    const NUM_COLUMNS = 15;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 13;
+    const NUM_HYDRATE_COLUMNS = 15;
 
     /**
      * the column name for the ID_USER field
@@ -127,6 +127,16 @@ class UserTableMap extends TableMap
     const COL_USER_EXPIRED = 'user.USER_EXPIRED';
 
     /**
+     * the column name for the USER_REMEMBER_TOKEN field
+     */
+    const COL_USER_REMEMBER_TOKEN = 'user.USER_REMEMBER_TOKEN';
+
+    /**
+     * the column name for the USER_REMEMBER_TOKEN_VALIDITY field
+     */
+    const COL_USER_REMEMBER_TOKEN_VALIDITY = 'user.USER_REMEMBER_TOKEN_VALIDITY';
+
+    /**
      * the column name for the CREATED_AT field
      */
     const COL_CREATED_AT = 'user.CREATED_AT';
@@ -148,12 +158,12 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('IdUser', 'UserUsername', 'UserPassword', 'UserSalt', 'UserFirstname', 'UserLastname', 'UserEmail', 'UserActive', 'UserRoles', 'UserExpireAt', 'UserExpired', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('idUser', 'userUsername', 'userPassword', 'userSalt', 'userFirstname', 'userLastname', 'userEmail', 'userActive', 'userRoles', 'userExpireAt', 'userExpired', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID_USER, UserTableMap::COL_USER_USERNAME, UserTableMap::COL_USER_PASSWORD, UserTableMap::COL_USER_SALT, UserTableMap::COL_USER_FIRSTNAME, UserTableMap::COL_USER_LASTNAME, UserTableMap::COL_USER_EMAIL, UserTableMap::COL_USER_ACTIVE, UserTableMap::COL_USER_ROLES, UserTableMap::COL_USER_EXPIRE_AT, UserTableMap::COL_USER_EXPIRED, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID_USER', 'COL_USER_USERNAME', 'COL_USER_PASSWORD', 'COL_USER_SALT', 'COL_USER_FIRSTNAME', 'COL_USER_LASTNAME', 'COL_USER_EMAIL', 'COL_USER_ACTIVE', 'COL_USER_ROLES', 'COL_USER_EXPIRE_AT', 'COL_USER_EXPIRED', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
-        self::TYPE_FIELDNAME     => array('id_user', 'user_username', 'user_password', 'user_salt', 'user_firstname', 'user_lastname', 'user_email', 'user_active', 'user_roles', 'user_expire_at', 'user_expired', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        self::TYPE_PHPNAME       => array('IdUser', 'UserUsername', 'UserPassword', 'UserSalt', 'UserFirstname', 'UserLastname', 'UserEmail', 'UserActive', 'UserRoles', 'UserExpireAt', 'UserExpired', 'UserRememberToken', 'UserRememberTokenValidity', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('idUser', 'userUsername', 'userPassword', 'userSalt', 'userFirstname', 'userLastname', 'userEmail', 'userActive', 'userRoles', 'userExpireAt', 'userExpired', 'userRememberToken', 'userRememberTokenValidity', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID_USER, UserTableMap::COL_USER_USERNAME, UserTableMap::COL_USER_PASSWORD, UserTableMap::COL_USER_SALT, UserTableMap::COL_USER_FIRSTNAME, UserTableMap::COL_USER_LASTNAME, UserTableMap::COL_USER_EMAIL, UserTableMap::COL_USER_ACTIVE, UserTableMap::COL_USER_ROLES, UserTableMap::COL_USER_EXPIRE_AT, UserTableMap::COL_USER_EXPIRED, UserTableMap::COL_USER_REMEMBER_TOKEN, UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID_USER', 'COL_USER_USERNAME', 'COL_USER_PASSWORD', 'COL_USER_SALT', 'COL_USER_FIRSTNAME', 'COL_USER_LASTNAME', 'COL_USER_EMAIL', 'COL_USER_ACTIVE', 'COL_USER_ROLES', 'COL_USER_EXPIRE_AT', 'COL_USER_EXPIRED', 'COL_USER_REMEMBER_TOKEN', 'COL_USER_REMEMBER_TOKEN_VALIDITY', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id_user', 'user_username', 'user_password', 'user_salt', 'user_firstname', 'user_lastname', 'user_email', 'user_active', 'user_roles', 'user_expire_at', 'user_expired', 'user_remember_token', 'user_remember_token_validity', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -163,12 +173,12 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('IdUser' => 0, 'UserUsername' => 1, 'UserPassword' => 2, 'UserSalt' => 3, 'UserFirstname' => 4, 'UserLastname' => 5, 'UserEmail' => 6, 'UserActive' => 7, 'UserRoles' => 8, 'UserExpireAt' => 9, 'UserExpired' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, ),
-        self::TYPE_STUDLYPHPNAME => array('idUser' => 0, 'userUsername' => 1, 'userPassword' => 2, 'userSalt' => 3, 'userFirstname' => 4, 'userLastname' => 5, 'userEmail' => 6, 'userActive' => 7, 'userRoles' => 8, 'userExpireAt' => 9, 'userExpired' => 10, 'createdAt' => 11, 'updatedAt' => 12, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID_USER => 0, UserTableMap::COL_USER_USERNAME => 1, UserTableMap::COL_USER_PASSWORD => 2, UserTableMap::COL_USER_SALT => 3, UserTableMap::COL_USER_FIRSTNAME => 4, UserTableMap::COL_USER_LASTNAME => 5, UserTableMap::COL_USER_EMAIL => 6, UserTableMap::COL_USER_ACTIVE => 7, UserTableMap::COL_USER_ROLES => 8, UserTableMap::COL_USER_EXPIRE_AT => 9, UserTableMap::COL_USER_EXPIRED => 10, UserTableMap::COL_CREATED_AT => 11, UserTableMap::COL_UPDATED_AT => 12, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID_USER' => 0, 'COL_USER_USERNAME' => 1, 'COL_USER_PASSWORD' => 2, 'COL_USER_SALT' => 3, 'COL_USER_FIRSTNAME' => 4, 'COL_USER_LASTNAME' => 5, 'COL_USER_EMAIL' => 6, 'COL_USER_ACTIVE' => 7, 'COL_USER_ROLES' => 8, 'COL_USER_EXPIRE_AT' => 9, 'COL_USER_EXPIRED' => 10, 'COL_CREATED_AT' => 11, 'COL_UPDATED_AT' => 12, ),
-        self::TYPE_FIELDNAME     => array('id_user' => 0, 'user_username' => 1, 'user_password' => 2, 'user_salt' => 3, 'user_firstname' => 4, 'user_lastname' => 5, 'user_email' => 6, 'user_active' => 7, 'user_roles' => 8, 'user_expire_at' => 9, 'user_expired' => 10, 'created_at' => 11, 'updated_at' => 12, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        self::TYPE_PHPNAME       => array('IdUser' => 0, 'UserUsername' => 1, 'UserPassword' => 2, 'UserSalt' => 3, 'UserFirstname' => 4, 'UserLastname' => 5, 'UserEmail' => 6, 'UserActive' => 7, 'UserRoles' => 8, 'UserExpireAt' => 9, 'UserExpired' => 10, 'UserRememberToken' => 11, 'UserRememberTokenValidity' => 12, 'CreatedAt' => 13, 'UpdatedAt' => 14, ),
+        self::TYPE_STUDLYPHPNAME => array('idUser' => 0, 'userUsername' => 1, 'userPassword' => 2, 'userSalt' => 3, 'userFirstname' => 4, 'userLastname' => 5, 'userEmail' => 6, 'userActive' => 7, 'userRoles' => 8, 'userExpireAt' => 9, 'userExpired' => 10, 'userRememberToken' => 11, 'userRememberTokenValidity' => 12, 'createdAt' => 13, 'updatedAt' => 14, ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID_USER => 0, UserTableMap::COL_USER_USERNAME => 1, UserTableMap::COL_USER_PASSWORD => 2, UserTableMap::COL_USER_SALT => 3, UserTableMap::COL_USER_FIRSTNAME => 4, UserTableMap::COL_USER_LASTNAME => 5, UserTableMap::COL_USER_EMAIL => 6, UserTableMap::COL_USER_ACTIVE => 7, UserTableMap::COL_USER_ROLES => 8, UserTableMap::COL_USER_EXPIRE_AT => 9, UserTableMap::COL_USER_EXPIRED => 10, UserTableMap::COL_USER_REMEMBER_TOKEN => 11, UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY => 12, UserTableMap::COL_CREATED_AT => 13, UserTableMap::COL_UPDATED_AT => 14, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID_USER' => 0, 'COL_USER_USERNAME' => 1, 'COL_USER_PASSWORD' => 2, 'COL_USER_SALT' => 3, 'COL_USER_FIRSTNAME' => 4, 'COL_USER_LASTNAME' => 5, 'COL_USER_EMAIL' => 6, 'COL_USER_ACTIVE' => 7, 'COL_USER_ROLES' => 8, 'COL_USER_EXPIRE_AT' => 9, 'COL_USER_EXPIRED' => 10, 'COL_USER_REMEMBER_TOKEN' => 11, 'COL_USER_REMEMBER_TOKEN_VALIDITY' => 12, 'COL_CREATED_AT' => 13, 'COL_UPDATED_AT' => 14, ),
+        self::TYPE_FIELDNAME     => array('id_user' => 0, 'user_username' => 1, 'user_password' => 2, 'user_salt' => 3, 'user_firstname' => 4, 'user_lastname' => 5, 'user_email' => 6, 'user_active' => 7, 'user_roles' => 8, 'user_expire_at' => 9, 'user_expired' => 10, 'user_remember_token' => 11, 'user_remember_token_validity' => 12, 'created_at' => 13, 'updated_at' => 14, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -199,6 +209,8 @@ class UserTableMap extends TableMap
         $this->addColumn('USER_ROLES', 'UserRoles', 'ARRAY', true, null, null);
         $this->addColumn('USER_EXPIRE_AT', 'UserExpireAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('USER_EXPIRED', 'UserExpired', 'BOOLEAN', true, 1, false);
+        $this->addColumn('USER_REMEMBER_TOKEN', 'UserRememberToken', 'VARCHAR', false, 40, null);
+        $this->addColumn('USER_REMEMBER_TOKEN_VALIDITY', 'UserRememberTokenValidity', 'TIMESTAMP', false, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -209,6 +221,7 @@ class UserTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Trigger', '\\App\\Model\\Trigger', RelationMap::ONE_TO_MANY, array('id_user' => 'user_id', ), null, null, 'Triggers');
+        $this->addRelation('UserLog', '\\App\\Model\\UserLog', RelationMap::ONE_TO_MANY, array('id_user' => 'user_id', ), 'CASCADE', null, 'UserLogs');
         $this->addRelation('UserTargetGroup', '\\App\\Model\\UserTargetGroup', RelationMap::ONE_TO_MANY, array('id_user' => 'id_user', ), 'CASCADE', null, 'UserTargetGroups');
     } // buildRelations()
 
@@ -231,6 +244,7 @@ class UserTableMap extends TableMap
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        UserLogTableMap::clearInstancePool();
         UserTargetGroupTableMap::clearInstancePool();
     }
 
@@ -386,6 +400,8 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn(UserTableMap::COL_USER_ROLES);
             $criteria->addSelectColumn(UserTableMap::COL_USER_EXPIRE_AT);
             $criteria->addSelectColumn(UserTableMap::COL_USER_EXPIRED);
+            $criteria->addSelectColumn(UserTableMap::COL_USER_REMEMBER_TOKEN);
+            $criteria->addSelectColumn(UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY);
             $criteria->addSelectColumn(UserTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(UserTableMap::COL_UPDATED_AT);
         } else {
@@ -400,6 +416,8 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.USER_ROLES');
             $criteria->addSelectColumn($alias . '.USER_EXPIRE_AT');
             $criteria->addSelectColumn($alias . '.USER_EXPIRED');
+            $criteria->addSelectColumn($alias . '.USER_REMEMBER_TOKEN');
+            $criteria->addSelectColumn($alias . '.USER_REMEMBER_TOKEN_VALIDITY');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
         }

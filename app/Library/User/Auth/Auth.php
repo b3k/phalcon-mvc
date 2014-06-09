@@ -3,6 +3,11 @@
 namespace App\Library\User\Auth;
 
 use Phalcon\Mvc\User\Component;
+use App\Library\User\Auth\Exception\UnknownUserException;
+use App\Library\User\Auth\Exception\InactiveUserException;
+use App\Library\User\Auth\Exception\InvalidCredentialsException;
+use App\Library\User\Auth\Exception\UserExpiredException;
+use App\Model\UserLog;
 
 /**
  * Vokuro\Auth\Auth
@@ -11,8 +16,29 @@ use Phalcon\Mvc\User\Component;
 class Auth
         extends Component
 {
-    
+
     const AUTH_IDENT_SESSION_KEY = 'auth_ident';
+
+    protected $UsersRepository;
+
+    public function __construct()
+    {
+        if (!class_exists($this->config->application->users->repository_class)) {
+            throw new \RuntimeException(sprintf('Given repository class %s does not exists.', $this->config->application->users->repository_class));
+        }
+        $RepositoryClass = $this->config->application->users->repository_class;
+        $this->UsersRepository = new $RepositoryClass();
+    }
+
+    public function getUsersRepository()
+    {
+        return $this->UsersRepository;
+    }
+
+    public function setUsersRepository($UsersRepository)
+    {
+        return $this->UsersRepository = $UsersRepository;
+    }
 
     /**
      * Checks the user credentials
@@ -20,38 +46,60 @@ class Auth
      * @param  array  $credentials
      * @return boolan
      */
-    public function check($credentials)
+    public function login($credentials)
     {
-
-        // Check if the user exist
-        $user = Users::findFirstByEmail($credentials['email']);
-        if ($user == false) {
-            $this->registerUserThrottling(0);
-            throw new Exception('Wrong email/password combination');
+        $User = $this->getUsersRepository()->findByEmail($credentials['email']);
+        if (!$User) {
+            $this->addLog('auth:login:fail', 0, $credentials, $this->request->getClientAddress(), $this->request->getUserAgent());
+            $this->checkUserThrottling(0);
+            throw new UnknownUserException('Wrong email/password combination');
         }
 
-        // Check the password
-        if (!$this->security->checkHash($credentials['password'], $user->password)) {
-            $this->registerUserThrottling($user->id);
-            throw new Exception('Wrong email/password combination');
+        if (!$this->security->checkHash($credentials['password'], $User->getPassword())) {
+            $this->registerUserThrottling($User->getId());
+            throw new InvalidCredentialsException('Wrong email/password combination');
         }
 
         // Check if the user was flagged
-        $this->checkUserFlags($user);
+        $this->checkUserFlags($User);
 
         // Register the successful login
-        $this->saveSuccessLogin($user);
+        $this->saveSuccessLogin($User);
+
+        $credentials['password'] = str_repeat('*', strlen($credentials['password']));
+        $this->addLog('auth:login:success', $User->getId(), array_map($credentials, array($this, 'prepareDataToLog')), $this->request->getClientAddress(), $this->request->getUserAgent());
 
         // Check if the remember me was selected
         if (isset($credentials['remember'])) {
-            $this->createRememberEnviroment($user);
+            $this->createRememberEnviroment($User);
         }
 
-        $this->session->set('auth-identity', array(
+        $this->session->set(self::AUTH_IDENT_SESSION_KEY, array(
             'id' => $user->id,
             'name' => $user->name,
             'profile' => $user->profile->name
         ));
+    }
+
+    public function prepareDataToLog($data)
+    {
+        foreach ($data as $key => $value) {
+            switch (strtolower(trim($key))) {
+                case 'password': $data[$key] = str_repeat("*", strlen($value));
+            }
+        }
+        return $data;
+    }
+
+    public function addLog($action, $userId = 0, $params = array(), $ip = '', $ua = '')
+    {
+        $UserLog = new UserLog();
+        $UserLog->setAction($action);
+        $UserLog->setParams(json_encode($params));
+        $UserLog->setUserId($userId);
+        $UserLog->setIp($this->request->getClientAddress());
+        $UserLog->setUserAgent($this->request->getUserAgent());
+        $UserLog->save();
     }
 
     /**
@@ -59,15 +107,13 @@ class Auth
      *
      * @param Vokuro\Models\Users $user
      */
-    public function saveSuccessLogin($user)
+    public function saveSuccessLogin($User)
     {
-        $successLogin = new SuccessLogins();
-        $successLogin->usersId = $user->id;
-        $successLogin->ipAddress = $this->request->getClientAddress();
-        $successLogin->userAgent = $this->request->getUserAgent();
-        if (!$successLogin->save()) {
-            $messages = $successLogin->getMessages();
-            throw new Exception($messages[0]);
+        $UserLog = $User->createLog();
+        $UserLog->setIp() = $this->request->getClientAddress();
+        $UserLog->setUserAgent() = $this->request->getUserAgent();
+        if (!$UserLog->save()) {
+            throw new \RuntimeException('Can not save user log');
         }
     }
 
@@ -79,12 +125,6 @@ class Auth
      */
     public function registerUserThrottling($userId)
     {
-        $failedLogin = new FailedLogins();
-        $failedLogin->usersId = $userId;
-        $failedLogin->ipAddress = $this->request->getClientAddress();
-        $failedLogin->attempted = time();
-        $failedLogin->save();
-
         $attempts = FailedLogins::count(array(
                     'ipAddress = ?0 AND attempted >= ?1',
                     'bind' => array(
@@ -113,10 +153,10 @@ class Auth
      *
      * @param Vokuro\Models\Users $user
      */
-    public function createRememberEnviroment(Users $user)
+    public function createRememberEnviroment($User)
     {
         $userAgent = $this->request->getUserAgent();
-        $token = md5($user->email . $user->password . $userAgent);
+        $token = sha1($User->email . $User->password . $userAgent);
 
         $remember = new RememberTokens();
         $remember->usersId = $user->id;
@@ -174,7 +214,7 @@ class Auth
                         $this->checkUserFlags($user);
 
                         // Register identity
-                        $this->session->set('auth-identity', array(
+                        $this->session->set(self::AUTH_IDENT_SESSION_KEY, array(
                             'id' => $user->id,
                             'name' => $user->name,
                             'profile' => $user->profile->name
@@ -200,18 +240,14 @@ class Auth
      *
      * @param Vokuro\Models\Users $user
      */
-    public function checkUserFlags(Users $user)
+    public function checkUserFlags($User)
     {
-        if ($user->active != 'Y') {
-            throw new Exception('The user is inactive');
+        if (!$User->getActive()) {
+            throw new InactiveUserException('The user is inactive');
         }
 
-        if ($user->banned != 'N') {
-            throw new Exception('The user is banned');
-        }
-
-        if ($user->suspended != 'N') {
-            throw new Exception('The user is suspended');
+        if ($User->getExpired()) {
+            throw new UserExpiredException('The user account is expired');
         }
     }
 
@@ -222,7 +258,7 @@ class Auth
      */
     public function getIdentity()
     {
-        return $this->session->get('auth-identity');
+        return $this->session->get(self::AUTH_IDENT_SESSION_KEY);
     }
 
     /**
@@ -232,7 +268,7 @@ class Auth
      */
     public function getName()
     {
-        $identity = $this->session->get('auth-identity');
+        $identity = $this->session->get(self::AUTH_IDENT_SESSION_KEY);
 
         return $identity['name'];
     }
@@ -249,7 +285,7 @@ class Auth
             $this->cookies->get('RMT')->delete();
         }
 
-        $this->session->remove('auth-identity');
+        $this->session->remove(self::AUTH_IDENT_SESSION_KEY);
     }
 
     /**
@@ -266,23 +302,17 @@ class Auth
 
         $this->checkUserFlags($user);
 
-        $this->session->set('auth-identity', array(
+        $this->session->set(self::AUTH_IDENT_SESSION_KEY, array(
             'id' => $user->id,
             'name' => $user->name,
             'profile' => $user->profile->name
         ));
     }
 
-    /**
-     * Get the entity related to user in the active identity
-     *
-     * @return \Vokuro\Models\Users
-     */
     public function getUser()
     {
-        $identity = $this->session->get('auth-identity');
+        $identity = $this->session->get(self::AUTH_IDENT_SESSION_KEY);
         if (isset($identity['id'])) {
-
             $user = Users::findFirstById($identity['id']);
             if ($user == false) {
                 throw new Exception('The user does not exist');

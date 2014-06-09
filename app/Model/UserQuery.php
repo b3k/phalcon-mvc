@@ -4,7 +4,6 @@ namespace App\Model;
 
 use App\Model\Base\UserQuery as BaseUserQuery;
 
-
 /**
  * Skeleton subclass for performing query and update operations on the 'user' table.
  *
@@ -15,7 +14,15 @@ use App\Model\Base\UserQuery as BaseUserQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class UserQuery extends BaseUserQuery
+class UserQuery
+        extends BaseUserQuery
 {
 
-} // UserQuery
+    public function findByEmail($email)
+    {
+        return $this->findByUserEmail($email);
+    }
+
+}
+
+// UserQuery

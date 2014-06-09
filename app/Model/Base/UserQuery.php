@@ -31,6 +31,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery orderByUserRoles($order = Criteria::ASC) Order by the user_roles column
  * @method     ChildUserQuery orderByUserExpireAt($order = Criteria::ASC) Order by the user_expire_at column
  * @method     ChildUserQuery orderByUserExpired($order = Criteria::ASC) Order by the user_expired column
+ * @method     ChildUserQuery orderByUserRememberToken($order = Criteria::ASC) Order by the user_remember_token column
+ * @method     ChildUserQuery orderByUserRememberTokenValidity($order = Criteria::ASC) Order by the user_remember_token_validity column
  * @method     ChildUserQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildUserQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
@@ -45,6 +47,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery groupByUserRoles() Group by the user_roles column
  * @method     ChildUserQuery groupByUserExpireAt() Group by the user_expire_at column
  * @method     ChildUserQuery groupByUserExpired() Group by the user_expired column
+ * @method     ChildUserQuery groupByUserRememberToken() Group by the user_remember_token column
+ * @method     ChildUserQuery groupByUserRememberTokenValidity() Group by the user_remember_token_validity column
  * @method     ChildUserQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildUserQuery groupByUpdatedAt() Group by the updated_at column
  *
@@ -56,11 +60,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinTrigger($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Trigger relation
  * @method     ChildUserQuery innerJoinTrigger($relationAlias = null) Adds a INNER JOIN clause to the query using the Trigger relation
  *
+ * @method     ChildUserQuery leftJoinUserLog($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserLog relation
+ * @method     ChildUserQuery rightJoinUserLog($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserLog relation
+ * @method     ChildUserQuery innerJoinUserLog($relationAlias = null) Adds a INNER JOIN clause to the query using the UserLog relation
+ *
  * @method     ChildUserQuery leftJoinUserTargetGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserTargetGroup relation
  * @method     ChildUserQuery rightJoinUserTargetGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserTargetGroup relation
  * @method     ChildUserQuery innerJoinUserTargetGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the UserTargetGroup relation
  *
- * @method     \App\Model\TriggerQuery|\App\Model\UserTargetGroupQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Model\TriggerQuery|\App\Model\UserLogQuery|\App\Model\UserTargetGroupQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -76,6 +84,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser findOneByUserRoles(array $user_roles) Return the first ChildUser filtered by the user_roles column
  * @method     ChildUser findOneByUserExpireAt(string $user_expire_at) Return the first ChildUser filtered by the user_expire_at column
  * @method     ChildUser findOneByUserExpired(boolean $user_expired) Return the first ChildUser filtered by the user_expired column
+ * @method     ChildUser findOneByUserRememberToken(string $user_remember_token) Return the first ChildUser filtered by the user_remember_token column
+ * @method     ChildUser findOneByUserRememberTokenValidity(string $user_remember_token_validity) Return the first ChildUser filtered by the user_remember_token_validity column
  * @method     ChildUser findOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column
  * @method     ChildUser findOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column
  *
@@ -91,6 +101,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection findByUserRoles(array $user_roles) Return ChildUser objects filtered by the user_roles column
  * @method     ChildUser[]|ObjectCollection findByUserExpireAt(string $user_expire_at) Return ChildUser objects filtered by the user_expire_at column
  * @method     ChildUser[]|ObjectCollection findByUserExpired(boolean $user_expired) Return ChildUser objects filtered by the user_expired column
+ * @method     ChildUser[]|ObjectCollection findByUserRememberToken(string $user_remember_token) Return ChildUser objects filtered by the user_remember_token column
+ * @method     ChildUser[]|ObjectCollection findByUserRememberTokenValidity(string $user_remember_token_validity) Return ChildUser objects filtered by the user_remember_token_validity column
  * @method     ChildUser[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUser objects filtered by the created_at column
  * @method     ChildUser[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildUser objects filtered by the updated_at column
  * @method     ChildUser[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -182,7 +194,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_USER, USER_USERNAME, USER_PASSWORD, USER_SALT, USER_FIRSTNAME, USER_LASTNAME, USER_EMAIL, USER_ACTIVE, USER_ROLES, USER_EXPIRE_AT, USER_EXPIRED, CREATED_AT, UPDATED_AT FROM user WHERE ID_USER = :p0';
+        $sql = 'SELECT ID_USER, USER_USERNAME, USER_PASSWORD, USER_SALT, USER_FIRSTNAME, USER_LASTNAME, USER_EMAIL, USER_ACTIVE, USER_ROLES, USER_EXPIRE_AT, USER_EXPIRED, USER_REMEMBER_TOKEN, USER_REMEMBER_TOKEN_VALIDITY, CREATED_AT, UPDATED_AT FROM user WHERE ID_USER = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -666,6 +678,78 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the user_remember_token column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserRememberToken('fooValue');   // WHERE user_remember_token = 'fooValue'
+     * $query->filterByUserRememberToken('%fooValue%'); // WHERE user_remember_token LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userRememberToken The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByUserRememberToken($userRememberToken = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userRememberToken)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userRememberToken)) {
+                $userRememberToken = str_replace('*', '%', $userRememberToken);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_USER_REMEMBER_TOKEN, $userRememberToken, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_remember_token_validity column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserRememberTokenValidity('2011-03-14'); // WHERE user_remember_token_validity = '2011-03-14'
+     * $query->filterByUserRememberTokenValidity('now'); // WHERE user_remember_token_validity = '2011-03-14'
+     * $query->filterByUserRememberTokenValidity(array('max' => 'yesterday')); // WHERE user_remember_token_validity > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $userRememberTokenValidity The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByUserRememberTokenValidity($userRememberTokenValidity = null, $comparison = null)
+    {
+        if (is_array($userRememberTokenValidity)) {
+            $useMinMax = false;
+            if (isset($userRememberTokenValidity['min'])) {
+                $this->addUsingAlias(UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY, $userRememberTokenValidity['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($userRememberTokenValidity['max'])) {
+                $this->addUsingAlias(UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY, $userRememberTokenValidity['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY, $userRememberTokenValidity, $comparison);
+    }
+
+    /**
      * Filter the query on the created_at column
      *
      * Example usage:
@@ -822,6 +906,79 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinTrigger($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Trigger', '\App\Model\TriggerQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Model\UserLog object
+     *
+     * @param \App\Model\UserLog|ObjectCollection $userLog  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByUserLog($userLog, $comparison = null)
+    {
+        if ($userLog instanceof \App\Model\UserLog) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID_USER, $userLog->getUserId(), $comparison);
+        } elseif ($userLog instanceof ObjectCollection) {
+            return $this
+                ->useUserLogQuery()
+                ->filterByPrimaryKeys($userLog->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByUserLog() only accepts arguments of type \App\Model\UserLog or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the UserLog relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinUserLog($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('UserLog');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'UserLog');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the UserLog relation UserLog object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Model\UserLogQuery A secondary query class using the current class as primary query
+     */
+    public function useUserLogQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinUserLog($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'UserLog', '\App\Model\UserLogQuery');
     }
 
     /**

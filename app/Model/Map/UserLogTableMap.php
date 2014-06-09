@@ -59,7 +59,7 @@ class UserLogTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class UserLogTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the ID_USER_LOG field
@@ -90,6 +90,16 @@ class UserLogTableMap extends TableMap
      * the column name for the USER_LOG_PARAMS field
      */
     const COL_USER_LOG_PARAMS = 'user_log.USER_LOG_PARAMS';
+
+    /**
+     * the column name for the USER_LOG_IP field
+     */
+    const COL_USER_LOG_IP = 'user_log.USER_LOG_IP';
+
+    /**
+     * the column name for the USER_LOG_HTTP_USER_AGENT field
+     */
+    const COL_USER_LOG_HTTP_USER_AGENT = 'user_log.USER_LOG_HTTP_USER_AGENT';
 
     /**
      * the column name for the CREATED_AT field
@@ -113,12 +123,12 @@ class UserLogTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('IdUserLog', 'UserId', 'UserLogAction', 'UserLogParams', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('idUserLog', 'userId', 'userLogAction', 'userLogParams', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserLogTableMap::COL_ID_USER_LOG, UserLogTableMap::COL_USER_ID, UserLogTableMap::COL_USER_LOG_ACTION, UserLogTableMap::COL_USER_LOG_PARAMS, UserLogTableMap::COL_CREATED_AT, UserLogTableMap::COL_UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID_USER_LOG', 'COL_USER_ID', 'COL_USER_LOG_ACTION', 'COL_USER_LOG_PARAMS', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
-        self::TYPE_FIELDNAME     => array('id_user_log', 'user_id', 'user_log_action', 'user_log_params', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('IdUserLog', 'UserId', 'UserLogAction', 'UserLogParams', 'UserLogIp', 'UserLogHttpUserAgent', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('idUserLog', 'userId', 'userLogAction', 'userLogParams', 'userLogIp', 'userLogHttpUserAgent', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(UserLogTableMap::COL_ID_USER_LOG, UserLogTableMap::COL_USER_ID, UserLogTableMap::COL_USER_LOG_ACTION, UserLogTableMap::COL_USER_LOG_PARAMS, UserLogTableMap::COL_USER_LOG_IP, UserLogTableMap::COL_USER_LOG_HTTP_USER_AGENT, UserLogTableMap::COL_CREATED_AT, UserLogTableMap::COL_UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID_USER_LOG', 'COL_USER_ID', 'COL_USER_LOG_ACTION', 'COL_USER_LOG_PARAMS', 'COL_USER_LOG_IP', 'COL_USER_LOG_HTTP_USER_AGENT', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id_user_log', 'user_id', 'user_log_action', 'user_log_params', 'user_log_ip', 'user_log_http_user_agent', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -128,12 +138,12 @@ class UserLogTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('IdUserLog' => 0, 'UserId' => 1, 'UserLogAction' => 2, 'UserLogParams' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, ),
-        self::TYPE_STUDLYPHPNAME => array('idUserLog' => 0, 'userId' => 1, 'userLogAction' => 2, 'userLogParams' => 3, 'createdAt' => 4, 'updatedAt' => 5, ),
-        self::TYPE_COLNAME       => array(UserLogTableMap::COL_ID_USER_LOG => 0, UserLogTableMap::COL_USER_ID => 1, UserLogTableMap::COL_USER_LOG_ACTION => 2, UserLogTableMap::COL_USER_LOG_PARAMS => 3, UserLogTableMap::COL_CREATED_AT => 4, UserLogTableMap::COL_UPDATED_AT => 5, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID_USER_LOG' => 0, 'COL_USER_ID' => 1, 'COL_USER_LOG_ACTION' => 2, 'COL_USER_LOG_PARAMS' => 3, 'COL_CREATED_AT' => 4, 'COL_UPDATED_AT' => 5, ),
-        self::TYPE_FIELDNAME     => array('id_user_log' => 0, 'user_id' => 1, 'user_log_action' => 2, 'user_log_params' => 3, 'created_at' => 4, 'updated_at' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('IdUserLog' => 0, 'UserId' => 1, 'UserLogAction' => 2, 'UserLogParams' => 3, 'UserLogIp' => 4, 'UserLogHttpUserAgent' => 5, 'CreatedAt' => 6, 'UpdatedAt' => 7, ),
+        self::TYPE_STUDLYPHPNAME => array('idUserLog' => 0, 'userId' => 1, 'userLogAction' => 2, 'userLogParams' => 3, 'userLogIp' => 4, 'userLogHttpUserAgent' => 5, 'createdAt' => 6, 'updatedAt' => 7, ),
+        self::TYPE_COLNAME       => array(UserLogTableMap::COL_ID_USER_LOG => 0, UserLogTableMap::COL_USER_ID => 1, UserLogTableMap::COL_USER_LOG_ACTION => 2, UserLogTableMap::COL_USER_LOG_PARAMS => 3, UserLogTableMap::COL_USER_LOG_IP => 4, UserLogTableMap::COL_USER_LOG_HTTP_USER_AGENT => 5, UserLogTableMap::COL_CREATED_AT => 6, UserLogTableMap::COL_UPDATED_AT => 7, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID_USER_LOG' => 0, 'COL_USER_ID' => 1, 'COL_USER_LOG_ACTION' => 2, 'COL_USER_LOG_PARAMS' => 3, 'COL_USER_LOG_IP' => 4, 'COL_USER_LOG_HTTP_USER_AGENT' => 5, 'COL_CREATED_AT' => 6, 'COL_UPDATED_AT' => 7, ),
+        self::TYPE_FIELDNAME     => array('id_user_log' => 0, 'user_id' => 1, 'user_log_action' => 2, 'user_log_params' => 3, 'user_log_ip' => 4, 'user_log_http_user_agent' => 5, 'created_at' => 6, 'updated_at' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -153,9 +163,11 @@ class UserLogTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID_USER_LOG', 'IdUserLog', 'INTEGER', true, 10, null);
-        $this->addColumn('USER_ID', 'UserId', 'INTEGER', true, 10, null);
+        $this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'user', 'ID_USER', true, 10, null);
         $this->addColumn('USER_LOG_ACTION', 'UserLogAction', 'VARCHAR', true, 25, null);
         $this->addColumn('USER_LOG_PARAMS', 'UserLogParams', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('USER_LOG_IP', 'UserLogIp', 'VARCHAR', false, 15, null);
+        $this->addColumn('USER_LOG_HTTP_USER_AGENT', 'UserLogHttpUserAgent', 'VARCHAR', false, 100, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -165,6 +177,7 @@ class UserLogTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('User', '\\App\\Model\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id_user', ), 'CASCADE', null);
     } // buildRelations()
 
     /**
@@ -325,6 +338,8 @@ class UserLogTableMap extends TableMap
             $criteria->addSelectColumn(UserLogTableMap::COL_USER_ID);
             $criteria->addSelectColumn(UserLogTableMap::COL_USER_LOG_ACTION);
             $criteria->addSelectColumn(UserLogTableMap::COL_USER_LOG_PARAMS);
+            $criteria->addSelectColumn(UserLogTableMap::COL_USER_LOG_IP);
+            $criteria->addSelectColumn(UserLogTableMap::COL_USER_LOG_HTTP_USER_AGENT);
             $criteria->addSelectColumn(UserLogTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(UserLogTableMap::COL_UPDATED_AT);
         } else {
@@ -332,6 +347,8 @@ class UserLogTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.USER_ID');
             $criteria->addSelectColumn($alias . '.USER_LOG_ACTION');
             $criteria->addSelectColumn($alias . '.USER_LOG_PARAMS');
+            $criteria->addSelectColumn($alias . '.USER_LOG_IP');
+            $criteria->addSelectColumn($alias . '.USER_LOG_HTTP_USER_AGENT');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
         }

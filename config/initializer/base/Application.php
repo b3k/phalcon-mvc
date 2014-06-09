@@ -144,7 +144,8 @@ class Application
 
     protected function initAuth()
     {
-        $this->di->set(self::SERVICE_AUTH, function () {
+        $config = $this->config;
+        $this->di->set(self::SERVICE_AUTH, function () use ($config) {
             $Auth = new \App\Library\User\Auth\Auth();
             return $Auth;
         });

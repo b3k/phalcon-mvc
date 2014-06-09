@@ -289,6 +289,8 @@
         <column name="user_roles" phpName="UserRoles" type="ARRAY" required="true"/>
         <column name="user_expire_at" phpName="UserExpireAt" type="TIMESTAMP"/>
         <column name="user_expired" phpName="UserExpired" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="user_remember_token" phpName="UserRememberToken" type="VARCHAR" size="40" required="false"/>
+        <column name="user_remember_token_validity" phpName="UserRememberTokenValidity" type="TIMESTAMP" required="false"/>
         <index name="user_username">
             <index-column name="user_username" size="32"/>
         </index>
@@ -306,9 +308,14 @@
 
     <table name="user_log" idMethod="native" phpName="UserLog">
         <column name="id_user_log" phpName="IdUserLog" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="user_id" phpName="UserId" type="INTEGER" size="10" required="true"/>
+        <column name="user_id" phpName="UserId" type="INTEGER" size="10" required="true" sqlType="int(10) unsigned"/>
         <column name="user_log_action" phpName="UserLogAction" type="VARCHAR" size="25" required="true"/>
         <column name="user_log_params" phpName="UserLogParams" type="LONGVARCHAR" required="true"/>
+        <column name="user_log_ip" phpName="UserLogIp" type="VARCHAR" size="15" required="false"/>
+        <column name="user_log_http_user_agent" phpName="UserLogHttpUserAgent" type="VARCHAR" size="100" required="false"/>
+        <foreign-key foreignTable="user" name="user_log_ibfk_1" onDelete="CASCADE">
+            <reference local="user_id" foreign="id_user"/>
+        </foreign-key>
         <index name="user_id">
             <index-column name="user_id"/>
         </index>

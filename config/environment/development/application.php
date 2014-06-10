@@ -16,7 +16,8 @@ return array(
     ),
     'users' => array(
         'repository_class' => 'App\Model\UserQuery',
-        'user_throttling' => TRUE
+        'throttling' => TRUE,
+        'login_column' => 'user_email'
     ),
     'cookies' => array(
         'encrypt' => TRUE

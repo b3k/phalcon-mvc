@@ -3,38 +3,64 @@
 namespace App\Library\User\Auth;
 
 use Phalcon\Mvc\User\Component;
+use Phalcon\Session\Bag;
 use App\Library\User\Auth\Exception\UnknownUserException;
 use App\Library\User\Auth\Exception\InactiveUserException;
 use App\Library\User\Auth\Exception\InvalidCredentialsException;
 use App\Library\User\Auth\Exception\UserExpiredException;
 use App\Model\UserLog;
+use App\Model\UserLogQuery;
 
 /**
  * Vokuro\Auth\Auth
  * Manages Authentication/Identity Management in Vokuro
  */
-class Auth
-        extends Component
+class Auth extends Component
 {
 
     const AUTH_IDENT_SESSION_KEY = 'auth_ident';
+    const AUTH_REMEMBER_IDENT_COOKIE_KEY = 'auth_rmb_id';
+    const AUTH_REMEMBER_TOKEN_COOKIE_KEY = 'auth_rmb_token';
 
+    protected $default = array(
+        'repository_class' => '\App\Model\User',
+        'login_column' => 'email',
+        'throttling' => TRUE,
+        'throttling_check_duration' => 3600,
+        'remember_token_validity' => 604800
+    );
     protected $UsersRepository;
+    protected $ConfigNode;
+    protected $SaveUser = FALSE;
 
+    /**
+     * 
+     * @throws \RuntimeException
+     */
     public function __construct()
     {
-        if (!class_exists($this->config->application->users->repository_class)) {
-            throw new \RuntimeException(sprintf('Given repository class %s does not exists.', $this->config->application->users->repository_class));
+        $this->ConfigNode = array_merge($this->default, $this->config->application->users->toArray());
+        if (!class_exists($this->ConfigNode['repository_class'])) {
+            throw new \RuntimeException(sprintf('Given repository class %s does not exists.', $this->ConfigNode['repository_class']));
         }
-        $RepositoryClass = $this->config->application->users->repository_class;
+        $RepositoryClass = $this->ConfigNode['repository_class'];
         $this->UsersRepository = new $RepositoryClass();
     }
 
+    /**
+     * 
+     * @return type
+     */
     public function getUsersRepository()
     {
         return $this->UsersRepository;
     }
 
+    /**
+     * 
+     * @param type $UsersRepository
+     * @return type
+     */
     public function setUsersRepository($UsersRepository)
     {
         return $this->UsersRepository = $UsersRepository;
@@ -48,13 +74,15 @@ class Auth
      */
     public function login($credentials)
     {
-        $User = $this->getUsersRepository()->findByEmail($credentials['email']);
+        // check that given user exists
+        $User = $this->getUsersRepository()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
         if (!$User) {
             $this->addLog('auth:login:fail', 0, $credentials, $this->request->getClientAddress(), $this->request->getUserAgent());
             $this->checkUserThrottling(0);
-            throw new UnknownUserException('Wrong email/password combination');
+            throw new UnknownUserException('User with given identifier does not exist');
         }
 
+        // check password
         if (!$this->security->checkHash($credentials['password'], $User->getPassword())) {
             $this->registerUserThrottling($User->getId());
             throw new InvalidCredentialsException('Wrong email/password combination');
@@ -63,35 +91,25 @@ class Auth
         // Check if the user was flagged
         $this->checkUserFlags($User);
 
-        // Register the successful login
-        $this->saveSuccessLogin($User);
-
+        // Obfuscate password before log
         $credentials['password'] = str_repeat('*', strlen($credentials['password']));
-        $this->addLog('auth:login:success', $User->getId(), array_map($credentials, array($this, 'prepareDataToLog')), $this->request->getClientAddress(), $this->request->getUserAgent());
+        $this->addLog('auth:login:success', $User->getId(), $credentials, $this->request->getClientAddress(), $this->request->getUserAgent());
 
         // Check if the remember me was selected
         if (isset($credentials['remember'])) {
-            $this->createRememberEnviroment($User);
+            $this->setRememberEnviroment($User);
         }
 
         $this->session->set(self::AUTH_IDENT_SESSION_KEY, array(
-            'id' => $user->id,
-            'name' => $user->name,
-            'profile' => $user->profile->name
+            'id' => $User->getId(),
+            'object' => $User,
         ));
+
+        // regenerate session id
+        session_regenerate_id();
     }
 
-    public function prepareDataToLog($data)
-    {
-        foreach ($data as $key => $value) {
-            switch (strtolower(trim($key))) {
-                case 'password': $data[$key] = str_repeat("*", strlen($value));
-            }
-        }
-        return $data;
-    }
-
-    public function addLog($action, $userId = 0, $params = array(), $ip = '', $ua = '')
+    protected function addLog($action, $userId = 0, $params = array(), $ip = '', $ua = '')
     {
         $UserLog = new UserLog();
         $UserLog->setAction($action);
@@ -103,37 +121,23 @@ class Auth
     }
 
     /**
-     * Creates the remember me environment settings the related cookies and generating tokens
-     *
-     * @param Vokuro\Models\Users $user
-     */
-    public function saveSuccessLogin($User)
-    {
-        $UserLog = $User->createLog();
-        $UserLog->setIp() = $this->request->getClientAddress();
-        $UserLog->setUserAgent() = $this->request->getUserAgent();
-        if (!$UserLog->save()) {
-            throw new \RuntimeException('Can not save user log');
-        }
-    }
-
-    /**
      * Implements login throttling
      * Reduces the efectiveness of brute force attacks
      *
      * @param int $userId
      */
-    public function registerUserThrottling($userId)
+    public function checkUserThrottling()
     {
-        $attempts = FailedLogins::count(array(
-                    'ipAddress = ?0 AND attempted >= ?1',
-                    'bind' => array(
-                        $this->request->getClientAddress(),
-                        time() - 3600 * 6
-                    )
-        ));
+        if (!$this->ConfigNode['throttling']) {
+            return;
+        }
+        $count = UserLogQuery::countActions('auth:login:fail', array(
+                    'ip' => $this->request->getClientAddress(),
+                    'date_from' => new \DateTime(time() - $this->ConfigNode['throttling_check_duration'])
+                        )
+        );
 
-        switch ($attempts) {
+        switch ($count) {
             case 1:
             case 2:
                 // no delay
@@ -153,21 +157,12 @@ class Auth
      *
      * @param Vokuro\Models\Users $user
      */
-    public function createRememberEnviroment($User)
+    public function setRememberEnviroment($User)
     {
-        $userAgent = $this->request->getUserAgent();
-        $token = sha1($User->email . $User->password . $userAgent);
-
-        $remember = new RememberTokens();
-        $remember->usersId = $user->id;
-        $remember->token = $token;
-        $remember->userAgent = $userAgent;
-
-        if ($remember->save() != false) {
-            $expire = time() + 86400 * 8;
-            $this->cookies->set('RMU', $user->id, $expire);
-            $this->cookies->set('RMT', $token, $expire);
-        }
+        $User->setRememberToken(sha1($User->getId() . $this->config->security->getRandomBytes()));
+        $expire = time() + (int) $this->ConfigNode['remember_token_validity'];
+        $this->cookies->set(self::AUTH_REMEMBER_IDENT_COOKIE_KEY, $User->getValue($this->ConfigNode['login_column']), $expire);
+        $this->cookies->set(self::AUTH_REMEMBER_TOKEN_COOKIE_KEY, $User->getRememberToken(), $expire);
     }
 
     /**
@@ -177,7 +172,7 @@ class Auth
      */
     public function hasRememberMe()
     {
-        return $this->cookies->has('RMU');
+        return $this->cookies->has(self::AUTH_REMEMBER_TOKEN_COOKIE_KEY) && $this->cookies->has(self::AUTH_REMEMBER_IDENT_COOKIE_KEY);
     }
 
     /**
@@ -187,17 +182,14 @@ class Auth
      */
     public function loginWithRememberMe()
     {
-        $userId = $this->cookies->get('RMU')->getValue();
-        $cookieToken = $this->cookies->get('RMT')->getValue();
+        $userId = $this->cookies->get(self::AUTH_REMEMBER_IDENT_COOKIE_KEY)->getValue();
+        $cookieToken = $this->cookies->get(self::AUTH_REMEMBER_TOKEN_COOKIE_KEY)->getValue();
 
-        $user = Users::findFirstById($userId);
+        $user = UserQuery::findOneBy($this->ConfigNode['login_column'], $userId);
         if ($user) {
-
             $userAgent = $this->request->getUserAgent();
             $token = md5($user->email . $user->password . $userAgent);
-
             if ($cookieToken == $token) {
-
                 $remember = RememberTokens::findFirst(array(
                             'usersId = ?0 AND token = ?1',
                             'bind' => array(
@@ -223,14 +215,16 @@ class Auth
                         // Register the successful login
                         $this->saveSuccessLogin($user);
 
+                        session_regenerate_id();
+
                         return $this->response->redirect('users');
                     }
                 }
             }
         }
 
-        $this->cookies->get('RMU')->delete();
-        $this->cookies->get('RMT')->delete();
+        $this->cookies->get(self::AUTH_REMEMBER_IDENT_COOKIE_KEY)->delete();
+        $this->cookies->get(self::AUTH_REMEMBER_TOKEN_COOKIE_KEY)->delete();
 
         return $this->response->redirect('session/login');
     }
@@ -259,18 +253,6 @@ class Auth
     public function getIdentity()
     {
         return $this->session->get(self::AUTH_IDENT_SESSION_KEY);
-    }
-
-    /**
-     * Returns the current identity
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        $identity = $this->session->get(self::AUTH_IDENT_SESSION_KEY);
-
-        return $identity['name'];
     }
 
     /**

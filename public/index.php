@@ -20,6 +20,7 @@ define('APP_APPLICATION_DIR', APP_ROOT_DIR . DS . 'app');
 define('APP_CONFIG_DIR', APP_ROOT_DIR . DS . 'config');
 define('APP_VIEWS_DIR', APP_APPLICATION_DIR . DS . 'Views');
 define('APP_TMP_DIR', APP_ROOT_DIR . DS . 'tmp' . DS . APP_ENV);
+define('APP_LOG_DIR', APP_ROOT_DIR . DS . 'log');
 define('APP_PUBLIC_DIR', APP_ROOT_DIR . DS . 'public');
 
 require_once APP_ROOT_DIR . '/config/exceptions/exceptions.php';

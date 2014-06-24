@@ -2,8 +2,7 @@
 
 namespace Config\Initializer\Base;
 
-class Application
-        extends \Phalcon\Mvc\Application
+class Application extends \Phalcon\Mvc\Application
 {
 
     const SERVICE_CONFIG = 'config';
@@ -24,6 +23,7 @@ class Application
     const SERVICE_AUTH = 'auth';
     const SERVICE_CLI_APP = 'cli';
     const SERVICE_PROPEL = 'propel';
+    const SERVICE_LOG = 'log';
     const SERVICE_FILESYSTEM = 'filesystem';
 
     protected $di;
@@ -35,7 +35,7 @@ class Application
     protected $routing;
 
     /**
-     *
+     * Base ACL rules
      * @var array
      */
     protected $base_acl_list = array(
@@ -50,6 +50,7 @@ class Application
                 'resetPassword' => '*',
             ),
             'error' => array(
+                'error403' => '*',
                 'error404' => '*',
                 'error500' => '*'
             )
@@ -118,6 +119,32 @@ class Application
         });
     }
 
+    protected function initLog()
+    {
+        $config = $this->config;
+        $this->di->set(self::SERVICE_FILESYSTEM, function() use ($config) {
+            $log_config = $config->application->log->toArray();
+            if (isset($log_config['format'])) {
+                $formatter_format = $log_config['format'];
+            }
+            if (isset($log_config['formatter_class']) && class_exists($log_config['formatter_class'], true)) {
+                $formatter_class = $log_config['formatter_class'];
+                $Formatter = new $formatter_class($formatter_format);
+            }
+            if (isset($log_config['adapter_class']) && class_exists($log_config['adapter_class'], true)) {
+                $adapter_class = $log_config['adapter_class'];
+                $path = isset($log_config['path']) && is_writable($log_config['path']) ? $log_config['path'] : APP_LOG_DIR . DS . APP_ENV . '.log';
+                $Log = new $adapter_class($path);
+            }
+            $log_adapter = $config->application->log->adapter_class;
+            $Log = new $log_adapter($config->application->log->path);
+            if (isset($Formatter)) {
+                $Log->setFormatter($Formatter);
+            }
+            return $Log;
+        });
+    }
+
     protected function initFilesystem()
     {
         $this->di->set(self::SERVICE_FILESYSTEM, function() {
@@ -129,8 +156,8 @@ class Application
     protected function initPropel()
     {
         $this->di->set(self::SERVICE_PROPEL, function () {
-            $Acl = new \App\Library\User\Acl\Acl();
-            return $Acl;
+            $Propel = new \Propel();
+            return $Propel;
         });
     }
 

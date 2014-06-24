@@ -60,5 +60,9 @@ class User extends BaseUser implements UserInterface
         $UserLog->setUserId($this->getId());
         return $UserLog;
     }
+    
+    public function getRoles() {
+        return $this->getUserRoles();
+    }
 
 }

@@ -6,8 +6,7 @@ require_once(APP_ROOT_DIR . '/config/initializer/base/ApplicationCli.php');
 
 use \Config\Initializer\Base\ApplicationCli as BaseApplication;
 
-class ApplicationCli
-        extends BaseApplication
+class ApplicationCli extends BaseApplication
 {
 
     protected static $used_services = array(

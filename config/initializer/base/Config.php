@@ -22,7 +22,8 @@ class Config extends PhalconConfig
     protected $env = null;
     protected $base_path = null;
     protected $loadable_config_groups = array(
-        'database', 'application', 'models', 'common', 'mailer'
+        'database', 'application', 'models', 
+        'common', 'mailer', 'acl'
     );
     protected static $config_cache_file = 'compiled_config.php';
     protected $filesystem;

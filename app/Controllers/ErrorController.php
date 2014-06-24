@@ -7,6 +7,12 @@ namespace App\Controllers;
  */
 class ErrorController extends ControllerBase
 {
+
+    public function error403Action()
+    {
+        die('403');
+    }
+
     public function error404Action()
     {
         die('404');
@@ -14,7 +20,7 @@ class ErrorController extends ControllerBase
 
     public function error500Action()
     {
-        die('404');
+        die('500');
     }
 
 }

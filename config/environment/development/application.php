@@ -5,6 +5,12 @@ return array(
     'staticBaseUri' => '/',
     'timezone' => 'Europe/Warsaw',
     'publicUrl' => 'upcheck.net',
+    'log' => array(
+        'adapter_class' => 'Phalcon\Logger\Adapter\File',
+        'formatter_class' => 'Phalcon\Logger\Formatter\Line',
+        'format' => '[%date%][%type%] %message%',
+        'path' => APP_LOG_DIR . DS . APP_ENV . '.log'
+    ),
     'security' => array(
         'key' => 'IOjscifo9e080123nsdkk'
     ),

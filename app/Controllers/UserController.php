@@ -17,6 +17,7 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
  */
 class UserController extends ControllerBase
 {
+
     public function initialize()
     {
         $this->view->setTemplateBefore('private');
@@ -29,42 +30,6 @@ class UserController extends ControllerBase
     {
         $this->persistent->conditions = null;
         $this->view->form = new UsersForm();
-    }
-
-    /**
-     * Searches for users
-     */
-    public function searchAction()
-    {
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, 'Vokuro\Models\Users', $this->request->getPost());
-            $this->persistent->searchParams = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = array();
-        if ($this->persistent->searchParams) {
-            $parameters = $this->persistent->searchParams;
-        }
-
-        $users = Users::find($parameters);
-        if (count($users) == 0) {
-            $this->flash->notice("The search did not find any users");
-
-            return $this->dispatcher->forward(array(
-                        "action" => "index"
-            ));
-        }
-
-        $paginator = new Paginator(array(
-            "data" => $users,
-            "limit" => 10,
-            "page" => $numberPage
-        ));
-
-        $this->view->page = $paginator->getPaginate();
     }
 
     /**
@@ -164,62 +129,88 @@ class UserController extends ControllerBase
         ));
     }
 
+    /**
+     * Shows the forgot password form
+     */
+    public function forgotPasswordAction()
+    {
+        $form = new ForgotPasswordForm();
+
+        if ($this->request->isPost()) {
+
+            if ($form->isValid($this->request->getPost()) == false) {
+                foreach ($form->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+            } else {
+
+                $user = Users::findFirstByEmail($this->request->getPost('email'));
+                if (!$user) {
+                    $this->flash->success('There is no account associated to this email');
+                } else {
+
+                    $resetPassword = new ResetPasswords();
+                    $resetPassword->usersId = $user->id;
+                    if ($resetPassword->save()) {
+                        $this->flash->success('Success! Please check your messages for an email reset password');
+                    } else {
+                        foreach ($resetPassword->getMessages() as $message) {
+                            $this->flash->error($message);
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->view->form = $form;
+    }
+
+    /**
+     * Closes the session
+     */
     public function logoutAction()
     {
+        $this->auth->remove();
+
+        return $this->response->redirect('index');
     }
 
-    public function resetPasswordAction()
-    {
-        $code = $this->dispatcher->getParam('code');
-
-        $resetPassword = ResetPasswords::findFirstByCode($code);
-
-        if (!$resetPassword) {
-            return $this->dispatcher->forward(array(
-                        'controller' => 'index',
-                        'action' => 'index'
-            ));
-        }
-
-        if ($resetPassword->reset != 'N') {
-            return $this->dispatcher->forward(array(
-                        'controller' => 'session',
-                        'action' => 'login'
-            ));
-        }
-
-        $resetPassword->reset = 'Y';
-
-        /**
-         * Change the confirmation to 'reset'
-         */
-        if (!$resetPassword->save()) {
-
-            foreach ($resetPassword->getMessages() as $message) {
-                $this->flash->error($message);
-            }
-
-            return $this->dispatcher->forward(array(
-                        'controller' => 'index',
-                        'action' => 'index'
-            ));
-        }
-
-        /**
-         * Identify the user in the application
-         */
-        $this->auth->authUserById($resetPassword->usersId);
-
-        $this->flash->success('Please reset your password');
-
-        return $this->dispatcher->forward(array(
-                    'controller' => 'users',
-                    'action' => 'changePassword'
-        ));
-    }
-
+    /**
+     * Starts a session in the admin backend
+     */
     public function loginAction()
     {
+        $form = new LoginForm();
+
+        try {
+
+            if (!$this->request->isPost()) {
+
+                if ($this->auth->hasRememberMe()) {
+                    return $this->auth->loginWithRememberMe();
+                }
+            } else {
+
+                if ($form->isValid($this->request->getPost()) == false) {
+                    foreach ($form->getMessages() as $message) {
+                        $this->flash->error($message);
+                    }
+                } else {
+
+                    $this->auth->check(array(
+                        'email' => $this->request->getPost('email'),
+                        'password' => $this->request->getPost('password'),
+                        'remember' => $this->request->getPost('remember')
+                    ));
+
+                    return $this->response->redirect('users');
+                }
+            }
+        } catch (AuthException $e) {
+            $this->flash->error($e->getMessage());
+        }
+
+        $this->view->form = $form;
     }
 
     /**
@@ -260,6 +251,74 @@ class UserController extends ControllerBase
         }
 
         $this->view->form = $form;
+    }
+
+    /**
+     * Confirms an e-mail, if the user must change thier password then changes it
+     */
+    public function confirmEmailAction()
+    {
+        $code = $this->dispatcher->getParam('code');
+
+        $confirmation = EmailConfirmations::findFirstByCode($code);
+
+        if (!$confirmation) {
+            return $this->dispatcher->forward(array(
+                        'controller' => 'index',
+                        'action' => 'index'
+            ));
+        }
+
+        if ($confirmation->confirmed != 'N') {
+            return $this->dispatcher->forward(array(
+                        'controller' => 'session',
+                        'action' => 'login'
+            ));
+        }
+
+        $confirmation->confirmed = 'Y';
+
+        $confirmation->user->active = 'Y';
+
+        /**
+         * Change the confirmation to 'confirmed' and update the user to 'active'
+         */
+        if (!$confirmation->save()) {
+
+            foreach ($confirmation->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                        'controller' => 'index',
+                        'action' => 'index'
+            ));
+        }
+
+        /**
+         * Identify the user in the application
+         */
+        $this->auth->authUserById($confirmation->user->id);
+
+        /**
+         * Check if the user must change his/her password
+         */
+        if ($confirmation->user->mustChangePassword == 'Y') {
+
+            $this->flash->success('The email was successfully confirmed. Now you must change your password');
+
+            return $this->dispatcher->forward(array(
+                        'controller' => 'users',
+                        'action' => 'changePassword'
+            ));
+        }
+
+        $this->flash->success('The email was successfully confirmed');
+
+        return $this->dispatcher->forward(array(
+                    'controller' => 'users',
+                    'action' => 'index'
+        ));
     }
 
 }

@@ -5,6 +5,12 @@ return array(
     'staticBaseUri' => '/',
     'timezone' => 'Europe/Warsaw',
     'publicUrl' => 'upcheck.net',
+    'log' => array(
+        'adapter' => 'Phalcon\Logger\Adapter\File',
+        'formatter' => 'Phalcon\Logger\Formatter\Line',
+        'format' => '[%date%][%type%] %message%',
+        'path' => APP_LOG_DIR . DS . APP_ENV . '.log'
+    ),
     'security' => array(
         'key' => 'IOjscifo9e080123nsdkk'
     ),
@@ -13,6 +19,11 @@ return array(
         'cipher' => 'tripledes',
         'mode' => 'cbc',
         'padding' => \Phalcon\Crypt::PADDING_DEFAULT
+    ),
+    'users' => array(
+        'repository_class' => 'App\Model\UserQuery',
+        'throttling' => TRUE,
+        'login_column' => 'user_email'
     ),
     'cookies' => array(
         'encrypt' => TRUE

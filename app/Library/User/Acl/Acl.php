@@ -16,7 +16,8 @@ class Acl extends Component
     private $acl;
 
     /**
-     *
+     * Determine to use APC
+     *  
      * @var boolean
      */
     private $use_apc;
@@ -35,7 +36,7 @@ class Acl extends Component
     {
         $this->acl = new \Phalcon\Acl\Adapter\Memory();
 
-        $this->acl->setDefaultAction(isset($list['default']) ? $list['default'] : Phalcon\Acl::DENY);
+        $this->acl->setDefaultAction(isset($list['default_action']) ? $list['default_action'] : \Phalcon\Acl::DENY);
 
         if (isset($list['roles'])) {
             foreach ($list['roles'] as $role) {
@@ -83,14 +84,25 @@ class Acl extends Component
     /**
      * Checks if the current profile is allowed to access a resource
      *
-     * @param  string  $profile
+     * @param  array  $roles
      * @param  string  $controller
      * @param  string  $action
      * @return boolean
      */
-    public function isAllowed($profile, $controller, $action)
+    public function isAllowed($roles, $controller, $action)
     {
-        return $this->getAcl()->isAllowed($profile, $controller, $action);
+        if (empty($roles)) {
+            $roles = array($this->config->acl->default_role);
+        }
+
+        $access = $this->getAcl()->getDefaultAction();
+        foreach ($roles as $role) {
+            $access = $this->getAcl()->isAllowed($role, $controller, $action);
+            if ($access) {
+                break;
+            }
+        }        
+        return $access;
     }
 
     /**
@@ -108,7 +120,6 @@ class Acl extends Component
             $acl = apc_fetch(APP_ENV . '_' . self::CACHE_KEY);
             if (is_object($acl)) {
                 $this->acl = $acl;
-
                 return $acl;
             }
         }
@@ -121,7 +132,7 @@ class Acl extends Component
             }
         } else {
             $AclList = \App\Library\Utilities\Utilities::array_merge_recursive_distinct(
-                            $this->app->getBaseAclList(), (file_exists(APP_CONFIG_DIR . '/environment/' . APP_ENV . '/acl.php') ? require_once(APP_CONFIG_DIR . '/environment/' . APP_ENV . '/acl.php') : array())
+                            $this->app->getBaseAclList(), $this->config->acl->toArray()
             );
             $this->buildFromArray($AclList);
         }

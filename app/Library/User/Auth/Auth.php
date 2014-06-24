@@ -65,6 +65,24 @@ class Auth extends Component
     {
         return $this->UsersRepository = $UsersRepository;
     }
+    
+    public function getSession() {
+        return $this->session;
+    }
+    
+    public function getRequest() {
+        return $this->session;
+    }
+
+    /**
+     * Returns the current identity
+     *
+     * @return User
+     */
+    public function getIdentity()
+    {
+        return $this->getSession()->get(self::AUTH_IDENT_SESSION_KEY, FALSE);
+    }
 
     /**
      * Checks the user credentials
@@ -100,23 +118,20 @@ class Auth extends Component
             $this->setRememberEnviroment($User);
         }
 
-        $this->session->set(self::AUTH_IDENT_SESSION_KEY, array(
-            'id' => $User->getId(),
-            'object' => $User,
-        ));
+        $this->getSession()->set(self::AUTH_IDENT_SESSION_KEY, $User);
 
         // regenerate session id
         session_regenerate_id();
     }
 
-    protected function addLog($action, $userId = 0, $params = array(), $ip = '', $ua = '')
+    protected function addLog($action, $userId = 0, $params = array(), $ip = FALSE, $ua = FALSE)
     {
         $UserLog = new UserLog();
         $UserLog->setAction($action);
         $UserLog->setParams(json_encode($params));
         $UserLog->setUserId($userId);
-        $UserLog->setIp($this->request->getClientAddress());
-        $UserLog->setUserAgent($this->request->getUserAgent());
+        $UserLog->setIp($ip ? $ip : $this->getRequest()->getClientAddress());
+        $UserLog->setUserAgent($ua ? $ua : $this->getRequest()->getUserAgent());
         $UserLog->save();
     }
 
@@ -132,7 +147,7 @@ class Auth extends Component
             return;
         }
         $count = UserLogQuery::countActions('auth:login:fail', array(
-                    'ip' => $this->request->getClientAddress(),
+                    'ip' => $this->getRequest()->getClientAddress(),
                     'date_from' => new \DateTime(time() - $this->ConfigNode['throttling_check_duration'])
                         )
         );
@@ -243,16 +258,6 @@ class Auth extends Component
         if ($User->getExpired()) {
             throw new UserExpiredException('The user account is expired');
         }
-    }
-
-    /**
-     * Returns the current identity
-     *
-     * @return array
-     */
-    public function getIdentity()
-    {
-        return $this->session->get(self::AUTH_IDENT_SESSION_KEY);
     }
 
     /**

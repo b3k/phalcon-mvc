@@ -10,7 +10,6 @@ class IndexController extends ControllerBase
 
     public function indexAction()
     {
-        die('sdsd');
         $this->view->setTemplateBefore('public');
     }
 

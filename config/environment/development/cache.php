@@ -22,5 +22,23 @@ return array(
             'cacheDir' => APP_TMP_DIR . DS . 'cache',
             'prefix' => 'view_'
         ),
+    ),
+    'backends' => array(
+        array(
+            'adapter' => '\Phalcon\Cache\Backend\File',
+            'lifetime' => 600,
+            'options' => array(
+                'cacheDir' => APP_TMP_DIR . DS . 'cache',
+                'prefix' => 'cache1_'
+            )
+        ),
+        array(
+            'adapter' => '\Phalcon\Cache\Backend\Apc',
+            'lifetime' => 1200,
+            'options' => array(
+                'cacheDir' => APP_TMP_DIR . DS . 'cache',
+                'prefix' => 'cache2_'
+            )
+        )
     )
 );

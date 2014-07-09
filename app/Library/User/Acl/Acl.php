@@ -35,7 +35,6 @@ class Acl extends Component
     public function buildFromArray($list)
     {
         $this->acl = new \Phalcon\Acl\Adapter\Memory();
-
         $this->acl->setDefaultAction(isset($list['default_action']) ? $list['default_action'] : \Phalcon\Acl::DENY);
 
         if (isset($list['roles'])) {
@@ -61,12 +60,18 @@ class Acl extends Component
             if (is_array($actions)) {
                 foreach ($actions as $action => $roles) {
                     $action = strtolower($action);
+
+                    // If we got wildmask '*' then allow all defined roles
+                    if (!is_array($roles) && trim($roles) === '*') {
+                        $roles = $list['roles'];
+                    }
+
                     if (is_array($roles)) {
                         foreach ($roles as $role) {
-                            $this->acl->allow(strtolower($role), $controller, $action);
+                            $this->acl->allow(strtolower(trim($role)), $controller, $action);
                         }
                     } else {
-                        $this->acl->allow(strtolower($roles), $controller, $action);
+                        $this->acl->allow(strtolower(trim($role)), $controller, $action);
                     }
                 }
             }
@@ -91,7 +96,7 @@ class Acl extends Component
      */
     public function isAllowed($roles, $controller, $action)
     {
-        if (empty($roles)) {
+        if (!$roles || empty($roles)) {
             $roles = array($this->config->acl->default_role);
         }
 
@@ -101,7 +106,7 @@ class Acl extends Component
             if ($access) {
                 break;
             }
-        }        
+        }
         return $access;
     }
 
@@ -116,6 +121,7 @@ class Acl extends Component
             return $this->acl;
         }
 
+        // try from APC Cache
         if ($this->use_apc) {
             $acl = apc_fetch(APP_ENV . '_' . self::CACHE_KEY);
             if (is_object($acl)) {
@@ -124,6 +130,7 @@ class Acl extends Component
             }
         }
 
+        // Try from file Cache
         if (file_exists(APP_TMP_DIR . DS . self::CACHE_KEY)) {
             $data = file_get_contents(APP_TMP_DIR . DS . self::CACHE_KEY);
             $this->acl = unserialize($data);

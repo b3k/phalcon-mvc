@@ -18,6 +18,7 @@ class Application extends \Phalcon\Mvc\Application
     const SERVICE_DISPATCHER = 'dispatcher';
     const SERVICE_VIEWS_CACHE = 'viewCache';
     const SERVICE_CACHE = 'cache';
+    const SERVICE_CACHE_MANAGER = 'cacheManager';
     const SERVICE_CRYPT = 'crypt';
     const SERVICE_ACL = 'acl';
     const SERVICE_AUTH = 'auth';
@@ -241,6 +242,27 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
+    protected function initCacheManager()
+    {
+        $config = $this->config;
+        $this->di->set(self::SERVICE_CACHE_MANAGER, function () use ($config) {
+            $backends_config = $config->cache->backends;
+            $backends = array();
+            foreach ($backends_config as $backend) {
+                $frontCache = new Phalcon\Cache\Frontend\Data(array(
+                    "lifetime" => isset($backend['lifetime']) ? $backend['lifetime'] : 600
+                ));
+                $class_name = $backend['adapter'];
+                $BackendInstance = new $class_name($frontCache, array(
+                    $backend->options->toArray()
+                ));
+                $backends[] = $BackendInstance;
+            }
+            $CacheManager = new App\Library\Cache\Manager($backends);
+            return $CacheManager;
+        });
+    }
+
     protected function initCache()
     {
         $config = $this->config;
@@ -261,7 +283,7 @@ class Application extends \Phalcon\Mvc\Application
     {
         $config = $this->config;
         foreach (array(self::SERVICE_VIEWS_CACHE, self::SERVICE_CACHE) as $service) {
-            $this->di->set($service, function () use ($config) {
+            $this->di->set($service, function () use ($config, $service) {
                 $frontendAdapter = $config->cache->{$service}->frontend_adapter;
                 $backendAdapter = $config->cache->{$service}->backend_adapter;
 

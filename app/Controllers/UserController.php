@@ -212,6 +212,10 @@ class UserController extends ControllerBase
 
         $this->view->form = $form;
     }
+    
+    public function resetPasswordAction() {
+        
+    }
 
     /**
      * Users must use this action to change its password

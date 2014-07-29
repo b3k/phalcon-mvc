@@ -1,5 +1,6 @@
 <?php
-namespace Vokuro\Controllers;
+
+namespace App\Controllers;
 
 /**
  * Display the "About" page.
@@ -7,11 +8,18 @@ namespace Vokuro\Controllers;
 class AboutController extends ControllerBase
 {
 
-    /**
-     * Default action. Set the public layout (layouts/public.volt)
-     */
+    protected $layout = 'main';
+    
+    protected $template = 'default';
+    
+    protected $vars = array(
+        'title' => 'My default title',
+        'breadcrumb' => array('About')
+    );
+        
     public function indexAction()
     {
-        $this->view->setTemplateBefore('public');
+        
     }
+
 }

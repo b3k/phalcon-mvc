@@ -28,7 +28,7 @@ class Acl extends Component
     }
 
     /**
-     *
+     * @TODO Refactor to use cache backend
      * @param  array                       $list
      * @return \Phalcon\Acl\Adapter\Memory
      */
@@ -52,6 +52,8 @@ class Acl extends Component
                     $actions[] = substr(strtolower($method->getName()), 0, -6);
                 }
             }
+            //print_r($controller);
+            //print_r($actions);
             $this->acl->addResource(new \Phalcon\Acl\Resource(strtolower($controller)), $actions);
         }
 
@@ -113,6 +115,7 @@ class Acl extends Component
     /**
      * Returns the ACL list
      *
+     * @TODO Refactor this to use backend cache from config
      * @return Phalcon\Acl\Adapter\Memory
      */
     public function getAcl()
@@ -120,7 +123,6 @@ class Acl extends Component
         if (is_object($this->acl)) {
             return $this->acl;
         }
-
         // try from APC Cache
         if ($this->use_apc) {
             $acl = apc_fetch(APP_ENV . '_' . self::CACHE_KEY);
@@ -129,7 +131,6 @@ class Acl extends Component
                 return $acl;
             }
         }
-
         // Try from file Cache
         if (file_exists(APP_TMP_DIR . DS . self::CACHE_KEY)) {
             $data = file_get_contents(APP_TMP_DIR . DS . self::CACHE_KEY);

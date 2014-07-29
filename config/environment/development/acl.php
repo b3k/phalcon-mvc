@@ -1,6 +1,5 @@
 <?php
 
-// define Controller -> Action -> Allowed roles
 return array(
     'default_action' => \Phalcon\Acl::DENY,
     'roles' => array('guest', 'user', 'moderator', 'admin'),
@@ -10,7 +9,7 @@ return array(
             'index' => '*',
         ),
         'user' => array(
-            'logout' => array('user', 'admin')
+            'logout' => array('user', 'admin'),
         ),
         'error' => array(
             'error403' => '*',

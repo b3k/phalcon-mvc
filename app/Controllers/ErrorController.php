@@ -3,10 +3,21 @@
 namespace App\Controllers;
 
 /**
- * Display the default index page.
+ * Error controller
  */
 class ErrorController extends ControllerBase
 {
+
+    protected $layout = 'main2';
+    
+    protected $template = 'default';
+    
+    protected $use_https = true;
+    
+    protected $vars = array(
+        'title' => 'My default title',
+        'breadcrumb' => array('About')
+    );
 
     public function error403Action()
     {

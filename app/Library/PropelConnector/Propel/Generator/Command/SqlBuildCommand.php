@@ -22,6 +22,7 @@ class SqlBuildCommand
         extends \Propel\Generator\Command\SqlBuildCommand
 {
 
+    const DEFAULT_PLATFORM = 'MysqlPlatform';
     const DEFAULT_MYSQL_ENGINE = 'InnoDB';
     const DEFAULT_DATABASE_ENCODING = 'UTF-8';
     const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../config/db/sql';

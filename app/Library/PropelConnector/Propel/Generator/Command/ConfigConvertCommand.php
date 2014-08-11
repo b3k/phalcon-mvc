@@ -17,7 +17,7 @@ use Propel\Generator\Config\XmlToArrayConverter;
 use Propel\Generator\Config\ArrayToPhpConverter;
 use App\Tasks\Command\AbstractCommand;
 
-class ConfigConvertXmlCommand extends \Propel\Generator\Command\ConfigConvertXmlCommand
+class ConfigConvertCommand extends \Propel\Generator\Command\ConfigConvertCommand
 {
 
     const DEFAULT_INPUT_FILE = 'runtime-conf.xml';

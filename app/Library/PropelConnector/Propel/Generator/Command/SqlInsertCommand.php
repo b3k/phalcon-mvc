@@ -24,6 +24,7 @@ class SqlInsertCommand extends \Propel\Generator\Command\SqlInsertCommand
 
     const DEFAULT_SQL_DIRECTORY = '/../../../../../../config/db/sql';
     const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db';
+    const DEFAULT_PLATFORM = 'MysqlPlatform';
 
     /**
      * {@inheritdoc}

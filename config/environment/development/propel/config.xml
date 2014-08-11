@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<kupa>
+    <config>
+        <database>
+            <connections>
+                <default>
+                    <adapter>mysql</adapter>
+                    <classname>\Propel\Runtime\Connection\DebugPDO</classname>
+                    <dsn>mysql:host=127.0.0.1;dbname=upcheck</dsn>
+                    <user>root</user>
+                    <password>1769root</password>
+                    <options>
+                        <option id="ATTR_PERSISTENT">true</option>
+                    </options>
+                    <attributes>
+                        <option id="ATTR_EMULATE_PREPARES">false</option>
+                    </attributes>
+                    <settings>
+                        <charset>utf-8</charset>
+                        <queries>
+                            <query>select * from table1;</query>
+                            <query>select * from table2;</query>
+                        </queries>
+                    </settings>
+                </default>
+            </connections>
+        </database>
+        <generator>
+            <defaultConnection>default</defaultConnection>
+        </generator>
+    </config>
+</kupa>

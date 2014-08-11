@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Propel\Generator\Manager\MigrationManager;
-use Propel\Generator\Config\GeneratorConfig;
+use App\Library\PropelConnector\Propel\Generator\Config\GeneratorConfig;
 use App\Tasks\Command\AbstractCommand;
 
 /**
@@ -56,16 +56,36 @@ class MigrationStatusCommand extends \Propel\Generator\Command\MigrationStatusCo
      *
      * @return GeneratorConfig
      */
-    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
+//    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
+//    {
+//        $options = $properties;
+//        if ($input && $input->hasOption('input-dir')) {
+//            $options = array_merge(
+//                    $properties, $this->getBuildProperties(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
+//            );
+//        }
+//
+//        return new GeneratorConfig($options);
+//    }
+    protected function getGeneratorConfig(array $properties = null, InputInterface $input = null)
     {
-        $options = $properties;
-        if ($input && $input->hasOption('input-dir')) {
-            $options = array_merge(
-                    $properties, $this->getBuildProperties(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
-            );
+        if (null === $input) {
+            return new GeneratorConfig(null, $properties);
         }
 
-        return new GeneratorConfig($options);
+        $inputDir = null;
+
+        if ($input->hasOption('input-dir')) {
+            if (!($this instanceof SqlInsertCommand)) {
+                $inputDir = $input->getOption('input-dir');
+            }
+        }
+
+        if ($input->hasOption('platform') && (null !== $input->getOption('platform'))) {
+            $properties['propel']['generator']['platformClass'] = '\\Propel\\Generator\\Platform\\' . $input->getOption('platform');
+        }
+
+        return new GeneratorConfig($inputDir, $properties);
     }
 
     /**
@@ -73,9 +93,7 @@ class MigrationStatusCommand extends \Propel\Generator\Command\MigrationStatusCo
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $generatorConfig = $this->getGeneratorConfig(array(
-            'propel.platform.class' => $input->getOption('platform'),
-                ), $input);
+        $generatorConfig = $this->getGeneratorConfig(null, $input);
 
         $this->createDirectory($input->getOption('output-dir'));
 
@@ -85,7 +103,7 @@ class MigrationStatusCommand extends \Propel\Generator\Command\MigrationStatusCo
         $connections = array();
         $optionConnections = $input->getOption('connection');
         if (!$optionConnections) {
-            $connections = $generatorConfig->getBuildConnections(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel');
+            $connections = $generatorConfig->getBuildConnections($input->getOption('input-dir'));
         } else {
             foreach ($optionConnections as $connection) {
                 list($name, $dsn, $infos) = $this->parseConnection($connection);
@@ -154,7 +172,6 @@ class MigrationStatusCommand extends \Propel\Generator\Command\MigrationStatusCo
             }
         } else {
             $output->writeln(sprintf('No migration file found in "%s".', $dir));
-
             return false;
         }
 
@@ -163,7 +180,6 @@ class MigrationStatusCommand extends \Propel\Generator\Command\MigrationStatusCo
 
         if (!$nbNotYetExecutedMigrations) {
             $output->writeln('All migration files were already executed - Nothing to migrate.');
-
             return false;
         }
 

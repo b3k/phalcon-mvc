@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Propel\Generator\Manager\GraphvizManager;
-use Propel\Generator\Config\GeneratorConfig;
+use App\Library\PropelConnector\Propel\Generator\Config\GeneratorConfig;
 use App\Tasks\Command\AbstractCommand;
 
 /**
@@ -53,16 +53,36 @@ class GraphvizGenerateCommand extends \Propel\Generator\Command\GraphvizGenerate
      *
      * @return GeneratorConfig
      */
-    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
+//    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
+//    {
+//        $options = $properties;
+//        if ($input && $input->hasOption('input-dir')) {
+//            $options = array_merge(
+//                    $properties, $this->getBuildProperties(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
+//            );
+//        }
+//
+//        return new GeneratorConfig($options);
+//    }
+    protected function getGeneratorConfig(array $properties = null, InputInterface $input = null)
     {
-        $options = $properties;
-        if ($input && $input->hasOption('input-dir')) {
-            $options = array_merge(
-                    $properties, $this->getBuildProperties(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
-            );
+        if (null === $input) {
+            return new GeneratorConfig(null, $properties);
         }
 
-        return new GeneratorConfig($options);
+        $inputDir = null;
+
+        if ($input->hasOption('input-dir')) {
+            if (!($this instanceof SqlInsertCommand)) {
+                $inputDir = $input->getOption('input-dir');
+            }
+        }
+
+        if ($input->hasOption('platform') && (null !== $input->getOption('platform'))) {
+            $properties['propel']['generator']['platformClass'] = '\\Propel\\Generator\\Platform\\' . $input->getOption('platform');
+        }
+
+        return new GeneratorConfig($inputDir, $properties);
     }
 
     /**

@@ -1,26 +1,18 @@
 <?php
-namespace Vokuro\Controllers;
+namespace App\Controllers;
 
-use Vokuro\Forms\LoginForm;
-use Vokuro\Forms\SignUpForm;
-use Vokuro\Forms\ForgotPasswordForm;
-use Vokuro\Auth\Exception as AuthException;
-use Vokuro\Models\Users;
-use Vokuro\Models\ResetPasswords;
+use App\Forms\LoginForm;
+use App\Forms\SignUpForm;
+use App\Forms\ForgotPasswordForm;
+use App\Auth\Exception as AuthException;
+use App\Models\Users;
+use App\Models\ResetPasswords;
 
 /**
  * Controller used handle non-authenticated session actions like login/logout, user signup, and forgotten passwords
  */
 class SessionController extends ControllerBase
 {
-
-    /**
-     * Default action. Set the public layout (layouts/public.volt)
-     */
-    public function initialize()
-    {
-        $this->view->setTemplateBefore('public');
-    }
 
     public function indexAction()
     {
@@ -32,33 +24,33 @@ class SessionController extends ControllerBase
      */
     public function signupAction()
     {
-        $form = new SignUpForm();
-
-        if ($this->request->isPost()) {
-
-            if ($form->isValid($this->request->getPost()) != false) {
-
+        $Form = new SignUpForm();
+        
+        if ($this->isPost()) {
+            
+            if ($Form->isValid($this->getPost()) != false) {
+                
                 $user = new Users();
-
+                
                 $user->assign(array(
-                    'name' => $this->request->getPost('name', 'striptags'),
-                    'email' => $this->request->getPost('email'),
-                    'password' => $this->security->hash($this->request->getPost('password')),
+                    'name' => $this->getPost('name', 'striptags'),
+                    'email' => $this->getPost('email'),
+                    'password' => $this->getSecurity()->hash($this->getPost('password')),
                     'profilesId' => 2
                 ));
 
                 if ($user->save()) {
-                    return $this->dispatcher->forward(array(
+                    return $this->forward(array(
                         'controller' => 'index',
                         'action' => 'index'
                     ));
                 }
 
-                $this->flash->error($user->getMessages());
+                $this->addError($user->getMessages());
             }
         }
 
-        $this->view->form = $form;
+        $this->getView()->form = $Form;
     }
 
     /**

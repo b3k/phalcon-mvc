@@ -11,6 +11,9 @@ return array(
         'user' => array(
             'logout' => array('user', 'admin'),
         ),
+        'session' => array(
+            'signup' => array('guest')
+        ),
         'error' => array(
             'error403' => '*',
             'error404' => '*',

@@ -32,9 +32,8 @@
       </div>
     </div><!-- /navbar-inner -->
   </div>
-
+DEFAULT
 <div class="container main-container">
-PUBLIC
   {{ content() }}
 </div>
 

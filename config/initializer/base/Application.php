@@ -14,7 +14,7 @@ class Application extends \Phalcon\Mvc\Application
     const SERVICE_SECURITY = 'security';
     const SERVICE_FLASH = 'flash';
     const SERVICE_FLASH_SESSION = 'flashSession';
-    const SERVICE_SESSION = 'flashSession';
+    const SERVICE_SESSION = 'session';
     const SERVICE_DISPATCHER = 'dispatcher';
     const SERVICE_VIEWS_CACHE = 'viewCache';
     const SERVICE_CACHE = 'cache';
@@ -184,23 +184,27 @@ class Application extends \Phalcon\Mvc\Application
         $config = $this->config;
         $this->di->set(self::SERVICE_VIEW, function () use ($config) {
             $view = new \Phalcon\Mvc\View();
+            //$view->setBasePath(APP_APPLICATION_DIR . DS);
             $view->setViewsDir(APP_VIEWS_DIR . DS);
+            $view->setLayoutsDir('layouts' . DS);
+            $view->setPartialsDir('partials' . DS);
             $view->registerEngines(
                     array(
                         '.volt' => function ($view, $di) {
                     $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
-
+                    $compiledPath = APP_TMP_DIR . DS . 'volt' . DS;
+                    if (!file_exists($compiledPath)) {
+                        mkdir($compiledPath, 0777);
+                    }
                     $volt->setOptions(array(
-                        "compiledPath" => APP_TMP_DIR . DS . 'volt' . DS,
+                        "compiledPath" => $compiledPath,
                         "compiledExtension" => ".compiled"
                     ));
-
                     return $volt;
                 },
-                        '.php' => 'Phalcon\Mvc\View\Engine\Php'
+                        '.phtml' => 'Phalcon\Mvc\View\Engine\Php'
                     )
             );
-
             return $view;
         });
     }
@@ -352,10 +356,8 @@ class Application extends \Phalcon\Mvc\Application
     {
         $config = $this->config;
         $this->di->set(self::SERVICE_SESSION, function () use ($config) {
-            $session = new \Phalcon\Session\Adapter\Files();
-            $session->setOptions(array('uniqueId' => $config->application->session->uniqueId));
+            $session = new \App\Library\Session\Adapter\Files($config->application->session->toArray());
             $session->start();
-
             return $session;
         });
     }

@@ -23,7 +23,18 @@ return array(
     'users' => array(
         'repository_class' => 'App\Model\UserQuery',
         'throttling' => TRUE,
-        'login_column' => 'user_email'
+        'login_column' => 'user_email',
+    ),
+    'session' => array(
+        'name' => 'FSID',
+        'cookie' => array(
+            'lifetime' => 345600,
+            'path' => '/',
+            'secure' => '0',
+            'httponly' => '1'
+        ),
+        'uniqueId' => 'falconidae',
+        'hash' => 'sha1'
     ),
     'cookies' => array(
         'encrypt' => TRUE

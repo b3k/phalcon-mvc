@@ -10,7 +10,8 @@ class IndexController extends ControllerBase
 
     public function indexAction()
     {
-        $this->view->setTemplateBefore('public');
+
+        //$this->view->setTemplateBefore('public');
     }
 
 }

@@ -19,6 +19,7 @@ class Router extends PhalconRouter
 {
     protected $default_controller = 'index';
     protected $default_action = 'index';
+    protected $default_format = 'html';
     protected $default_index_action = 'index';
 
     protected $not_found_controller = 'error';
@@ -36,34 +37,40 @@ class Router extends PhalconRouter
 
     public function loadDefaults()
     {
+        $this->removeExtraSlashes(true);
         $this->setDefaultController($this->default_controller);
         $this->setDefaultAction($this->default_action);
 
-        $this->add('/:controller/:action/:params', array(
+        $this->add('/:controller/:action\.([a-z]+)/:params', array(
             'controller' => 1,
             'action' => 2,
-            'params' => 3,
+            'format' => 3,
+            'params' => 4,
         ));
 
-        $this->add('/:controller/:int', array(
+        $this->add('/:controller\.([a-z]+)/:int', array(
             'controller' => 1,
             'action' => $this->default_index_action,
-            'id' => 2,
+            'id' => 3,
+            'format' => 2
         ));
 
-        $this->add('/:controller[/]?', array(
+        $this->add('/:controller\.([a-z]+)[/]?', array(
             'controller' => 1,
+            'format' => 2,
             'action' => $this->default_index_action
         ));
 
         $this->add('/', array(
             'controller' => $this->default_controller,
-            'action' => $this->default_action
+            'action' => $this->default_action,
+            'format' => $this->default_format
         ));
 
         $this->notFound(array(
             'controller' => $this->not_found_controller,
-            'action' => $this->not_found_action
+            'action' => $this->not_found_action,
+            'format' => $this->default_format
         ));
     }
 

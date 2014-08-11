@@ -2,7 +2,7 @@
 
 <header class="jumbotron subhead" id="overview">
 	<div class="hero-unit">
-		<h1>Welcome!</h1>
+		<h1>Welcome!!!!!!!!!!</h1>
 		<p class="lead">This is a website secured by Phalcon Framework</p>
 
 		<div align="right">
@@ -12,7 +12,6 @@
 </header>
 
 <div class="row">
-
     <div class="span4">
       <div class="well">
       	<h3>Awesome Section</h3>

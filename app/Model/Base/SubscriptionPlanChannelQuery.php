@@ -138,7 +138,7 @@ abstract class SubscriptionPlanChannelQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_SUBSCRIPTION_PLAN, ID_CHANNEL FROM subscription_plan_channel WHERE ID_SUBSCRIPTION_PLAN = :p0 AND ID_CHANNEL = :p1';
+        $sql = 'SELECT `ID_SUBSCRIPTION_PLAN`, `ID_CHANNEL` FROM `subscription_plan_channel` WHERE `ID_SUBSCRIPTION_PLAN` = :p0 AND `ID_CHANNEL` = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);

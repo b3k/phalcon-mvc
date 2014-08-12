@@ -166,7 +166,7 @@ abstract class StackTestResultFailQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_TEST_RESULT_FAIL, TARGET_ID, TARGET_GROUP_ID, TARGET_TYPE_ID, STACK_TEST_RESULT_FAIL_INFO, STACK_TEST_RESULT_FAIL_PRIORITY, CREATED_AT, UPDATED_AT FROM stack_test_result_fail WHERE ID_TEST_RESULT_FAIL = :p0';
+        $sql = 'SELECT `ID_TEST_RESULT_FAIL`, `TARGET_ID`, `TARGET_GROUP_ID`, `TARGET_TYPE_ID`, `STACK_TEST_RESULT_FAIL_INFO`, `STACK_TEST_RESULT_FAIL_PRIORITY`, `CREATED_AT`, `UPDATED_AT` FROM `stack_test_result_fail` WHERE `ID_TEST_RESULT_FAIL` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

@@ -12,8 +12,6 @@ namespace App\Library\PropelConnector\Propel\Generator\Command;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Propel\Generator\Manager\GraphvizManager;
 use App\Library\PropelConnector\Propel\Generator\Config\GeneratorConfig;
 use App\Tasks\Command\AbstractCommand;
 
@@ -44,70 +42,19 @@ class GraphvizGenerateCommand extends \Propel\Generator\Command\GraphvizGenerate
         ;
     }
 
-    /**
-     * Returns a new `GeneratorConfig` object with your `$properties` merged with
-     * the build.properties in the `input-dir` folder.
-     *
-     * @param array $properties
-     * @param       $input
-     *
-     * @return GeneratorConfig
-     */
-//    protected function getGeneratorConfig(array $properties, InputInterface $input = null)
-//    {
-//        $options = $properties;
-//        if ($input && $input->hasOption('input-dir')) {
-//            $options = array_merge(
-//                    $properties, $this->getBuildProperties(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'build.properties')
-//            );
-//        }
-//
-//        return new GeneratorConfig($options);
-//    }
     protected function getGeneratorConfig(array $properties = null, InputInterface $input = null)
     {
         if (null === $input) {
             return new GeneratorConfig(null, $properties);
         }
 
-        $inputDir = null;
-
-        if ($input->hasOption('input-dir')) {
-            if (!($this instanceof SqlInsertCommand)) {
-                $inputDir = $input->getOption('input-dir');
-            }
-        }
+        $inputDir = dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env');
 
         if ($input->hasOption('platform') && (null !== $input->getOption('platform'))) {
             $properties['propel']['generator']['platformClass'] = '\\Propel\\Generator\\Platform\\' . $input->getOption('platform');
         }
 
         return new GeneratorConfig($inputDir, $properties);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $generatorConfig = $this->getGeneratorConfig(array(
-            'propel.platform.class' => $input->getOption('platform'),
-            'propel.packageObjectModel' => true,
-                ), $input);
-
-        $this->createDirectory($input->getOption('output-dir'));
-
-        $manager = new GraphvizManager();
-        $manager->setGeneratorConfig($generatorConfig);
-        $manager->setSchemas($this->getSchemas($input->getOption('input-dir'), $input->getOption('recursive')));
-        $manager->setLoggerClosure(function ($message) use ($input, $output) {
-            if ($input->getOption('verbose')) {
-                $output->writeln($message);
-            }
-        });
-        $manager->setWorkingDirectory($input->getOption('output-dir'));
-
-        $manager->build();
     }
 
 }

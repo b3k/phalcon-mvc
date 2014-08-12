@@ -28,6 +28,13 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
+/**
+ * Base class that represents a row from the 'user' table.
+ *
+ *
+ *
+* @package    propel.generator.App.Model.Base
+*/
 abstract class User implements ActiveRecordInterface
 {
     /**
@@ -560,9 +567,9 @@ abstract class User implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -610,9 +617,9 @@ abstract class User implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -630,9 +637,9 @@ abstract class User implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -650,9 +657,9 @@ abstract class User implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -741,7 +748,7 @@ abstract class User implements ActiveRecordInterface
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->user_expire_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->user_expire_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('UserExpired', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_expired = (null !== $col) ? (boolean) $col : null;
@@ -753,19 +760,19 @@ abstract class User implements ActiveRecordInterface
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->user_remember_token_validity = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->user_remember_token_validity = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1026,7 +1033,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function setUserExpireAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->user_expire_at !== null || $dt !== null) {
             if ($dt !== $this->user_expire_at) {
                 $this->user_expire_at = $dt;
@@ -1094,7 +1101,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function setUserRememberTokenValidity($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->user_remember_token_validity !== null || $dt !== null) {
             if ($dt !== $this->user_remember_token_validity) {
                 $this->user_remember_token_validity = $dt;
@@ -1114,7 +1121,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
@@ -1134,7 +1141,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
@@ -1388,53 +1395,53 @@ abstract class User implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(UserTableMap::COL_ID_USER)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_USER';
+            $modifiedColumns[':p' . $index++]  = '`ID_USER`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_USERNAME)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_USERNAME';
+            $modifiedColumns[':p' . $index++]  = '`USER_USERNAME`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_PASSWORD)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_PASSWORD';
+            $modifiedColumns[':p' . $index++]  = '`USER_PASSWORD`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_SALT)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_SALT';
+            $modifiedColumns[':p' . $index++]  = '`USER_SALT`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_FIRSTNAME)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_FIRSTNAME';
+            $modifiedColumns[':p' . $index++]  = '`USER_FIRSTNAME`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_LASTNAME)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_LASTNAME';
+            $modifiedColumns[':p' . $index++]  = '`USER_LASTNAME`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_EMAIL)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_EMAIL';
+            $modifiedColumns[':p' . $index++]  = '`USER_EMAIL`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_ACTIVE)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_ACTIVE';
+            $modifiedColumns[':p' . $index++]  = '`USER_ACTIVE`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_ROLES)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_ROLES';
+            $modifiedColumns[':p' . $index++]  = '`USER_ROLES`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_EXPIRE_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_EXPIRE_AT';
+            $modifiedColumns[':p' . $index++]  = '`USER_EXPIRE_AT`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_EXPIRED)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_EXPIRED';
+            $modifiedColumns[':p' . $index++]  = '`USER_EXPIRED`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_REMEMBER_TOKEN)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_REMEMBER_TOKEN';
+            $modifiedColumns[':p' . $index++]  = '`USER_REMEMBER_TOKEN`';
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_REMEMBER_TOKEN_VALIDITY)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_REMEMBER_TOKEN_VALIDITY';
+            $modifiedColumns[':p' . $index++]  = '`USER_REMEMBER_TOKEN_VALIDITY`';
         }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
         }
         if ($this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`UPDATED_AT`';
         }
 
         $sql = sprintf(
-            'INSERT INTO user (%s) VALUES (%s)',
+            'INSERT INTO `user` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1443,49 +1450,49 @@ abstract class User implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID_USER':
+                    case '`ID_USER`':
                         $stmt->bindValue($identifier, $this->id_user, PDO::PARAM_INT);
                         break;
-                    case 'USER_USERNAME':
+                    case '`USER_USERNAME`':
                         $stmt->bindValue($identifier, $this->user_username, PDO::PARAM_STR);
                         break;
-                    case 'USER_PASSWORD':
+                    case '`USER_PASSWORD`':
                         $stmt->bindValue($identifier, $this->user_password, PDO::PARAM_STR);
                         break;
-                    case 'USER_SALT':
+                    case '`USER_SALT`':
                         $stmt->bindValue($identifier, $this->user_salt, PDO::PARAM_STR);
                         break;
-                    case 'USER_FIRSTNAME':
+                    case '`USER_FIRSTNAME`':
                         $stmt->bindValue($identifier, $this->user_firstname, PDO::PARAM_STR);
                         break;
-                    case 'USER_LASTNAME':
+                    case '`USER_LASTNAME`':
                         $stmt->bindValue($identifier, $this->user_lastname, PDO::PARAM_STR);
                         break;
-                    case 'USER_EMAIL':
+                    case '`USER_EMAIL`':
                         $stmt->bindValue($identifier, $this->user_email, PDO::PARAM_STR);
                         break;
-                    case 'USER_ACTIVE':
+                    case '`USER_ACTIVE`':
                         $stmt->bindValue($identifier, (int) $this->user_active, PDO::PARAM_INT);
                         break;
-                    case 'USER_ROLES':
+                    case '`USER_ROLES`':
                         $stmt->bindValue($identifier, $this->user_roles, PDO::PARAM_STR);
                         break;
-                    case 'USER_EXPIRE_AT':
+                    case '`USER_EXPIRE_AT`':
                         $stmt->bindValue($identifier, $this->user_expire_at ? $this->user_expire_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'USER_EXPIRED':
+                    case '`USER_EXPIRED`':
                         $stmt->bindValue($identifier, (int) $this->user_expired, PDO::PARAM_INT);
                         break;
-                    case 'USER_REMEMBER_TOKEN':
+                    case '`USER_REMEMBER_TOKEN`':
                         $stmt->bindValue($identifier, $this->user_remember_token, PDO::PARAM_STR);
                         break;
-                    case 'USER_REMEMBER_TOKEN_VALIDITY':
+                    case '`USER_REMEMBER_TOKEN_VALIDITY`':
                         $stmt->bindValue($identifier, $this->user_remember_token_validity ? $this->user_remember_token_validity->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'CREATED_AT':
+                    case '`CREATED_AT`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED_AT':
+                    case '`UPDATED_AT`':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
@@ -1647,13 +1654,49 @@ abstract class User implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->collTriggers) {
-                $result['Triggers'] = $this->collTriggers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'triggers';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'triggers';
+                        break;
+                    default:
+                        $key = 'Triggers';
+                }
+
+                $result[$key] = $this->collTriggers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUserLogs) {
-                $result['UserLogs'] = $this->collUserLogs->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'userLogs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'user_logs';
+                        break;
+                    default:
+                        $key = 'UserLogs';
+                }
+
+                $result[$key] = $this->collUserLogs->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUserTargetGroups) {
-                $result['UserTargetGroups'] = $this->collUserTargetGroups->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'userTargetGroups';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'user_target_groups';
+                        break;
+                    default:
+                        $key = 'UserTargetGroups';
+                }
+
+                $result[$key] = $this->collUserTargetGroups->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 

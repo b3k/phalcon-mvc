@@ -5,8 +5,7 @@ use App\Forms\LoginForm;
 use App\Forms\SignUpForm;
 use App\Forms\ForgotPasswordForm;
 use App\Auth\Exception as AuthException;
-use App\Models\Users;
-use App\Models\ResetPasswords;
+use App\Model\User;
 
 /**
  * Controller used handle non-authenticated session actions like login/logout, user signup, and forgotten passwords
@@ -30,23 +29,21 @@ class SessionController extends ControllerBase
             
             if ($Form->isValid($this->getPost()) != false) {
                 
-                $user = new Users();
+                $User = new User();
+                $User->setUserFirstname($this->getPost('name', '', 'striptags'));
+                $User->setUserEmail($this->getPost('email'));
+                $User->setUserPassword($this->getSecurity()->hash($this->getPost('password')));
+                $User->setUserActive(true);
+                $User->setUserLastname('Test');
                 
-                $user->assign(array(
-                    'name' => $this->getPost('name', 'striptags'),
-                    'email' => $this->getPost('email'),
-                    'password' => $this->getSecurity()->hash($this->getPost('password')),
-                    'profilesId' => 2
-                ));
-
-                if ($user->save()) {
+                if ($User->save()) {
                     return $this->forward(array(
                         'controller' => 'index',
                         'action' => 'index'
                     ));
                 }
 
-                $this->addError($user->getMessages());
+                $this->addError($Form->getMessages());
             }
         }
 

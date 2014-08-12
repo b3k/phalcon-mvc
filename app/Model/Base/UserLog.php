@@ -23,6 +23,13 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
+/**
+ * Base class that represents a row from the 'user_log' table.
+ *
+ *
+ *
+* @package    propel.generator.App.Model.Base
+*/
 abstract class UserLog implements ActiveRecordInterface
 {
     /**
@@ -400,9 +407,9 @@ abstract class UserLog implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -420,9 +427,9 @@ abstract class UserLog implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -493,13 +500,13 @@ abstract class UserLog implements ActiveRecordInterface
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserLogTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -668,7 +675,7 @@ abstract class UserLog implements ActiveRecordInterface
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
@@ -688,7 +695,7 @@ abstract class UserLog implements ActiveRecordInterface
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
@@ -898,32 +905,32 @@ abstract class UserLog implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(UserLogTableMap::COL_ID_USER_LOG)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_USER_LOG';
+            $modifiedColumns[':p' . $index++]  = '`ID_USER_LOG`';
         }
         if ($this->isColumnModified(UserLogTableMap::COL_USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_ID';
+            $modifiedColumns[':p' . $index++]  = '`USER_ID`';
         }
         if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_ACTION)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_LOG_ACTION';
+            $modifiedColumns[':p' . $index++]  = '`USER_LOG_ACTION`';
         }
         if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_PARAMS)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_LOG_PARAMS';
+            $modifiedColumns[':p' . $index++]  = '`USER_LOG_PARAMS`';
         }
         if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_IP)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_LOG_IP';
+            $modifiedColumns[':p' . $index++]  = '`USER_LOG_IP`';
         }
         if ($this->isColumnModified(UserLogTableMap::COL_USER_LOG_HTTP_USER_AGENT)) {
-            $modifiedColumns[':p' . $index++]  = 'USER_LOG_HTTP_USER_AGENT';
+            $modifiedColumns[':p' . $index++]  = '`USER_LOG_HTTP_USER_AGENT`';
         }
         if ($this->isColumnModified(UserLogTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
         }
         if ($this->isColumnModified(UserLogTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`UPDATED_AT`';
         }
 
         $sql = sprintf(
-            'INSERT INTO user_log (%s) VALUES (%s)',
+            'INSERT INTO `user_log` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -932,28 +939,28 @@ abstract class UserLog implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID_USER_LOG':
+                    case '`ID_USER_LOG`':
                         $stmt->bindValue($identifier, $this->id_user_log, PDO::PARAM_INT);
                         break;
-                    case 'USER_ID':
+                    case '`USER_ID`':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
                         break;
-                    case 'USER_LOG_ACTION':
+                    case '`USER_LOG_ACTION`':
                         $stmt->bindValue($identifier, $this->user_log_action, PDO::PARAM_STR);
                         break;
-                    case 'USER_LOG_PARAMS':
+                    case '`USER_LOG_PARAMS`':
                         $stmt->bindValue($identifier, $this->user_log_params, PDO::PARAM_STR);
                         break;
-                    case 'USER_LOG_IP':
+                    case '`USER_LOG_IP`':
                         $stmt->bindValue($identifier, $this->user_log_ip, PDO::PARAM_STR);
                         break;
-                    case 'USER_LOG_HTTP_USER_AGENT':
+                    case '`USER_LOG_HTTP_USER_AGENT`':
                         $stmt->bindValue($identifier, $this->user_log_http_user_agent, PDO::PARAM_STR);
                         break;
-                    case 'CREATED_AT':
+                    case '`CREATED_AT`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED_AT':
+                    case '`UPDATED_AT`':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
@@ -1087,7 +1094,19 @@ abstract class UserLog implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aUser) {
-                $result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'user';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'user';
+                        break;
+                    default:
+                        $key = 'User';
+                }
+
+                $result[$key] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 

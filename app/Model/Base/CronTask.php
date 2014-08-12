@@ -21,6 +21,13 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
+/**
+ * Base class that represents a row from the 'cron_task' table.
+ *
+ *
+ *
+* @package    propel.generator.App.Model.Base
+*/
 abstract class CronTask implements ActiveRecordInterface
 {
     /**
@@ -433,9 +440,9 @@ abstract class CronTask implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -453,9 +460,9 @@ abstract class CronTask implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -473,9 +480,9 @@ abstract class CronTask implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -493,9 +500,9 @@ abstract class CronTask implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -578,25 +585,25 @@ abstract class CronTask implements ActiveRecordInterface
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->cron_task_run_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->cron_task_run_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CronTaskTableMap::translateFieldName('CronTaskExecutedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->cron_task_executed_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->cron_task_executed_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : CronTaskTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : CronTaskTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -766,7 +773,7 @@ abstract class CronTask implements ActiveRecordInterface
      */
     public function setCronTaskRunAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->cron_task_run_at !== null || $dt !== null) {
             if ($dt !== $this->cron_task_run_at) {
                 $this->cron_task_run_at = $dt;
@@ -786,7 +793,7 @@ abstract class CronTask implements ActiveRecordInterface
      */
     public function setCronTaskExecutedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->cron_task_executed_at !== null || $dt !== null) {
             if ($dt !== $this->cron_task_executed_at) {
                 $this->cron_task_executed_at = $dt;
@@ -806,7 +813,7 @@ abstract class CronTask implements ActiveRecordInterface
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
@@ -826,7 +833,7 @@ abstract class CronTask implements ActiveRecordInterface
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
@@ -1023,38 +1030,38 @@ abstract class CronTask implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(CronTaskTableMap::COL_ID_CRON_TASK)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_CRON_TASK';
+            $modifiedColumns[':p' . $index++]  = '`ID_CRON_TASK`';
         }
         if ($this->isColumnModified(CronTaskTableMap::COL_CRON_TASK_CODE)) {
-            $modifiedColumns[':p' . $index++]  = 'CRON_TASK_CODE';
+            $modifiedColumns[':p' . $index++]  = '`CRON_TASK_CODE`';
         }
         if ($this->isColumnModified(CronTaskTableMap::COL_CRON_TASK_INTERVAL)) {
-            $modifiedColumns[':p' . $index++]  = 'CRON_TASK_INTERVAL';
+            $modifiedColumns[':p' . $index++]  = '`CRON_TASK_INTERVAL`';
         }
         if ($this->isColumnModified(CronTaskTableMap::COL_CRON_TASK_PARAMS)) {
-            $modifiedColumns[':p' . $index++]  = 'CRON_TASK_PARAMS';
+            $modifiedColumns[':p' . $index++]  = '`CRON_TASK_PARAMS`';
         }
         if ($this->isColumnModified(CronTaskTableMap::COL_CRON_TASK_ACTIVE)) {
-            $modifiedColumns[':p' . $index++]  = 'CRON_TASK_ACTIVE';
+            $modifiedColumns[':p' . $index++]  = '`CRON_TASK_ACTIVE`';
         }
         if ($this->isColumnModified(CronTaskTableMap::COL_CRON_TASK_STATE)) {
-            $modifiedColumns[':p' . $index++]  = 'CRON_TASK_STATE';
+            $modifiedColumns[':p' . $index++]  = '`CRON_TASK_STATE`';
         }
         if ($this->isColumnModified(CronTaskTableMap::COL_CRON_TASK_RUN_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CRON_TASK_RUN_AT';
+            $modifiedColumns[':p' . $index++]  = '`CRON_TASK_RUN_AT`';
         }
         if ($this->isColumnModified(CronTaskTableMap::COL_CRON_TASK_EXECUTED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CRON_TASK_EXECUTED_AT';
+            $modifiedColumns[':p' . $index++]  = '`CRON_TASK_EXECUTED_AT`';
         }
         if ($this->isColumnModified(CronTaskTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
         }
         if ($this->isColumnModified(CronTaskTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`UPDATED_AT`';
         }
 
         $sql = sprintf(
-            'INSERT INTO cron_task (%s) VALUES (%s)',
+            'INSERT INTO `cron_task` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1063,34 +1070,34 @@ abstract class CronTask implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID_CRON_TASK':
+                    case '`ID_CRON_TASK`':
                         $stmt->bindValue($identifier, $this->id_cron_task, PDO::PARAM_INT);
                         break;
-                    case 'CRON_TASK_CODE':
+                    case '`CRON_TASK_CODE`':
                         $stmt->bindValue($identifier, $this->cron_task_code, PDO::PARAM_STR);
                         break;
-                    case 'CRON_TASK_INTERVAL':
+                    case '`CRON_TASK_INTERVAL`':
                         $stmt->bindValue($identifier, $this->cron_task_interval, PDO::PARAM_INT);
                         break;
-                    case 'CRON_TASK_PARAMS':
+                    case '`CRON_TASK_PARAMS`':
                         $stmt->bindValue($identifier, $this->cron_task_params, PDO::PARAM_STR);
                         break;
-                    case 'CRON_TASK_ACTIVE':
+                    case '`CRON_TASK_ACTIVE`':
                         $stmt->bindValue($identifier, (int) $this->cron_task_active, PDO::PARAM_INT);
                         break;
-                    case 'CRON_TASK_STATE':
+                    case '`CRON_TASK_STATE`':
                         $stmt->bindValue($identifier, $this->cron_task_state, PDO::PARAM_STR);
                         break;
-                    case 'CRON_TASK_RUN_AT':
+                    case '`CRON_TASK_RUN_AT`':
                         $stmt->bindValue($identifier, $this->cron_task_run_at ? $this->cron_task_run_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'CRON_TASK_EXECUTED_AT':
+                    case '`CRON_TASK_EXECUTED_AT`':
                         $stmt->bindValue($identifier, $this->cron_task_executed_at ? $this->cron_task_executed_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'CREATED_AT':
+                    case '`CREATED_AT`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED_AT':
+                    case '`UPDATED_AT`':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }

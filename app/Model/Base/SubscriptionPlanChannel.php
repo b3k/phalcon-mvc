@@ -22,6 +22,13 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 
+/**
+ * Base class that represents a row from the 'subscription_plan_channel' table.
+ *
+ *
+ *
+* @package    propel.generator.App.Model.Base
+*/
 abstract class SubscriptionPlanChannel implements ActiveRecordInterface
 {
     /**
@@ -641,14 +648,14 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(SubscriptionPlanChannelTableMap::COL_ID_SUBSCRIPTION_PLAN)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_SUBSCRIPTION_PLAN';
+            $modifiedColumns[':p' . $index++]  = '`ID_SUBSCRIPTION_PLAN`';
         }
         if ($this->isColumnModified(SubscriptionPlanChannelTableMap::COL_ID_CHANNEL)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_CHANNEL';
+            $modifiedColumns[':p' . $index++]  = '`ID_CHANNEL`';
         }
 
         $sql = sprintf(
-            'INSERT INTO subscription_plan_channel (%s) VALUES (%s)',
+            'INSERT INTO `subscription_plan_channel` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -657,10 +664,10 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID_SUBSCRIPTION_PLAN':
+                    case '`ID_SUBSCRIPTION_PLAN`':
                         $stmt->bindValue($identifier, $this->id_subscription_plan, PDO::PARAM_INT);
                         break;
-                    case 'ID_CHANNEL':
+                    case '`ID_CHANNEL`':
                         $stmt->bindValue($identifier, $this->id_channel, PDO::PARAM_INT);
                         break;
                 }
@@ -763,10 +770,34 @@ abstract class SubscriptionPlanChannel implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aChannel) {
-                $result['Channel'] = $this->aChannel->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'channel';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'channel';
+                        break;
+                    default:
+                        $key = 'Channel';
+                }
+
+                $result[$key] = $this->aChannel->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aSubscriptionPlan) {
-                $result['SubscriptionPlan'] = $this->aSubscriptionPlan->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'subscriptionPlan';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'subscription_plan';
+                        break;
+                    default:
+                        $key = 'SubscriptionPlan';
+                }
+
+                $result[$key] = $this->aSubscriptionPlan->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 

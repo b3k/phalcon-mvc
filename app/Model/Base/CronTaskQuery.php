@@ -159,7 +159,7 @@ abstract class CronTaskQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_CRON_TASK, CRON_TASK_CODE, CRON_TASK_INTERVAL, CRON_TASK_PARAMS, CRON_TASK_ACTIVE, CRON_TASK_STATE, CRON_TASK_RUN_AT, CRON_TASK_EXECUTED_AT, CREATED_AT, UPDATED_AT FROM cron_task WHERE ID_CRON_TASK = :p0';
+        $sql = 'SELECT `ID_CRON_TASK`, `CRON_TASK_CODE`, `CRON_TASK_INTERVAL`, `CRON_TASK_PARAMS`, `CRON_TASK_ACTIVE`, `CRON_TASK_STATE`, `CRON_TASK_RUN_AT`, `CRON_TASK_EXECUTED_AT`, `CREATED_AT`, `UPDATED_AT` FROM `cron_task` WHERE `ID_CRON_TASK` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

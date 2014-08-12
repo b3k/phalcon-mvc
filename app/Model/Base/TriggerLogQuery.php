@@ -146,7 +146,7 @@ abstract class TriggerLogQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_TRIGGER_LOG, TRIGGER_ID, TRIGGER_LOG_EXECUTED_ON, TRIGGER_LOG_RESULT, EXECUTED_AT FROM trigger_log WHERE ID_TRIGGER_LOG = :p0';
+        $sql = 'SELECT `ID_TRIGGER_LOG`, `TRIGGER_ID`, `TRIGGER_LOG_EXECUTED_ON`, `TRIGGER_LOG_RESULT`, `EXECUTED_AT` FROM `trigger_log` WHERE `ID_TRIGGER_LOG` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

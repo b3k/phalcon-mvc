@@ -34,6 +34,13 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
+/**
+ * Base class that represents a row from the 'target' table.
+ *
+ *
+ *
+* @package    propel.generator.App.Model.Base
+*/
 abstract class Target implements ActiveRecordInterface
 {
     /**
@@ -456,9 +463,9 @@ abstract class Target implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -476,9 +483,9 @@ abstract class Target implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -543,13 +550,13 @@ abstract class Target implements ActiveRecordInterface
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : TargetTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -685,7 +692,7 @@ abstract class Target implements ActiveRecordInterface
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
@@ -705,7 +712,7 @@ abstract class Target implements ActiveRecordInterface
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
@@ -1037,26 +1044,26 @@ abstract class Target implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(TargetTableMap::COL_ID_TARGET)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_TARGET';
+            $modifiedColumns[':p' . $index++]  = '`ID_TARGET`';
         }
         if ($this->isColumnModified(TargetTableMap::COL_TARGET_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'TARGET_TYPE_ID';
+            $modifiedColumns[':p' . $index++]  = '`TARGET_TYPE_ID`';
         }
         if ($this->isColumnModified(TargetTableMap::COL_TARGET_GROUP_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'TARGET_GROUP_ID';
+            $modifiedColumns[':p' . $index++]  = '`TARGET_GROUP_ID`';
         }
         if ($this->isColumnModified(TargetTableMap::COL_TARGET_TARGET)) {
-            $modifiedColumns[':p' . $index++]  = 'TARGET_TARGET';
+            $modifiedColumns[':p' . $index++]  = '`TARGET_TARGET`';
         }
         if ($this->isColumnModified(TargetTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
         }
         if ($this->isColumnModified(TargetTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`UPDATED_AT`';
         }
 
         $sql = sprintf(
-            'INSERT INTO target (%s) VALUES (%s)',
+            'INSERT INTO `target` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1065,22 +1072,22 @@ abstract class Target implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID_TARGET':
+                    case '`ID_TARGET`':
                         $stmt->bindValue($identifier, $this->id_target, PDO::PARAM_INT);
                         break;
-                    case 'TARGET_TYPE_ID':
+                    case '`TARGET_TYPE_ID`':
                         $stmt->bindValue($identifier, $this->target_type_id, PDO::PARAM_INT);
                         break;
-                    case 'TARGET_GROUP_ID':
+                    case '`TARGET_GROUP_ID`':
                         $stmt->bindValue($identifier, $this->target_group_id, PDO::PARAM_INT);
                         break;
-                    case 'TARGET_TARGET':
+                    case '`TARGET_TARGET`':
                         $stmt->bindValue($identifier, $this->target_target, PDO::PARAM_STR);
                         break;
-                    case 'CREATED_AT':
+                    case '`CREATED_AT`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED_AT':
+                    case '`UPDATED_AT`':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
@@ -1206,28 +1213,124 @@ abstract class Target implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aTargetType) {
-                $result['TargetType'] = $this->aTargetType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'targetType';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'target_type';
+                        break;
+                    default:
+                        $key = 'TargetType';
+                }
+
+                $result[$key] = $this->aTargetType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aTargetGroup) {
-                $result['TargetGroup'] = $this->aTargetGroup->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'targetGroup';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'target_group';
+                        break;
+                    default:
+                        $key = 'TargetGroup';
+                }
+
+                $result[$key] = $this->aTargetGroup->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collChannelOuts) {
-                $result['ChannelOuts'] = $this->collChannelOuts->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'channelOuts';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'channel_outs';
+                        break;
+                    default:
+                        $key = 'ChannelOuts';
+                }
+
+                $result[$key] = $this->collChannelOuts->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collStackTestResultFailsRelatedByTargetId) {
-                $result['StackTestResultFailsRelatedByTargetId'] = $this->collStackTestResultFailsRelatedByTargetId->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'stackTestResultFails';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'stack_test_result_fails';
+                        break;
+                    default:
+                        $key = 'StackTestResultFails';
+                }
+
+                $result[$key] = $this->collStackTestResultFailsRelatedByTargetId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collStackTestResultFailsRelatedByTargetGroupId) {
-                $result['StackTestResultFailsRelatedByTargetGroupId'] = $this->collStackTestResultFailsRelatedByTargetGroupId->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'stackTestResultFails';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'stack_test_result_fails';
+                        break;
+                    default:
+                        $key = 'StackTestResultFails';
+                }
+
+                $result[$key] = $this->collStackTestResultFailsRelatedByTargetGroupId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collStackTestResultFailsRelatedByTargetTypeId) {
-                $result['StackTestResultFailsRelatedByTargetTypeId'] = $this->collStackTestResultFailsRelatedByTargetTypeId->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'stackTestResultFails';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'stack_test_result_fails';
+                        break;
+                    default:
+                        $key = 'StackTestResultFails';
+                }
+
+                $result[$key] = $this->collStackTestResultFailsRelatedByTargetTypeId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collStackTestResultPasses) {
-                $result['StackTestResultPasses'] = $this->collStackTestResultPasses->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'stackTestResultPasses';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'stack_test_result_passes';
+                        break;
+                    default:
+                        $key = 'StackTestResultPasses';
+                }
+
+                $result[$key] = $this->collStackTestResultPasses->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collTriggers) {
-                $result['Triggers'] = $this->collTriggers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'triggers';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'triggers';
+                        break;
+                    default:
+                        $key = 'Triggers';
+                }
+
+                $result[$key] = $this->collTriggers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 

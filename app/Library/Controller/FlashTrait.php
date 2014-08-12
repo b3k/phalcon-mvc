@@ -8,11 +8,14 @@ trait FlashTrait
     public function addFlash($message, $type = 'notice')
     {
         switch ($type) {
-            case 'success': $this->getFlash()->success($message);
+            case 'success': 
+                $this->getFlash()->success($message);
                 break;
-            case 'warning': $this->getFlash()->warning($message);
+            case 'warning': 
+                $this->getFlash()->warning($message);
                 break;
-            case 'error': $this->getFlash()->error($message);
+            case 'error': 
+                $this->getFlash()->error($message);
                 break;
             case 'notice':
             default:

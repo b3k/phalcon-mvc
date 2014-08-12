@@ -166,7 +166,7 @@ abstract class StackTestResultPassQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_TEST_RESULT_PASS, TARGET_ID, TARGET_GROUP_ID, TARGET_TYPE_ID, STACK_TEST_RESULT_PASS_INFO, STACK_TEST_RESULT_PASS_PRIORITY, CREATED_AT, UPDATED_AT FROM stack_test_result_pass WHERE ID_TEST_RESULT_PASS = :p0';
+        $sql = 'SELECT `ID_TEST_RESULT_PASS`, `TARGET_ID`, `TARGET_GROUP_ID`, `TARGET_TYPE_ID`, `STACK_TEST_RESULT_PASS_INFO`, `STACK_TEST_RESULT_PASS_PRIORITY`, `CREATED_AT`, `UPDATED_AT` FROM `stack_test_result_pass` WHERE `ID_TEST_RESULT_PASS` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

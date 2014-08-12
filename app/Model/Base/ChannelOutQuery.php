@@ -162,7 +162,7 @@ abstract class ChannelOutQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_ALERT_OUT, CHANNEL_ID, TARGET_ID, CHANNEL_OUT_PARAMS, CHANNEL_OUT_STATUS, CHANNEL_OUT_PRIORITY, CREATED_AT, UPDATED_AT FROM channel_out WHERE ID_ALERT_OUT = :p0';
+        $sql = 'SELECT `ID_ALERT_OUT`, `CHANNEL_ID`, `TARGET_ID`, `CHANNEL_OUT_PARAMS`, `CHANNEL_OUT_STATUS`, `CHANNEL_OUT_PRIORITY`, `CREATED_AT`, `UPDATED_AT` FROM `channel_out` WHERE `ID_ALERT_OUT` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

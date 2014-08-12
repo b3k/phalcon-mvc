@@ -24,8 +24,8 @@ use App\Library\PropelConnector\Propel\Generator\Config\GeneratorConfig;
 class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
 {
 
-    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../app/Model/';
-    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/';
+    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../app/Model';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db/';
     const DEFAULT_MYSQL_ENGINE = 'InnoDB';
     const DEFAULT_OBJECT_BUILDER = '\Propel\Generator\Builder\Om\ObjectBuilder';
     const DEFAULT_OBJECT_STUB_BUILDER = '\Propel\Generator\Builder\Om\ExtensionObjectBuilder';
@@ -36,7 +36,7 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
     const DEFAULT_QUERY_INHERITANCE_STUB_BUILDER = '\Propel\Generator\Builder\Om\ExtensionQueryInheritanceBuilder';
     const DEFAULT_TABLEMAP_BUILDER = '\Propel\Generator\Builder\Om\TableMapBuilder';
     const DEFAULT_PLURALIZER = '\Propel\Common\Pluralizer\StandardEnglishPluralizer';
-    const DEFAULT_PLATFORM = 'mysql';
+    const DEFAULT_PLATFORM = 'MysqlPlatform';
 
     /**
      * {@inheritdoc}
@@ -47,22 +47,22 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
                 ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Application environment', AbstractCommand::DEFAULT_INPUT_ENV)
                 ->addOption('platform', null, InputOption::VALUE_REQUIRED, 'The platform', self::DEFAULT_PLATFORM)
                 ->addOption('recursive', null, InputOption::VALUE_NONE, 'Search for schema.xml inside the input directory')
-                ->addOption('mysql-engine', null, InputOption::VALUE_REQUIRED, 'MySQL engine (MyISAM, InnoDB, ...)', self::DEFAULT_MYSQL_ENGINE)
                 ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
                 ->addOption('output-dir', null, InputOption::VALUE_REQUIRED, 'The output directory', __DIR__ . self::DEFAULT_OUTPUT_DIRECTORY)
-                ->addOption('object-class', null, InputOption::VALUE_REQUIRED, 'The object class generator name', self::DEFAULT_OBJECT_BUILDER)
-                ->addOption('object-stub-class', null, InputOption::VALUE_REQUIRED, 'The object stub class generator name', self::DEFAULT_OBJECT_STUB_BUILDER)
-                ->addOption('object-multiextend-class', null, InputOption::VALUE_REQUIRED, 'The object multiextend class generator name', self::DEFAULT_MULTIEXTEND_OBJECT_BUILDER)
-                ->addOption('query-class', null, InputOption::VALUE_REQUIRED, 'The query class generator name', self::DEFAULT_QUERY_BUILDER)
-                ->addOption('query-stub-class', null, InputOption::VALUE_REQUIRED, 'The query stub class generator name', self::DEFAULT_QUERY_STUB_BUILDER)
-                ->addOption('query-inheritance-class', null, InputOption::VALUE_REQUIRED, 'The query inheritance class generator name', self::DEFAULT_QUERY_INHERITANCE_BUILDER)
-                ->addOption('query-inheritance-stub-class', null, InputOption::VALUE_REQUIRED, 'The query inheritance stub class generator name', self::DEFAULT_QUERY_INHERITANCE_STUB_BUILDER)
-                ->addOption('tablemap-class', null, InputOption::VALUE_REQUIRED, 'The tablemap class generator name', self::DEFAULT_TABLEMAP_BUILDER)
-                ->addOption('pluralizer-class', null, InputOption::VALUE_REQUIRED, 'The pluralizer class name', self::DEFAULT_PLURALIZER)
+                ->addOption('mysql-engine', null, InputOption::VALUE_REQUIRED, 'MySQL engine (MyISAM, InnoDB, ...)')
+                ->addOption('object-class', null, InputOption::VALUE_REQUIRED, 'The object class generator name')
+                ->addOption('object-stub-class', null, InputOption::VALUE_REQUIRED, 'The object stub class generator name')
+                ->addOption('object-multiextend-class', null, InputOption::VALUE_REQUIRED, 'The object multiextend class generator name')
+                ->addOption('query-class', null, InputOption::VALUE_REQUIRED, 'The query class generator name')
+                ->addOption('query-stub-class', null, InputOption::VALUE_REQUIRED, 'The query stub class generator name')
+                ->addOption('query-inheritance-class', null, InputOption::VALUE_REQUIRED, 'The query inheritance class generator name')
+                ->addOption('query-inheritance-stub-class', null, InputOption::VALUE_REQUIRED, 'The query inheritance stub class generator name')
+                ->addOption('tablemap-class', null, InputOption::VALUE_REQUIRED, 'The tablemap class generator name')
+                ->addOption('pluralizer-class', null, InputOption::VALUE_REQUIRED, 'The pluralizer class name')
                 ->addOption('enable-identifier-quoting', null, InputOption::VALUE_NONE, 'Identifier quoting may result in undesired behavior (especially in Postgres)')
                 ->addOption('target-package', null, InputOption::VALUE_REQUIRED, '', '')
                 ->addOption('enable-package-object-model', null, InputOption::VALUE_NONE, '')
-                ->addOption('disable-namespace-auto-package', null, InputOption::VALUE_NONE, 'Disable namespace auto-packaging')
+                ->addOption('disable-namespace-autopackage', null, InputOption::VALUE_NONE, 'Disable namespace auto-packaging')
                 ->addOption('composer-dir', null, InputOption::VALUE_REQUIRED, 'Directory in which your composer.json resides', null)
                 ->setName('propel:model:build')
                 ->setAliases(array('build'))
@@ -76,13 +76,7 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
             return new GeneratorConfig(null, $properties);
         }
 
-        $inputDir = null;
-
-        if ($input->hasOption('input-dir')) {
-            if (!($this instanceof SqlInsertCommand)) {
-                $inputDir = $input->getOption('input-dir');
-            }
-        }
+        $inputDir = dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env');
 
         if ($input->hasOption('platform') && (null !== $input->getOption('platform'))) {
             $properties['propel']['generator']['platformClass'] = '\\Propel\\Generator\\Platform\\' . $input->getOption('platform');
@@ -96,50 +90,80 @@ class ModelBuildCommand extends \Propel\Generator\Command\ModelBuildCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $generatorConfig = $this->getGeneratorConfig(array(
-            'propel.platform.class' => $input->getOption('platform'),
-            'propel.builder.object.class' => $input->getOption('object-class'),
-            'propel.builder.objectstub.class' => $input->getOption('object-stub-class'),
-            'propel.builder.objectmultiextend.class' => $input->getOption('object-multiextend-class'),
-            'propel.builder.query.class' => $input->getOption('query-class'),
-            'propel.builder.querystub.class' => $input->getOption('query-stub-class'),
-            'propel.builder.queryinheritance.class' => $input->getOption('query-inheritance-class'),
-            'propel.builder.queryinheritancestub.class' => $input->getOption('query-inheritance-stub-class'),
-            'propel.builder.tablemap.class' => $input->getOption('tablemap-class'),
-            'propel.builder.pluralizer.class' => $input->getOption('pluralizer-class'),
-            'propel.builder.composer.dir' => $input->getOption('composer-dir'),
-            'propel.disableIdentifierQuoting' => !$input->getOption('enable-identifier-quoting'),
-            'propel.targetPackage' => $input->getOption('target-package'),
-            'propel.packageObjectModel' => $input->getOption('enable-package-object-model'),
-            'propel.namespace.autoPackage' => !$input->getOption('disable-namespace-auto-package'),
-            'propel.addGenericAccessors' => true,
-            'propel.addGenericMutators' => true,
-            'propel.addSaveMethod' => true,
-            'propel.addTimeStamp' => false,
-            'propel.addValidateMethod' => true,
-            'propel.addHooks' => true,
-            'propel.namespace.map' => 'Map',
-            'propel.useLeftJoinsInDoJoinMethods' => true,
-            'propel.emulateForeignKeyConstraints' => false,
-            'propel.schema.autoPrefix' => true,
-            'propel.dateTimeClass' => '\DateTime',
-            // MySQL specific
-            'propel.mysql.tableType' => $input->getOption('mysql-engine'),
-            'propel.mysql.tableEngineKeyword' => 'ENGINE',
-                ), $input);
+        $configOptions = array();
+        $inputOptions = $input->getOptions();
 
-        $this->createDirectory($input->getOption('output-dir'));
+        foreach ($inputOptions as $key => $option) {
+            if (null !== $option) {
+                switch ($key) {
+                    case 'output-dir':
+                        $configOptions['propel']['paths']['phpDir'] = $option;
+                        break;
+                    case 'objects-class':
+                        $configOptions['propel']['generator']['objectModel']['builders']['object'] = $option;
+                        break;
+                    case 'object-stub-class':
+                        $configOptions['propel']['generator']['objectModel']['builders']['objectstub'] = $option;
+                        break;
+                    case 'object-multiextend-class':
+                        $configOptions['propel']['generator']['objectModel']['builders']['objectmultiextend'] = $option;
+                        break;
+                    case 'query-class':
+                        $configOptions['propel']['generator']['objectModel']['builders']['query'] = $option;
+                        break;
+                    case 'query-stub-class':
+                        $configOptions['propel']['generator']['objectModel']['builders']['querystub'] = $option;
+                        break;
+                    case 'query-inheritance-class':
+                        $configOptions['propel']['generator']['objectModel']['builders']['queryinheritance'] = $option;
+                        break;
+                    case 'query-inheritance-stub-class':
+                        $configOptions['propel']['generator']['objectModel']['builders']['queryinheritancestub'] = $option;
+                        break;
+                    case 'tablemap-class':
+                        $configOptions['propel']['generator']['objectModel']['builders']['tablemap'] = $option;
+                        break;
+                    case 'pluralizer-class':
+                        $configOptions['propel']['generator']['objectModel']['pluralizerClass'] = $option;
+                        break;
+                    case 'composer-dir':
+                        $configOptions['propel']['paths']['composerDir'] = $option;
+                        break;
+                    case 'enable-identifier-quoting':
+                        if ($option) {
+                            $configOptions['propel']['generator']['objectModel']['disableIdentifierQuoting'] = !$option;
+                        }
+                        break;
+                    case 'enable-package-object-model':
+                        if ($option) {
+                            $configOptions['propel']['generator']['packageObjectModel'] = $option;
+                        }
+                        break;
+                    case 'disable-namespace-autopackage':
+                        if ($option) {
+                            $configOptions['propel']['generator']['namespaceAutoPackage'] = TRUE;
+                        }
+                        break;
+                    case 'mysql-engine':
+                        $configOptions['propel']['database']['adapters']['mysql']['tableType'] = $option;
+                        break;
+                }
+            }
+        }
+
+        $generatorConfig = $this->getGeneratorConfig($configOptions, $input);
+        $this->createDirectory($generatorConfig->getSection('paths')['phpDir']);
 
         $manager = new ModelManager();
         $manager->setFilesystem($this->getFilesystem());
         $manager->setGeneratorConfig($generatorConfig);
-        $manager->setSchemas($this->getSchemas($input->getOption('input-dir') . 'db', $input->getOption('recursive')));
+        $manager->setSchemas($this->getSchemas($input->getOption('input-dir'), $input->getOption('recursive')));
         $manager->setLoggerClosure(function ($message) use ($input, $output) {
             if ($input->getOption('verbose')) {
                 $output->writeln($message);
             }
         });
-        $manager->setWorkingDirectory($input->getOption('output-dir'));
+        $manager->setWorkingDirectory($generatorConfig->getSection('paths')['phpDir']);
 
         $manager->build();
     }

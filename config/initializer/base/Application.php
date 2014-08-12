@@ -156,10 +156,15 @@ class Application extends \Phalcon\Mvc\Application
 
     protected function initPropel()
     {
-        $this->di->set(self::SERVICE_PROPEL, function () {
-            $Propel = new \Propel();
-            return $Propel;
-        });
+        if (file_exists(APP_TMP_DIR . DS . 'propel.php')) {
+            require_once(APP_TMP_DIR . DS . 'propel.php');
+        } else {
+            // Build config if is not created
+            $ConfigConvert = new \App\Library\PropelConnector\Propel\Generator\Command\ConfigConvertCommand();
+            $input = new \Symfony\Component\Console\Input\ArrayInput(array('--env' => APP_ENV));
+            $ouput = new \Symfony\Component\Console\Output\NullOutput();
+            $ConfigConvert->run($input, $ouput);
+        }
     }
 
     protected function initAcl()
@@ -323,10 +328,6 @@ class Application extends \Phalcon\Mvc\Application
      */
     protected function initLoader()
     {
-        /* if (!file_exists(APP_TMP_DIR . DS . 'classmap.php')) {
-          $this->generateClassMap();
-          } */
-
         $loader = new \Phalcon\Loader();
         $loader->registerNamespaces(array(
             'App\Controllers' => APP_APPLICATION_DIR . DS . 'controllers' . DS,

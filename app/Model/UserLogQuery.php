@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Model\Base\UserLogQuery as BaseUserLogQuery;
 
+
 /**
  * Skeleton subclass for performing query and update operations on the 'user_log' table.
  *
@@ -17,28 +18,4 @@ use App\Model\Base\UserLogQuery as BaseUserLogQuery;
 class UserLogQuery extends BaseUserLogQuery
 {
 
-    public static function countActions($action, Array $params = array())
-    {
-        $query = self::create();
-        if (isset($params['user_id'])) {
-            $query->filterByUserId($params['user_id']);
-        }
-        if (isset($params['ip'])) {
-            $query->filterByUserLogIp($params['ip']);
-        }
-        $date_params = array();
-        if (isset($params['date_from'])) {
-            $date_params['min'] = $params['date_from'];
-        }
-        if (isset($params['date_to'])) {
-            $date_params['min'] = $params['date_to'];
-        }
-        if (count($date_params) > 0) {
-            $query->filterByCreatedAt($date_params);
-        }
-        return $query->filterByUserLogAction($action)->count();
-    }
-
-}
-
-// UserLogQuery
+} // UserLogQuery

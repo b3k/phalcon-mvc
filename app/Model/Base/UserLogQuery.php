@@ -158,7 +158,7 @@ abstract class UserLogQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_USER_LOG, USER_ID, USER_LOG_ACTION, USER_LOG_PARAMS, USER_LOG_IP, USER_LOG_HTTP_USER_AGENT, CREATED_AT, UPDATED_AT FROM user_log WHERE ID_USER_LOG = :p0';
+        $sql = 'SELECT `ID_USER_LOG`, `USER_ID`, `USER_LOG_ACTION`, `USER_LOG_PARAMS`, `USER_LOG_IP`, `USER_LOG_HTTP_USER_AGENT`, `CREATED_AT`, `UPDATED_AT` FROM `user_log` WHERE `ID_USER_LOG` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

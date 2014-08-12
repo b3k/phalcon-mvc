@@ -22,6 +22,13 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
+/**
+ * Base class that represents a row from the 'trigger_log' table.
+ *
+ *
+ *
+* @package    propel.generator.App.Model.Base
+*/
 abstract class TriggerLog implements ActiveRecordInterface
 {
     /**
@@ -361,9 +368,9 @@ abstract class TriggerLog implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -428,7 +435,7 @@ abstract class TriggerLog implements ActiveRecordInterface
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->executed_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->executed_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -557,7 +564,7 @@ abstract class TriggerLog implements ActiveRecordInterface
      */
     public function setExecutedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->executed_at !== null || $dt !== null) {
             if ($dt !== $this->executed_at) {
                 $this->executed_at = $dt;
@@ -755,23 +762,23 @@ abstract class TriggerLog implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(TriggerLogTableMap::COL_ID_TRIGGER_LOG)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_TRIGGER_LOG';
+            $modifiedColumns[':p' . $index++]  = '`ID_TRIGGER_LOG`';
         }
         if ($this->isColumnModified(TriggerLogTableMap::COL_TRIGGER_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'TRIGGER_ID';
+            $modifiedColumns[':p' . $index++]  = '`TRIGGER_ID`';
         }
         if ($this->isColumnModified(TriggerLogTableMap::COL_TRIGGER_LOG_EXECUTED_ON)) {
-            $modifiedColumns[':p' . $index++]  = 'TRIGGER_LOG_EXECUTED_ON';
+            $modifiedColumns[':p' . $index++]  = '`TRIGGER_LOG_EXECUTED_ON`';
         }
         if ($this->isColumnModified(TriggerLogTableMap::COL_TRIGGER_LOG_RESULT)) {
-            $modifiedColumns[':p' . $index++]  = 'TRIGGER_LOG_RESULT';
+            $modifiedColumns[':p' . $index++]  = '`TRIGGER_LOG_RESULT`';
         }
         if ($this->isColumnModified(TriggerLogTableMap::COL_EXECUTED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'EXECUTED_AT';
+            $modifiedColumns[':p' . $index++]  = '`EXECUTED_AT`';
         }
 
         $sql = sprintf(
-            'INSERT INTO trigger_log (%s) VALUES (%s)',
+            'INSERT INTO `trigger_log` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -780,19 +787,19 @@ abstract class TriggerLog implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID_TRIGGER_LOG':
+                    case '`ID_TRIGGER_LOG`':
                         $stmt->bindValue($identifier, $this->id_trigger_log, PDO::PARAM_INT);
                         break;
-                    case 'TRIGGER_ID':
+                    case '`TRIGGER_ID`':
                         $stmt->bindValue($identifier, $this->trigger_id, PDO::PARAM_INT);
                         break;
-                    case 'TRIGGER_LOG_EXECUTED_ON':
+                    case '`TRIGGER_LOG_EXECUTED_ON`':
                         $stmt->bindValue($identifier, $this->trigger_log_executed_on, PDO::PARAM_STR);
                         break;
-                    case 'TRIGGER_LOG_RESULT':
+                    case '`TRIGGER_LOG_RESULT`':
                         $stmt->bindValue($identifier, $this->trigger_log_result, PDO::PARAM_STR);
                         break;
-                    case 'EXECUTED_AT':
+                    case '`EXECUTED_AT`':
                         $stmt->bindValue($identifier, $this->executed_at ? $this->executed_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
@@ -914,7 +921,19 @@ abstract class TriggerLog implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aTrigger) {
-                $result['Trigger'] = $this->aTrigger->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'trigger';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'trigger';
+                        break;
+                    default:
+                        $key = 'Trigger';
+                }
+
+                $result[$key] = $this->aTrigger->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 

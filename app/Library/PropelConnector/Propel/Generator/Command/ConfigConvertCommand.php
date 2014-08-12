@@ -13,17 +13,16 @@ namespace App\Library\PropelConnector\Propel\Generator\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Propel\Generator\Config\XmlToArrayConverter;
+use App\Library\PropelConnector\Propel\Generator\Config\GeneratorConfig;
 use Propel\Generator\Config\ArrayToPhpConverter;
 use App\Tasks\Command\AbstractCommand;
 
 class ConfigConvertCommand extends \Propel\Generator\Command\ConfigConvertCommand
 {
 
-    const DEFAULT_INPUT_FILE = 'runtime-conf.xml';
-    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../config';
-    const DEFAULT_OUTPUT_FILE = 'service.php';
-    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config';
+    const DEFAULT_OUTPUT_DIRECTORY = '/../../../../../../tmp';
+    const DEFAULT_OUTPUT_FILE = 'propel.php';
+    const DEFAULT_INPUT_DIRECTORY = '/../../../../../../config/db';
 
     /**
      * {@inheritdoc}
@@ -33,13 +32,27 @@ class ConfigConvertCommand extends \Propel\Generator\Command\ConfigConvertComman
         $this
                 ->addOption('env', null, InputOption::VALUE_REQUIRED, 'Application environment', AbstractCommand::DEFAULT_INPUT_ENV)
                 ->addOption('input-dir', null, InputOption::VALUE_REQUIRED, 'The input directory', __DIR__ . self::DEFAULT_INPUT_DIRECTORY)
-                ->addOption('input-file', null, InputOption::VALUE_REQUIRED, 'The input file', self::DEFAULT_INPUT_FILE)
                 ->addOption('output-dir', null, InputOption::VALUE_REQUIRED, 'The output directory', __DIR__ . self::DEFAULT_OUTPUT_DIRECTORY)
                 ->addOption('output-file', null, InputOption::VALUE_REQUIRED, 'The output file', self::DEFAULT_OUTPUT_FILE)
-                ->setName('propel:config:convert-xml')
+                ->setName('propel:config:convert')
                 ->setAliases(array('convert-conf'))
-                ->setDescription('Transform the XML configuration to PHP code leveraging the ServiceContainer')
+                ->setDescription('Transform the configuration to PHP code leveraging the ServiceContainer')
         ;
+    }
+
+    protected function getGeneratorConfig(array $properties = null, InputInterface $input = null)
+    {
+        if (null === $input) {
+            return new GeneratorConfig(null, $properties);
+        }
+
+        $inputDir = dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env');
+
+        if ($input->hasOption('platform') && (null !== $input->getOption('platform'))) {
+            $properties['propel']['generator']['platformClass'] = '\\Propel\\Generator\\Platform\\' . $input->getOption('platform');
+        }
+
+        return new GeneratorConfig($inputDir, $properties);
     }
 
     /**
@@ -47,22 +60,24 @@ class ConfigConvertCommand extends \Propel\Generator\Command\ConfigConvertComman
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $inputFilePath = $input->getOption('input-dir') . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . $input->getOption('input-file');
-        if (!file_exists($inputFilePath)) {
-            throw new \RuntimeException(sprintf('Unable to find the "%s" configuration file', $inputFilePath));
-        }
+        //$configManager = new ConfigurationManager($input->getOption('input-dir'));
+        $configManager = $this->getGeneratorConfig(null, $input);
+        $input->setOption('output-dir', $input->getOption('output-dir') . DIRECTORY_SEPARATOR . $input->getOption('env'));
 
-        $outputFilePath = $input->getOption('output-dir') . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . $input->getOption('output-file');
+        $this->createDirectory($input->getOption('output-dir'));
 
-        $this->createDirectory(dirname($outputFilePath));
-
+        $outputFilePath = $input->getOption('output-dir') . DIRECTORY_SEPARATOR . $input->getOption('output-file');
         if (!is_writable(dirname($outputFilePath))) {
             throw new \RuntimeException(sprintf('Unable to write the "%s" output file', $outputFilePath));
         }
 
-        $stringConf = file_get_contents($inputFilePath);
-        $arrayConf = XmlToArrayConverter::convert($stringConf);
-        $phpConf = ArrayToPhpConverter::convert($arrayConf);
+        //Create the options array to pass to ArrayToPhpConverter
+        $options['connections'] = $configManager->getConnectionParametersArray();
+        $options['defaultConnection'] = $configManager->getSection('runtime')['defaultConnection'];
+        $options['log'] = $configManager->getSection('runtime')['log'];
+        $options['profiler'] = $configManager->getConfigProperty('runtime.profiler');
+
+        $phpConf = ArrayToPhpConverter::convert($options);
         $phpConf = "<?php
 " . $phpConf;
 

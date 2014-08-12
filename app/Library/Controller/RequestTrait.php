@@ -85,17 +85,17 @@ trait RequestTrait
         return sha1($this->getRequestIp() . $this->getMethod() . $this->getRequest()->getUserAgent() . ($only_client ? '' : $this->getURI()));
     }
 
-    public function getPost($name, $default = null, $filter = null)
+    public function getPost($name = null, $default = null, $filter = null)
     {
         return $this->getRequest()->getPost($name, $filter, $default);
     }
 
-    public function getPut($name, $default = null, $filter = null)
+    public function getPut($name = null, $default = null, $filter = null)
     {
         return $this->getRequest()->getPut($name, $filter, $default);
     }
 
-    public function getQuery($name, $default = null, $filter = null)
+    public function getQuery($name = null, $default = null, $filter = null)
     {
         return $this->getRequest()->getQuery($name, $filter, $default);
     }

@@ -166,7 +166,7 @@ abstract class ChannelQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_CHANNEL, CHANNEL_CLASS, CHANNEL_NAME, CHANNEL_DESCRIPTION, CHANNEL_ACTIVE, CREATED_AT, UPDATED_AT, SLUG FROM channel WHERE ID_CHANNEL = :p0';
+        $sql = 'SELECT `ID_CHANNEL`, `CHANNEL_CLASS`, `CHANNEL_NAME`, `CHANNEL_DESCRIPTION`, `CHANNEL_ACTIVE`, `CREATED_AT`, `UPDATED_AT`, `SLUG` FROM `channel` WHERE `ID_CHANNEL` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

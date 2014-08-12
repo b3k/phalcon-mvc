@@ -9,7 +9,9 @@
         "symfony/finder": "~2.2",
         "symfony/console": "~2.2",
         "symfony/filesystem": "~2.2",
-        "propel/propel": "2.0.*@dev"
+        "propel/propel": "2.0.*@dev",
+        "leafo/scssphp": "0.1.0",
+        "monolog/monolog": "~1.3"
     },
     "authors": [{
             "name": "Bartosz Pietrzak",

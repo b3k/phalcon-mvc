@@ -162,7 +162,7 @@ abstract class TriggerTypeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_TRIGGER_TYPE, CHANNEL_ID, TRIGGER_TYPE_CLASS, TRIGGER_TYPE_NAME, TRIGGER_TYPE_DESCRIPTION, TRIGGER_TYPE_ACTIVE, CREATED_AT, UPDATED_AT FROM trigger_type WHERE ID_TRIGGER_TYPE = :p0';
+        $sql = 'SELECT `ID_TRIGGER_TYPE`, `CHANNEL_ID`, `TRIGGER_TYPE_CLASS`, `TRIGGER_TYPE_NAME`, `TRIGGER_TYPE_DESCRIPTION`, `TRIGGER_TYPE_ACTIVE`, `CREATED_AT`, `UPDATED_AT` FROM `trigger_type` WHERE `ID_TRIGGER_TYPE` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

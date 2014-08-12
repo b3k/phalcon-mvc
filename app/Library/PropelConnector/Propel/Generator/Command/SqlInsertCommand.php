@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Propel\Generator\Manager\SqlManager;
 use App\Tasks\Command\AbstractCommand;
+use App\Library\PropelConnector\Propel\Generator\Config\GeneratorConfig;
 
 /**
  * @author William Durand <william.durand1@gmail.com>
@@ -44,35 +45,19 @@ class SqlInsertCommand extends \Propel\Generator\Command\SqlInsertCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function getGeneratorConfig(array $properties = null, InputInterface $input = null)
     {
-        $manager = new SqlManager();
-
-        $generatorConfig = $this->getGeneratorConfig(array(), $input);
-
-        $connections = array();
-        $optionConnections = $input->getOption('connection');
-        if (!$optionConnections) {
-            $connections = $generatorConfig->getBuildConnections(dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env') . DIRECTORY_SEPARATOR . 'propel');
-        } else {
-            foreach ($optionConnections as $connection) {
-                list($name, $dsn, $infos) = $this->parseConnection($connection);
-                $connections[$name] = array_merge(array('dsn' => $dsn), $infos);
-            }
+        if (null === $input) {
+            return new GeneratorConfig(null, $properties);
         }
 
-        $manager->setConnections($connections);
-        $manager->setLoggerClosure(function ($message) use ($input, $output) {
-            if ($input->getOption('verbose')) {
-                $output->writeln($message);
-            }
-        });
-        $manager->setWorkingDirectory($input->getOption('sql-dir'));
+        $inputDir = dirname($input->getOption('input-dir')) . DIRECTORY_SEPARATOR . 'environment' . DIRECTORY_SEPARATOR . $input->getOption('env');
 
-        $manager->insertSql();
+        if ($input->hasOption('platform') && (null !== $input->getOption('platform'))) {
+            $properties['propel']['generator']['platformClass'] = '\\Propel\\Generator\\Platform\\' . $input->getOption('platform');
+        }
+
+        return new GeneratorConfig($inputDir, $properties);
     }
 
 }

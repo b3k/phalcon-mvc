@@ -24,6 +24,13 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
+/**
+ * Base class that represents a row from the 'subscription_plan' table.
+ *
+ *
+ *
+* @package    propel.generator.App.Model.Base
+*/
 abstract class SubscriptionPlan implements ActiveRecordInterface
 {
     /**
@@ -580,9 +587,9 @@ abstract class SubscriptionPlan implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -600,9 +607,9 @@ abstract class SubscriptionPlan implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -739,13 +746,13 @@ abstract class SubscriptionPlan implements ActiveRecordInterface
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : SubscriptionPlanTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : SubscriptionPlanTableMap::translateFieldName('Slug', TableMap::TYPE_PHPNAME, $indexType)];
             $this->slug = (null !== $col) ? (string) $col : null;
@@ -1078,7 +1085,7 @@ abstract class SubscriptionPlan implements ActiveRecordInterface
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
@@ -1098,7 +1105,7 @@ abstract class SubscriptionPlan implements ActiveRecordInterface
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
@@ -1341,59 +1348,59 @@ abstract class SubscriptionPlan implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_ID_SUBSCRIPTION_PLAN)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_SUBSCRIPTION_PLAN';
+            $modifiedColumns[':p' . $index++]  = '`ID_SUBSCRIPTION_PLAN`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_NAME';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_NAME`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_DESCRIPTION';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_DESCRIPTION`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_PRICE)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_PRICE';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_PRICE`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_PERIOD)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_PERIOD';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_PERIOD`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_CODE)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_CODE';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_CODE`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_MAX_TARGET)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_MAX_TARGET';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_MAX_TARGET`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_CHECK_INTERVAL)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_CHECK_INTERVAL';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_CHECK_INTERVAL`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_RSS)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_RSS';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_RSS`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_MAX_TRIGGER)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_MAX_TRIGGER';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_MAX_TRIGGER`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SUBSCRIPTION_PLAN_SMS_IN_PERIOD)) {
-            $modifiedColumns[':p' . $index++]  = 'SUBSCRIPTION_PLAN_SMS_IN_PERIOD';
+            $modifiedColumns[':p' . $index++]  = '`SUBSCRIPTION_PLAN_SMS_IN_PERIOD`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`UPDATED_AT`';
         }
         if ($this->isColumnModified(SubscriptionPlanTableMap::COL_SLUG)) {
-            $modifiedColumns[':p' . $index++]  = 'SLUG';
+            $modifiedColumns[':p' . $index++]  = '`SLUG`';
         }
 
         $sql = sprintf(
-            'INSERT INTO subscription_plan (%s) VALUES (%s)',
+            'INSERT INTO `subscription_plan` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1402,55 +1409,55 @@ abstract class SubscriptionPlan implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID_SUBSCRIPTION_PLAN':
+                    case '`ID_SUBSCRIPTION_PLAN`':
                         $stmt->bindValue($identifier, $this->id_subscription_plan, PDO::PARAM_INT);
                         break;
-                    case 'SUBSCRIPTION_PLAN_NAME':
+                    case '`SUBSCRIPTION_PLAN_NAME`':
                         $stmt->bindValue($identifier, $this->subscription_plan_name, PDO::PARAM_STR);
                         break;
-                    case 'SUBSCRIPTION_PLAN_DESCRIPTION':
+                    case '`SUBSCRIPTION_PLAN_DESCRIPTION`':
                         $stmt->bindValue($identifier, $this->subscription_plan_description, PDO::PARAM_STR);
                         break;
-                    case 'SUBSCRIPTION_PLAN_PRICE':
+                    case '`SUBSCRIPTION_PLAN_PRICE`':
                         $stmt->bindValue($identifier, $this->subscription_plan_price, PDO::PARAM_STR);
                         break;
-                    case 'SUBSCRIPTION_PLAN_PERIOD':
+                    case '`SUBSCRIPTION_PLAN_PERIOD`':
                         $stmt->bindValue($identifier, $this->subscription_plan_period, PDO::PARAM_INT);
                         break;
-                    case 'SUBSCRIPTION_PLAN_CODE':
+                    case '`SUBSCRIPTION_PLAN_CODE`':
                         $stmt->bindValue($identifier, $this->subscription_plan_code, PDO::PARAM_STR);
                         break;
-                    case 'SUBSCRIPTION_PLAN_MAX_TARGET':
+                    case '`SUBSCRIPTION_PLAN_MAX_TARGET`':
                         $stmt->bindValue($identifier, $this->subscription_plan_max_target, PDO::PARAM_INT);
                         break;
-                    case 'SUBSCRIPTION_PLAN_CHECK_INTERVAL':
+                    case '`SUBSCRIPTION_PLAN_CHECK_INTERVAL`':
                         $stmt->bindValue($identifier, $this->subscription_plan_check_interval, PDO::PARAM_INT);
                         break;
-                    case 'SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS':
+                    case '`SUBSCRIPTION_PLAN_MAX_LOCALIZATIONS`':
                         $stmt->bindValue($identifier, $this->subscription_plan_max_localizations, PDO::PARAM_INT);
                         break;
-                    case 'SUBSCRIPTION_PLAN_RSS':
+                    case '`SUBSCRIPTION_PLAN_RSS`':
                         $stmt->bindValue($identifier, (int) $this->subscription_plan_rss, PDO::PARAM_INT);
                         break;
-                    case 'SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS':
+                    case '`SUBSCRIPTION_PLAN_MAX_SUB_ACCOUNTS`':
                         $stmt->bindValue($identifier, $this->subscription_plan_max_sub_accounts, PDO::PARAM_INT);
                         break;
-                    case 'SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS':
+                    case '`SUBSCRIPTION_PLAN_MAX_ALERT_RECEIVERS`':
                         $stmt->bindValue($identifier, $this->subscription_plan_max_alert_receivers, PDO::PARAM_INT);
                         break;
-                    case 'SUBSCRIPTION_PLAN_MAX_TRIGGER':
+                    case '`SUBSCRIPTION_PLAN_MAX_TRIGGER`':
                         $stmt->bindValue($identifier, $this->subscription_plan_max_trigger, PDO::PARAM_INT);
                         break;
-                    case 'SUBSCRIPTION_PLAN_SMS_IN_PERIOD':
+                    case '`SUBSCRIPTION_PLAN_SMS_IN_PERIOD`':
                         $stmt->bindValue($identifier, $this->subscription_plan_sms_in_period, PDO::PARAM_INT);
                         break;
-                    case 'CREATED_AT':
+                    case '`CREATED_AT`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED_AT':
+                    case '`UPDATED_AT`':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'SLUG':
+                    case '`SLUG`':
                         $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
                 }
@@ -1620,7 +1627,19 @@ abstract class SubscriptionPlan implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->collSubscriptionPlanChannels) {
-                $result['SubscriptionPlanChannels'] = $this->collSubscriptionPlanChannels->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'subscriptionPlanChannels';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'subscription_plan_channels';
+                        break;
+                    default:
+                        $key = 'SubscriptionPlanChannels';
+                }
+
+                $result[$key] = $this->collSubscriptionPlanChannels->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 

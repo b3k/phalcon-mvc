@@ -26,6 +26,13 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
+/**
+ * Base class that represents a row from the 'trigger_type' table.
+ *
+ *
+ *
+* @package    propel.generator.App.Model.Base
+*/
 abstract class TriggerType implements ActiveRecordInterface
 {
     /**
@@ -439,9 +446,9 @@ abstract class TriggerType implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -459,9 +466,9 @@ abstract class TriggerType implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -536,13 +543,13 @@ abstract class TriggerType implements ActiveRecordInterface
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : TriggerTypeTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -719,7 +726,7 @@ abstract class TriggerType implements ActiveRecordInterface
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
@@ -739,7 +746,7 @@ abstract class TriggerType implements ActiveRecordInterface
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
@@ -968,32 +975,32 @@ abstract class TriggerType implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(TriggerTypeTableMap::COL_ID_TRIGGER_TYPE)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_TRIGGER_TYPE';
+            $modifiedColumns[':p' . $index++]  = '`ID_TRIGGER_TYPE`';
         }
         if ($this->isColumnModified(TriggerTypeTableMap::COL_CHANNEL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'CHANNEL_ID';
+            $modifiedColumns[':p' . $index++]  = '`CHANNEL_ID`';
         }
         if ($this->isColumnModified(TriggerTypeTableMap::COL_TRIGGER_TYPE_CLASS)) {
-            $modifiedColumns[':p' . $index++]  = 'TRIGGER_TYPE_CLASS';
+            $modifiedColumns[':p' . $index++]  = '`TRIGGER_TYPE_CLASS`';
         }
         if ($this->isColumnModified(TriggerTypeTableMap::COL_TRIGGER_TYPE_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'TRIGGER_TYPE_NAME';
+            $modifiedColumns[':p' . $index++]  = '`TRIGGER_TYPE_NAME`';
         }
         if ($this->isColumnModified(TriggerTypeTableMap::COL_TRIGGER_TYPE_DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = 'TRIGGER_TYPE_DESCRIPTION';
+            $modifiedColumns[':p' . $index++]  = '`TRIGGER_TYPE_DESCRIPTION`';
         }
         if ($this->isColumnModified(TriggerTypeTableMap::COL_TRIGGER_TYPE_ACTIVE)) {
-            $modifiedColumns[':p' . $index++]  = 'TRIGGER_TYPE_ACTIVE';
+            $modifiedColumns[':p' . $index++]  = '`TRIGGER_TYPE_ACTIVE`';
         }
         if ($this->isColumnModified(TriggerTypeTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
         }
         if ($this->isColumnModified(TriggerTypeTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`UPDATED_AT`';
         }
 
         $sql = sprintf(
-            'INSERT INTO trigger_type (%s) VALUES (%s)',
+            'INSERT INTO `trigger_type` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1002,28 +1009,28 @@ abstract class TriggerType implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID_TRIGGER_TYPE':
+                    case '`ID_TRIGGER_TYPE`':
                         $stmt->bindValue($identifier, $this->id_trigger_type, PDO::PARAM_INT);
                         break;
-                    case 'CHANNEL_ID':
+                    case '`CHANNEL_ID`':
                         $stmt->bindValue($identifier, $this->channel_id, PDO::PARAM_INT);
                         break;
-                    case 'TRIGGER_TYPE_CLASS':
+                    case '`TRIGGER_TYPE_CLASS`':
                         $stmt->bindValue($identifier, $this->trigger_type_class, PDO::PARAM_STR);
                         break;
-                    case 'TRIGGER_TYPE_NAME':
+                    case '`TRIGGER_TYPE_NAME`':
                         $stmt->bindValue($identifier, $this->trigger_type_name, PDO::PARAM_STR);
                         break;
-                    case 'TRIGGER_TYPE_DESCRIPTION':
+                    case '`TRIGGER_TYPE_DESCRIPTION`':
                         $stmt->bindValue($identifier, $this->trigger_type_description, PDO::PARAM_STR);
                         break;
-                    case 'TRIGGER_TYPE_ACTIVE':
+                    case '`TRIGGER_TYPE_ACTIVE`':
                         $stmt->bindValue($identifier, (int) $this->trigger_type_active, PDO::PARAM_INT);
                         break;
-                    case 'CREATED_AT':
+                    case '`CREATED_AT`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED_AT':
+                    case '`UPDATED_AT`':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
@@ -1157,10 +1164,34 @@ abstract class TriggerType implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aChannel) {
-                $result['Channel'] = $this->aChannel->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'channel';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'channel';
+                        break;
+                    default:
+                        $key = 'Channel';
+                }
+
+                $result[$key] = $this->aChannel->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collTriggers) {
-                $result['Triggers'] = $this->collTriggers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'triggers';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'triggers';
+                        break;
+                    default:
+                        $key = 'Triggers';
+                }
+
+                $result[$key] = $this->collTriggers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 

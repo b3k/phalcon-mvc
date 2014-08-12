@@ -194,7 +194,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_USER, USER_USERNAME, USER_PASSWORD, USER_SALT, USER_FIRSTNAME, USER_LASTNAME, USER_EMAIL, USER_ACTIVE, USER_ROLES, USER_EXPIRE_AT, USER_EXPIRED, USER_REMEMBER_TOKEN, USER_REMEMBER_TOKEN_VALIDITY, CREATED_AT, UPDATED_AT FROM user WHERE ID_USER = :p0';
+        $sql = 'SELECT `ID_USER`, `USER_USERNAME`, `USER_PASSWORD`, `USER_SALT`, `USER_FIRSTNAME`, `USER_LASTNAME`, `USER_EMAIL`, `USER_ACTIVE`, `USER_ROLES`, `USER_EXPIRE_AT`, `USER_EXPIRED`, `USER_REMEMBER_TOKEN`, `USER_REMEMBER_TOKEN_VALIDITY`, `CREATED_AT`, `UPDATED_AT` FROM `user` WHERE `ID_USER` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

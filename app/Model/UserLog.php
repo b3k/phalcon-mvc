@@ -4,43 +4,18 @@ namespace App\Model;
 
 use App\Model\Base\UserLog as BaseUserLog;
 
-class UserLog
-        extends BaseUserLog
+
+/**
+ * Skeleton subclass for representing a row from the 'user_log' table.
+ *
+ *
+ *
+ * You should add additional methods to this class to meet the
+ * application requirements.  This class will only be generated as
+ * long as it does not already exist in the output directory.
+ *
+ */
+class UserLog extends BaseUserLog
 {
-
-    public function setAction($name)
-    {
-        return $this->setUserLogAction($name);
-    }
-
-    public function getAction()
-    {
-        return $this->getUserLogAction();
-    }
-
-    public function setParams($params)
-    {
-        return $this->setParams($params);
-    }
-
-    public function setIp($ip)
-    {
-        return $this->setUserLogIp($ip);
-    }
-
-    public function getIp()
-    {
-        return $this->getUserLogIp();
-    }
-
-    public function setUserAgent($ua)
-    {
-        return $this->setUserLogHttpUserAgent($ua);
-    }
-
-    public function getUserLogHttpUserAgent()
-    {
-        return $this->getUserLogHttpUserAgent();
-    }
 
 }

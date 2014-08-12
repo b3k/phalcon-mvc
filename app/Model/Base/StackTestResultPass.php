@@ -27,6 +27,13 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
+/**
+ * Base class that represents a row from the 'stack_test_result_pass' table.
+ *
+ *
+ *
+* @package    propel.generator.App.Model.Base
+*/
 abstract class StackTestResultPass implements ActiveRecordInterface
 {
     /**
@@ -438,9 +445,9 @@ abstract class StackTestResultPass implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -458,9 +465,9 @@ abstract class StackTestResultPass implements ActiveRecordInterface
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
@@ -535,13 +542,13 @@ abstract class StackTestResultPass implements ActiveRecordInterface
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : StackTestResultPassTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -732,7 +739,7 @@ abstract class StackTestResultPass implements ActiveRecordInterface
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
@@ -752,7 +759,7 @@ abstract class StackTestResultPass implements ActiveRecordInterface
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
@@ -978,32 +985,32 @@ abstract class StackTestResultPass implements ActiveRecordInterface
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(StackTestResultPassTableMap::COL_ID_TEST_RESULT_PASS)) {
-            $modifiedColumns[':p' . $index++]  = 'ID_TEST_RESULT_PASS';
+            $modifiedColumns[':p' . $index++]  = '`ID_TEST_RESULT_PASS`';
         }
         if ($this->isColumnModified(StackTestResultPassTableMap::COL_TARGET_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'TARGET_ID';
+            $modifiedColumns[':p' . $index++]  = '`TARGET_ID`';
         }
         if ($this->isColumnModified(StackTestResultPassTableMap::COL_TARGET_GROUP_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'TARGET_GROUP_ID';
+            $modifiedColumns[':p' . $index++]  = '`TARGET_GROUP_ID`';
         }
         if ($this->isColumnModified(StackTestResultPassTableMap::COL_TARGET_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'TARGET_TYPE_ID';
+            $modifiedColumns[':p' . $index++]  = '`TARGET_TYPE_ID`';
         }
         if ($this->isColumnModified(StackTestResultPassTableMap::COL_STACK_TEST_RESULT_PASS_INFO)) {
-            $modifiedColumns[':p' . $index++]  = 'STACK_TEST_RESULT_PASS_INFO';
+            $modifiedColumns[':p' . $index++]  = '`STACK_TEST_RESULT_PASS_INFO`';
         }
         if ($this->isColumnModified(StackTestResultPassTableMap::COL_STACK_TEST_RESULT_PASS_PRIORITY)) {
-            $modifiedColumns[':p' . $index++]  = 'STACK_TEST_RESULT_PASS_PRIORITY';
+            $modifiedColumns[':p' . $index++]  = '`STACK_TEST_RESULT_PASS_PRIORITY`';
         }
         if ($this->isColumnModified(StackTestResultPassTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
         }
         if ($this->isColumnModified(StackTestResultPassTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+            $modifiedColumns[':p' . $index++]  = '`UPDATED_AT`';
         }
 
         $sql = sprintf(
-            'INSERT INTO stack_test_result_pass (%s) VALUES (%s)',
+            'INSERT INTO `stack_test_result_pass` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1012,28 +1019,28 @@ abstract class StackTestResultPass implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'ID_TEST_RESULT_PASS':
+                    case '`ID_TEST_RESULT_PASS`':
                         $stmt->bindValue($identifier, $this->id_test_result_pass, PDO::PARAM_INT);
                         break;
-                    case 'TARGET_ID':
+                    case '`TARGET_ID`':
                         $stmt->bindValue($identifier, $this->target_id, PDO::PARAM_INT);
                         break;
-                    case 'TARGET_GROUP_ID':
+                    case '`TARGET_GROUP_ID`':
                         $stmt->bindValue($identifier, $this->target_group_id, PDO::PARAM_INT);
                         break;
-                    case 'TARGET_TYPE_ID':
+                    case '`TARGET_TYPE_ID`':
                         $stmt->bindValue($identifier, $this->target_type_id, PDO::PARAM_INT);
                         break;
-                    case 'STACK_TEST_RESULT_PASS_INFO':
+                    case '`STACK_TEST_RESULT_PASS_INFO`':
                         $stmt->bindValue($identifier, $this->stack_test_result_pass_info, PDO::PARAM_STR);
                         break;
-                    case 'STACK_TEST_RESULT_PASS_PRIORITY':
+                    case '`STACK_TEST_RESULT_PASS_PRIORITY`':
                         $stmt->bindValue($identifier, (int) $this->stack_test_result_pass_priority, PDO::PARAM_INT);
                         break;
-                    case 'CREATED_AT':
+                    case '`CREATED_AT`':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'UPDATED_AT':
+                    case '`UPDATED_AT`':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                 }
@@ -1167,13 +1174,49 @@ abstract class StackTestResultPass implements ActiveRecordInterface
 
         if ($includeForeignObjects) {
             if (null !== $this->aTarget) {
-                $result['Target'] = $this->aTarget->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'target';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'target';
+                        break;
+                    default:
+                        $key = 'Target';
+                }
+
+                $result[$key] = $this->aTarget->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aTargetGroup) {
-                $result['TargetGroup'] = $this->aTargetGroup->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'targetGroup';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'target_group';
+                        break;
+                    default:
+                        $key = 'TargetGroup';
+                }
+
+                $result[$key] = $this->aTargetGroup->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aTargetType) {
-                $result['TargetType'] = $this->aTargetType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+
+                switch ($keyType) {
+                    case TableMap::TYPE_STUDLYPHPNAME:
+                        $key = 'targetType';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'target_type';
+                        break;
+                    default:
+                        $key = 'TargetType';
+                }
+
+                $result[$key] = $this->aTargetType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 

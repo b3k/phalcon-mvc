@@ -186,7 +186,7 @@ abstract class TriggerQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_TRIGGER, TARGET_ID, USER_ID, TRIGGER_TYPE_ID, TRIGGER_PARAMS, TRIGGER_INVOKE_ON, TRIGGER_NAME, TRIGGER_ACTIVE, TRIGGER_LAST_EXECUTED_AT, TRIGGER_LAST_EXECUTED_RESULT, CREATED_AT, UPDATED_AT FROM trigger WHERE ID_TRIGGER = :p0';
+        $sql = 'SELECT `ID_TRIGGER`, `TARGET_ID`, `USER_ID`, `TRIGGER_TYPE_ID`, `TRIGGER_PARAMS`, `TRIGGER_INVOKE_ON`, `TRIGGER_NAME`, `TRIGGER_ACTIVE`, `TRIGGER_LAST_EXECUTED_AT`, `TRIGGER_LAST_EXECUTED_RESULT`, `CREATED_AT`, `UPDATED_AT` FROM `trigger` WHERE `ID_TRIGGER` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

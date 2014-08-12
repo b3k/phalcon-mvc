@@ -178,7 +178,7 @@ abstract class TargetQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID_TARGET, TARGET_TYPE_ID, TARGET_GROUP_ID, TARGET_TARGET, CREATED_AT, UPDATED_AT FROM target WHERE ID_TARGET = :p0';
+        $sql = 'SELECT `ID_TARGET`, `TARGET_TYPE_ID`, `TARGET_GROUP_ID`, `TARGET_TARGET`, `CREATED_AT`, `UPDATED_AT` FROM `target` WHERE `ID_TARGET` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

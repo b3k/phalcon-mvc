@@ -17,7 +17,21 @@ use Phalcon\Validation\Validator\Confirmation;
 class SignUpForm extends FormBase
 {
     
-    public function setup() {
+    public function definition() {
+        
+        $this->add('name','text', array('maxlength' => 10))
+            ->add('email','text', array('maxlength' => 10, 'label' => 'E-mail'))
+            ->add('password','password', array('maxlength' => 10, 'label' => 'E-mail'))
+            ->add('confirm_password','password', array('maxlength' => 10, 'label' => 'E-mail'));
+        
+        return array(
+            'name' => array('Name'),
+            'email' => array('Email'),
+            'password' => array('Password')
+        );
+    }
+    
+    public function validation() {
         return array(
             'name' => array('Name'),
             'email' => array('Email'),

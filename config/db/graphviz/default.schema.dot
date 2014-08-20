@@ -12,8 +12,8 @@ nodetarget_type [label="{<table>target_type|<cols>id_target_type (INTEGER) [PK]\
 nodetrigger [label="{<table>trigger|<cols>id_trigger (INTEGER) [PK]\ltarget_id (INTEGER) [FK]\luser_id (INTEGER) [FK]\ltrigger_type_id (INTEGER) [FK]\ltrigger_params (LONGVARCHAR)\ltrigger_invoke_on (ARRAY)\ltrigger_name (VARCHAR)\ltrigger_active (BOOLEAN)\ltrigger_last_executed_at (TIMESTAMP)\ltrigger_last_executed_result (VARCHAR)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
 nodetrigger_log [label="{<table>trigger_log|<cols>id_trigger_log (INTEGER) [PK]\ltrigger_id (INTEGER) [FK]\ltrigger_log_executed_on (VARCHAR)\ltrigger_log_result (VARCHAR)\lexecuted_at (TIMESTAMP)\l}", shape=record];
 nodetrigger_type [label="{<table>trigger_type|<cols>id_trigger_type (INTEGER) [PK]\lchannel_id (INTEGER) [FK]\ltrigger_type_class (VARCHAR)\ltrigger_type_name (VARCHAR)\ltrigger_type_description (LONGVARCHAR)\ltrigger_type_active (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
-nodeuser [label="{<table>user|<cols>id_user (INTEGER) [PK]\luser_username (VARCHAR)\luser_password (CHAR)\luser_salt (CHAR)\luser_firstname (VARCHAR)\luser_lastname (VARCHAR)\luser_email (VARCHAR)\luser_active (BOOLEAN)\luser_roles (ARRAY)\luser_expire_at (TIMESTAMP)\luser_expired (BOOLEAN)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
-nodeuser_log [label="{<table>user_log|<cols>id_user_log (INTEGER) [PK]\luser_id (INTEGER)\luser_log_action (VARCHAR)\luser_log_params (LONGVARCHAR)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodeuser [label="{<table>user|<cols>id_user (INTEGER) [PK]\luser_username (VARCHAR)\luser_password (CHAR)\luser_salt (CHAR)\luser_firstname (VARCHAR)\luser_lastname (VARCHAR)\luser_email (VARCHAR)\luser_active (BOOLEAN)\luser_roles (ARRAY)\luser_expire_at (TIMESTAMP)\luser_expired (BOOLEAN)\luser_remember_token (VARCHAR)\luser_remember_token_validity (TIMESTAMP)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
+nodeuser_log [label="{<table>user_log|<cols>id_user_log (INTEGER) [PK]\luser_id (INTEGER) [FK]\luser_log_action (VARCHAR)\luser_log_params (LONGVARCHAR)\luser_log_ip (VARCHAR)\luser_log_http_user_agent (VARCHAR)\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
 nodeuser_target_group [label="{<table>user_target_group|<cols>id_target_group (INTEGER) [FK]\lid_user (INTEGER) [FK]\lcreated_at (TIMESTAMP)\lupdated_at (TIMESTAMP)\l}", shape=record];
 
 nodechannel_out:cols -> nodechannel:table [label="channel_id=id_channel ", color=gray];
@@ -33,6 +33,7 @@ nodetrigger:cols -> nodeuser:table [label="user_id=id_user ", color=gray];
 nodetrigger:cols -> nodetrigger_type:table [label="trigger_type_id=id_trigger_type ", color=gray];
 nodetrigger_log:cols -> nodetrigger:table [label="trigger_id=id_trigger ", color=gray];
 nodetrigger_type:cols -> nodechannel:table [label="channel_id=id_channel ", color=gray];
+nodeuser_log:cols -> nodeuser:table [label="user_id=id_user ", color=gray];
 nodeuser_target_group:cols -> nodetarget_group:table [label="id_target_group=id_target_group ", color=gray];
 nodeuser_target_group:cols -> nodeuser:table [label="id_user=id_user ", color=gray];
 }

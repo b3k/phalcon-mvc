@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Library\Controller;
+namespace App\Library\Controller\Behaviour;
 
-trait RequestTrait
+trait RequestBehaviour
 {
 
     public function isPost()

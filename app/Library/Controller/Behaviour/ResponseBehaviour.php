@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Library\Controller;
+namespace App\Library\Controller\Behaviour;
 
-trait ResponseTrait
+trait ResponseBehaviour
 {
 
     public function isResponseSent()

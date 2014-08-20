@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Library\Controller;
+namespace App\Library\Controller\Behaviour;
 
-trait FlashTrait
+trait FlashBehaviour
 {
 
     public function addFlash($message, $type = 'notice')

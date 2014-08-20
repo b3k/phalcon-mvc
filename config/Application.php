@@ -21,6 +21,7 @@ class Application extends BaseApplication
         self::SERVICE_SESSION,
         self::SERVICE_FLASH,
         self::SERVICE_FLASH_SESSION,
+        self::SERVICE_DEBUG,
         self::SERVICE_PROPEL,
         self::SERVICE_CRYPT,
         self::SERVICE_VIEWS_CACHE,

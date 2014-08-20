@@ -9,6 +9,7 @@ class Application extends \Phalcon\Mvc\Application
     const SERVICE_VIEW = 'view';
     const SERVICE_LOADER = 'loader';
     const SERVICE_ROUTER = 'router';
+    const SERVICE_DEBUG = 'debug';
     const SERVICE_COOKIES = 'cookies';
     const SERVICE_URL = 'url';
     const SERVICE_SECURITY = 'security';
@@ -123,7 +124,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initLog()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_FILESYSTEM, function() use ($config) {
+        $this->di->set(self::SERVICE_LOG, function() use ($config) {
             $log_config = $config->application->log->toArray();
             if (isset($log_config['format'])) {
                 $formatter_format = $log_config['format'];
@@ -151,6 +152,13 @@ class Application extends \Phalcon\Mvc\Application
         $this->di->set(self::SERVICE_FILESYSTEM, function() {
             $Filesystem = new Symfony\Component\Filesystem\Filesystem();
             return $Filesystem;
+        });
+    }
+    
+    protected function initDebug()
+    {
+        $this->di->set(self::SERVICE_DEBUG, function() {
+            \Symfony\Component\Debug\Debug::enable();
         });
     }
 
@@ -188,9 +196,37 @@ class Application extends \Phalcon\Mvc\Application
     {
         $config = $this->config;
         $this->di->set(self::SERVICE_VIEW, function () use ($config) {
+            // Before we set View object we need to collect all templates 
+            // from application dir and libraries. Templates from app/Views 
+            // will be copied as last one, to overwrite lib views.
+            if (!file_exists(APP_TMP_DIR . DS . 'Views')) {
+                $Filesystem = new \Symfony\Component\Filesystem\Filesystem();
+                $Finder = new \Symfony\Component\Finder\Finder();
+                $Finder->directories()->name('Views')->
+                        exclude(APP_APPLICATION_DIR . DS . 'Views' . DS)->
+                        in(APP_APPLICATION_DIR . DS);
+                
+                foreach ($Finder as $file) {
+                    $Filesystem->mirror(
+                            $file->getRealPath(), 
+                            APP_TMP_DIR . DS . 'Views', 
+                            null, 
+                            ['override' => true, 'delete' => false]
+                    );
+                }
+                
+                // Now copy app/Views dir as last, to make overwrite 
+                // some Library views
+                $Filesystem->mirror(
+                        APP_APPLICATION_DIR . DS . 'Views', 
+                        APP_TMP_DIR . DS . 'Views', 
+                        null, 
+                        ['override' => true,'delete' => false]
+                );
+            }
+
             $view = new \Phalcon\Mvc\View();
-            //$view->setBasePath(APP_APPLICATION_DIR . DS);
-            $view->setViewsDir(APP_VIEWS_DIR . DS);
+            $view->setViewsDir(APP_TMP_DIR . DS . 'Views' . DS);
             $view->setLayoutsDir('layouts' . DS);
             $view->setPartialsDir('partials' . DS);
             $view->registerEngines(

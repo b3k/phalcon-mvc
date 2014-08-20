@@ -2,14 +2,11 @@
 
 namespace App\Controllers;
 
-use App\Library\Controller\Base as Controller;
-use Phalcon\Mvc\Dispatcher;
-use App\Library\User\Auth\UserInterface;
+use App\Library\Controller\BaseController as Controller;
 
 class ControllerBase extends Controller
 {
     /**
-     * Put some logic here
+     * Put your additional logic here
      */
-    
 }

@@ -8,11 +8,18 @@
         "swiftmailer/swiftmailer": "5.0.*",
         "symfony/finder": "~2.2",
         "symfony/console": "~2.2",
-        "symfony/filesystem": "~2.2",
-        "propel/propel": "2.0.*@dev",
+        "symfony/filesystem": "2.4.*@dev",
+        "symfony/debug": "2.4.*@dev",
+        "propel/propel": "dev-master",
         "leafo/scssphp": "0.1.0",
         "monolog/monolog": "~1.3"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/propelorm/Propel2"
+        }
+    ],
     "authors": [{
             "name": "Bartosz Pietrzak",
             "email": "b3k@b3k.pl"

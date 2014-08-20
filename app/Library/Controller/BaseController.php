@@ -6,7 +6,7 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Dispatcher;
 use App\Library\User\Auth\UserInterface;
 
-class Base extends Controller
+class BaseController extends Controller
 {
 
     /**
@@ -15,12 +15,12 @@ class Base extends Controller
      * - ResponseTrait
      * - RequestTrait
      * - CookiesTrait
-     * 
+     * - FlashBehaviour
      */
-    use \App\Library\Controller\ResponseTrait,
-        \App\Library\Controller\RequestTrait,
-        \App\Library\Controller\FlashTrait,
-        \App\Library\Controller\CookiesTrait;
+    use \App\Library\Controller\Behaviour\ResponseBehaviour,
+        \App\Library\Controller\Behaviour\RequestBehaviour,
+        \App\Library\Controller\Behaviour\FlashBehaviour,
+        \App\Library\Controller\Behaviour\CookiesBehaviour;
 
     protected $main_view = 'layouts/base/html';
     protected $template = 'default';
@@ -76,7 +76,12 @@ class Base extends Controller
     {
         return $this->getDi()->get('auth')->getIdentity();
     }
-
+    
+    /**
+     * Get URL object
+     * 
+     * @return type
+     */
     public function getUrlObject()
     {
         return $this->getDi()->get('url');

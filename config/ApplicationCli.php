@@ -20,6 +20,7 @@ class ApplicationCli extends BaseApplication
         self::SERVICE_ACL,
         self::SERVICE_AUTH,
         self::SERVICE_PROPEL,
+        self::SERVICE_DEBUG,
         self::SERVICE_CLI_APP
     );
 

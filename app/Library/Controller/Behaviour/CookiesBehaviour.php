@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Library\Controller;
+namespace App\Library\Controller\Behaviour;
 
-trait CookiesTrait
+trait CookiesBehaviour
 {
 
     public function setCookie($name, $value, $expire = null, $path = '/', $secure = null, $domain = null, $httpOnly = false)

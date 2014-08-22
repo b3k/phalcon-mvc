@@ -2,21 +2,22 @@
 
 namespace App\Forms;
 
-use App\Library\Form\AbstractForm;
+use App\Library\Form\Base\BaseForm;
+use Phalcon\Validation\Validator\Email;
+use Phalcon\Validation\Validator\StringLength;
 
-class SignUpForm extends AbstractForm
+class SignUpForm extends BaseForm
 {
 
     public function initialize()
     {
-
         $this
                 ->setTitle('SignUp Form')
                 ->setDescription('Create new user.')
                 ->setAttribute('autocomplete', 'off');
 
         $content = $this->addContentFieldSet()
-                ->addText('username', null, null, null, [], ['autocomplete' => 'off'])
+                ->addText('fullname', null, null, null, [], ['autocomplete' => 'off'])
                 ->addPassword('password', null, null, [], ['autocomplete' => 'off'])
                 ->addPassword('confirm_password', null, null, [], ['autocomplete' => 'off'])
                 ->addText('email', null, null, null, [], ['autocomplete' => 'off']);
@@ -26,6 +27,25 @@ class SignUpForm extends AbstractForm
                 ->addButtonLink('cancel', 'Cancel', ['for' => 'admin-users']);
 
         $this->_setValidation($content);
+    }
+
+    protected function _setValidation($content)
+    {
+        $content->getValidation()
+                ->add('fullname', new StringLength(['min' => 2]))
+                ->add('email', new Email())
+                ->add('password', new StringLength(['min' => 6]))
+                ->add('confirm_password', new StringLength(['min' => 6]));
+
+        $content
+                ->setRequired('fullname')
+                ->setRequired('email')
+                ->setRequired('password')
+                ->setRequired('confirm_password');
+
+        $this
+                ->addFilter('password', self::FILTER_STRING)
+                ->addFilter('confirm_password', self::FILTER_STRING);
     }
 
     /* public function initialize($entity = null, $options = null)
@@ -108,17 +128,4 @@ class SignUpForm extends AbstractForm
       'class' => 'btn btn-success'
       )));
       } */
-
-    /**
-     * Prints messages for a specific element
-     */
-    public function messages($name)
-    {
-        if ($this->hasMessagesFor($name)) {
-            foreach ($this->getMessagesFor($name) as $message) {
-                $this->flash->error($message);
-            }
-        }
-    }
-
 }

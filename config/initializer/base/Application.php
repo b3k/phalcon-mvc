@@ -26,6 +26,7 @@ class Application extends \Phalcon\Mvc\Application
     const SERVICE_CLI_APP = 'cli';
     const SERVICE_PROPEL = 'propel';
     const SERVICE_LOG = 'log';
+    const SERVICE_I18N = 'i18n';
     const SERVICE_FILESYSTEM = 'filesystem';
 
     protected $di;
@@ -154,11 +155,19 @@ class Application extends \Phalcon\Mvc\Application
             return $Filesystem;
         });
     }
-    
+
     protected function initDebug()
     {
         $this->di->set(self::SERVICE_DEBUG, function() {
             \Symfony\Component\Debug\Debug::enable();
+        });
+    }
+
+    protected function initI18n()
+    {
+        $this->di->set(self::SERVICE_I18N, function() {
+            $Translate = new \Phalcon\Translate\Adapter\NativeArray(['content' => ['abc' => 'cba']]);
+            return $Translate;
         });
     }
 
@@ -205,23 +214,17 @@ class Application extends \Phalcon\Mvc\Application
                 $Finder->directories()->name('Views')->
                         exclude(APP_APPLICATION_DIR . DS . 'Views' . DS)->
                         in(APP_APPLICATION_DIR . DS);
-                
+
                 foreach ($Finder as $file) {
                     $Filesystem->mirror(
-                            $file->getRealPath(), 
-                            APP_TMP_DIR . DS . 'Views', 
-                            null, 
-                            ['override' => true, 'delete' => false]
+                            $file->getRealPath(), APP_TMP_DIR . DS . 'Views', null, ['override' => true, 'delete' => false]
                     );
                 }
-                
+
                 // Now copy app/Views dir as last, to make overwrite 
                 // some Library views
                 $Filesystem->mirror(
-                        APP_APPLICATION_DIR . DS . 'Views', 
-                        APP_TMP_DIR . DS . 'Views', 
-                        null, 
-                        ['override' => true,'delete' => false]
+                        APP_APPLICATION_DIR . DS . 'Views', APP_TMP_DIR . DS . 'Views', null, ['override' => true, 'delete' => false]
                 );
             }
 
@@ -229,6 +232,7 @@ class Application extends \Phalcon\Mvc\Application
             $view->setViewsDir(APP_TMP_DIR . DS . 'Views' . DS);
             $view->setLayoutsDir('layouts' . DS);
             $view->setPartialsDir('partials' . DS);
+            $view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
             $view->registerEngines(
                     array(
                         '.volt' => function ($view, $di) {
@@ -241,6 +245,8 @@ class Application extends \Phalcon\Mvc\Application
                         "compiledPath" => $compiledPath,
                         "compiledExtension" => ".compiled"
                     ));
+                    $compiler = $volt->getCompiler();
+                    $compiler->addExtension(new \App\Library\View\Extension());
                     return $volt;
                 },
                         '.phtml' => 'Phalcon\Mvc\View\Engine\Php'

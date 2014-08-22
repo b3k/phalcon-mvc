@@ -19,7 +19,7 @@
 
 namespace App\Library\Form;
 
-use App\Library\Behaviour\DIBehaviour;
+use App\Library\DI\Behaviour\DIBehaviour;
 use App\Library\Form;
 use Phalcon\Forms\Element as PhalconElement;
 

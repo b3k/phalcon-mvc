@@ -3,6 +3,7 @@
 namespace App\Library\Form\Base;
 
 use App\Library\Form\Base\Behaviour\EntityForm;
+use App\Library\Form\AbstractForm;
 
 class BaseForm extends AbstractForm
 {
@@ -73,9 +74,9 @@ class BaseForm extends AbstractForm
      *
      * @return string
      */
-    protected function _resolveView($view, $module = 'Core')
+    protected function _resolveView($view)
     {
-        return '../../' . $module . '/View/' . $view;
+        return '../'.$view;
     }
 
 }

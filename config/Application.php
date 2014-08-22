@@ -26,6 +26,7 @@ class Application extends BaseApplication
         self::SERVICE_CRYPT,
         self::SERVICE_VIEWS_CACHE,
         self::SERVICE_VIEW,
+        self::SERVICE_I18N,
         self::SERVICE_ROUTER,
         self::SERVICE_ACL,
         self::SERVICE_AUTH,

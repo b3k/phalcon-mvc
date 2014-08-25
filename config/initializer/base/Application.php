@@ -2,6 +2,8 @@
 
 namespace Config\Initializer\Base;
 
+use \App\Library\I18n\I18n;
+
 class Application extends \Phalcon\Mvc\Application
 {
 
@@ -163,11 +165,15 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
+    /**
+     * Initialize I18n component
+     */
     protected function initI18n()
     {
-        $this->di->set(self::SERVICE_I18N, function() {
-            $Translate = new \Phalcon\Translate\Adapter\NativeArray(['content' => ['abc' => 'cba']]);
-            return $Translate;
+        $config = $this->config;
+        $this->di->set(self::SERVICE_I18N, function() use ($config) {
+            $I18n = new I18n($config->application->i18n);
+            return $I18n;
         });
     }
 
@@ -217,14 +223,16 @@ class Application extends \Phalcon\Mvc\Application
 
                 foreach ($Finder as $file) {
                     $Filesystem->mirror(
-                            $file->getRealPath(), APP_TMP_DIR . DS . 'Views', null, ['override' => true, 'delete' => false]
+                            $file->getRealPath(), APP_TMP_DIR . DS . 'Views', null, ['override' => true,
+                        'delete' => false]
                     );
                 }
 
                 // Now copy app/Views dir as last, to make overwrite 
                 // some Library views
                 $Filesystem->mirror(
-                        APP_APPLICATION_DIR . DS . 'Views', APP_TMP_DIR . DS . 'Views', null, ['override' => true, 'delete' => false]
+                        APP_APPLICATION_DIR . DS . 'Views', APP_TMP_DIR . DS . 'Views', null, ['override' => true,
+                    'delete' => false]
                 );
             }
 

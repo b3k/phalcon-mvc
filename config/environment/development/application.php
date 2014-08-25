@@ -11,6 +11,9 @@ return array(
         'format' => '[%date%][%type%] %message%',
         'path' => APP_LOG_DIR . DS . APP_ENV . '.log'
     ),
+    'i18n' => array(
+        'default' => 'pl_PL'
+    ),
     'security' => array(
         'key' => 'IOjscifo9e080123nsdkk'
     ),

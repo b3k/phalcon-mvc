@@ -10,6 +10,7 @@ namespace Config\Initializer\Base;
 
 use \Phalcon\Config as PhalconConfig;
 use Symfony\Component\Filesystem\Filesystem;
+use \App\Library\Utilities\Utilities;
 
 /**
  * Description of Config
@@ -19,47 +20,98 @@ use Symfony\Component\Filesystem\Filesystem;
 class Config extends PhalconConfig
 {
 
-    protected $env = null;
-    protected $base_path = null;
-    protected $loadable_config_groups = array(
-        'propel', 'application', 'models', 
+    private $env = null;
+    private $base_path = null;
+    private $loadable_config_groups = array(
+        'propel', 'application', 'models',
         'common', 'mailer', 'acl'
     );
-    protected static $config_cache_file = 'compiled_config.php';
-    protected $filesystem;
+    private $filesystem;
+
+    public function getDefaultConfigValues()
+    {
+        return array();
+    }
+
+    public function getLoadableConfigGroups()
+    {
+        return $this->loadable_config_groups;
+    }
+
+    public function getConfigCacheFilename()
+    {
+        return 'compiled_config.php';
+    }
+
+    public function getBasePath()
+    {
+        return $this->base_path;
+    }
+
+    public function setBasePath($base_path)
+    {
+        $this->base_path = $base_path;
+    }
+
+    public function getEnv()
+    {
+        return !$this->env ? APP_ENV : $this->env;
+    }
+
+    public function setEnv($env)
+    {
+        $this->env = $env;
+    }
+
+    public function getForceConfigValues()
+    {
+        return array();
+    }
+
+    public function getFilesystem()
+    {
+        if (!$this->filesystem) {
+            $this->filesystem = new Filesystem();
+        }
+        return $this->filesystem;
+    }
 
     public function __construct()
     {
-        if (is_readable(APP_TMP_DIR . DS . static::$config_cache_file)) {
-            return parent::__construct(require(APP_TMP_DIR . DS . static::$config_cache_file));
+        if (is_readable(APP_TMP_DIR . DS . $this->getConfigCacheFilename())) {
+            return parent::__construct(require(APP_TMP_DIR . DS . $this->getConfigCacheFilename()));
         }
-        $this->env = APP_ENV;
-        $this->base_path = APP_CONFIG_DIR . DS . 'environment' . DS . strtolower($this->env) . DS;
-        $this->filesystem = new Filesystem();
-        if (!file_exists($this->base_path)) {
-            mkdir($this->base_path, 0777, true);
+        $this->setEnv(APP_ENV);
+        $this->setBasePath(APP_CONFIG_DIR . DS . 'environment' . DS . strtolower($this->getEnv()) . DS);
+
+        // Create folders if cache folder dosen't exists
+        if (!file_exists($this->getBasePath())) {
+            $this->getFilesystem()->mkdir($this->getBasePath(), 0777);
         }
 
-        $config = array();
-
-        // make all values strtolower
-        $this->loadable_config_groups = array_map(function ($v) {
-            return strtolower(trim($v));
-        }, $this->loadable_config_groups);
+        $config = $this->getDefaultConfigValues();
 
         // get the config
-        foreach ($this->loadable_config_groups as $group) {
-            if (is_readable($this->base_path . $group . '.php')) {
-                $config[$group] = array_merge(
-                        // default values
-                        isset($this->default_config_values[$group]) ? $this->default_config_values[$group] : array(),
-                        // set values
-                        require($this->base_path . strtolower($group) . '.php'),
-                        // force config values
-                        isset($this->force_config_values[$group]) ? $this->force_config_values[$group] : array()
+        foreach ($this->getLoadableConfigGroups() as $group) {
+            if (is_readable($this->getBasePath() . $group . '.php')) {
+                $config = Utilities::array_merge_recursive_distinct(
+                                // default values
+                                $config,
+                                // set values
+                                array($group => require($this->getBasePath() . strtolower($group) . '.php'))
                 );
             }
         }
+        $forced_values = $this->getForceConfigValues();
+        if ($forced_values && count($forced_values) > 0) {
+            $config = Utilities::array_merge_recursive_distinct(
+                            $config,
+                            // force config values
+                            $forced_values
+            );
+        }
+
+        // warmup cache
         $this->warmupCache($config);
 
         return parent::__construct($config);
@@ -67,8 +119,8 @@ class Config extends PhalconConfig
 
     public function warmupCache($config)
     {
-        $this->filesystem->mkdir(dirname(APP_TMP_DIR . DS . static::$config_cache_file));
-        $this->filesystem->dumpFile(APP_TMP_DIR . DS . static::$config_cache_file, $this->dumpAsString($config));
+        $this->getFilesystem()->mkdir(dirname(APP_TMP_DIR . DS . $this->getConfigCacheFilename()));
+        $this->getFilesystem()->dumpFile(APP_TMP_DIR . DS . $this->getConfigCacheFilename(), $this->dumpAsString($config));
     }
 
     protected function dumpAsString($array)

@@ -29,6 +29,10 @@ class Router extends PhalconRouter
     {
         parent::__construct();
     }
+    
+    public function add($pattern, $paths = NULL, $httpMethods = NULL) {
+        return parent::add($pattern, $paths, $httpMethods);
+    }
 
     public function loadApplicationRoutes()
     {

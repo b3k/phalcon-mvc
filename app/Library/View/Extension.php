@@ -66,7 +66,6 @@ class Extension extends DI\Injectable
                 return $resolvedArgs[0] . ' instanceof ' . $resolvedArgs[1];
 
             case 'resolveView':
-
                 if (isset($params[1])) {
                     $value = $this->_resolveView($params[0]['expr']['value']);
                 } else {

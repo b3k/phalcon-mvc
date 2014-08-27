@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Forms\LoginForm;
@@ -15,7 +16,7 @@ class SessionController extends ControllerBase
 
     public function indexAction()
     {
-
+        
     }
 
     /**
@@ -24,27 +25,33 @@ class SessionController extends ControllerBase
     public function signupAction()
     {
         $Form = new SignUpForm();
-        
-        if ($this->isPost()) {
-            
-            if ($Form->isValid($this->getPost()) != false) {
-                
-                $User = new User();
-                $User->setUserFirstname($this->getPost('name', '', 'striptags'));
-                $User->setUserEmail($this->getPost('email'));
-                $User->setUserPassword($this->getSecurity()->hash($this->getPost('password')));
-                $User->setUserActive(true);
-                $User->setUserLastname('Test');
-                
-                if ($User->save()) {
-                    return $this->forward(array(
-                        'controller' => 'index',
-                        'action' => 'index'
-                    ));
-                }
 
-                $this->addError($Form->getMessages());
+        try {
+
+            if ($this->isPost()) {
+
+                if ($Form->isValid($this->getPost()) != false) {
+
+                    $User = new User();
+                    $User->setUserFirstname($this->getPost('name', '', 'striptags'));
+                    $User->setUserEmail($this->getPost('email'));
+                    $User->setUserPassword($this->getSecurity()->hash($this->getPost('password')));
+                    $User->setUserActive(true);
+                    $User->setUserLastname('Test');
+
+                    if ($User->save()) {
+                        return $this->forward(array(
+                                    'controller' => 'index',
+                                    'action' => 'index'
+                        ));
+                    }
+
+                    //$this->addError($Form->getMessages());
+                }
             }
+            
+        } catch (\Exception $e) {
+            $this->addError($e->getMessage());
         }
 
         $this->getView()->form = $Form;
@@ -59,19 +66,14 @@ class SessionController extends ControllerBase
 
         try {
 
-            if (!$this->request->isPost()) {
+            if (!$this->isPost()) {
 
-                if ($this->auth->hasRememberMe()) {
-                    return $this->auth->loginWithRememberMe();
-                }
+                //if ($this->auth->hasRememberMe()) {
+                //    return $this->auth->loginWithRememberMe();
+                //}
             } else {
 
-                if ($form->isValid($this->request->getPost()) == false) {
-                    foreach ($form->getMessages() as $message) {
-                        $this->flash->error($message);
-                    }
-                } else {
-
+                if ($form->isValid($this->getPost()) != false) {
                     $this->auth->check(array(
                         'email' => $this->request->getPost('email'),
                         'password' => $this->request->getPost('password'),
@@ -133,4 +135,5 @@ class SessionController extends ControllerBase
 
         return $this->response->redirect('index');
     }
+
 }

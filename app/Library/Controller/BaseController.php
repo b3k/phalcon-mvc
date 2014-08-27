@@ -35,19 +35,6 @@ class BaseController extends Controller
 
     public function initialize()
     {
-        // set layout
-        if ($this->main_view) {
-            $this->setMainView($this->main_view);
-        }
-
-        if ($this->template) {
-            $this->setTemplate($this->template);
-        }
-
-        if ($this->layout) {
-            $this->setLayout($this->layout);
-        }
-
         // override base uri
         if ($this->base_uri !== null) {
             $this->getUrlObject()->setBaseUri($this->base_uri);
@@ -60,11 +47,14 @@ class BaseController extends Controller
 
         // use http
         if ($this->use_https !== null) {
-            $this->getUrlObject()->setBaseUri('https://' . $this->static_base_uri);
+            $this->getUrlObject()->setBaseUri('https://' . $this->base_uri);
         }
 
         // Chek client HTTP_ACCPT header to negotiate respond_to
         $this->negotiateResponseType($this->getDispatcher()->getParam('format'));
+        
+        // Chek client HTTP_ACCPT_LANGUAGE header to negotiate I18n tranlsation
+        $this->negotiateLanguage();
     }
 
     /**
@@ -84,7 +74,17 @@ class BaseController extends Controller
      */
     public function getUrlObject()
     {
-        return $this->getDi()->get('url');
+        return $this->getDi()->getShared('url');
+    }
+    
+    /**
+     * Get URL object
+     * 
+     * @return type
+     */
+    public function getI18n()
+    {
+        return $this->getDi()->getShared('i18n');
     }
 
     /**
@@ -124,7 +124,7 @@ class BaseController extends Controller
      */
     public function getAcl()
     {
-        return $this->getDi()->get('acl');
+        return $this->getDi()->getShared('acl');
     }
 
     /**

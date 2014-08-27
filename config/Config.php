@@ -9,34 +9,49 @@ use \Config\Initializer\Base\Config as BaseConfig;
 class Config extends BaseConfig
 {
 
-    protected static $config_cache_file = 'compiled_config.php';
-    
-    protected $default_config_values = array(
-        'application' => array(
-            'controllersDir' => '/../app/controllers/',
-            'modelsDir' => '/../app/models/',
-            'viewsDir' => '/../app/views/',
-            'pluginsDir' => '/../app/helpers/',
-            'libraryDir' => '/../app/libs/',
-            'baseUri' => '/'
-        ),
-        'mailer' => array(
-            'username' => '',
-            'password' => ''
-        ),
-        'common' => array(
-        )
-    );
+    /**
+     * Name of file which stores compiled configuration in APP_TMP dir.
+     *
+     * @return string
+     */
+    public function getConfigCacheFilename()
+    {
+        return 'compiled_config.php';
+    }
 
     /**
-     * Some options that will be forced
+     * Array with default values, which can be overriden by enviroment config
      *
-     * @var array
+     * @return array
      */
-    protected $force_config_values = array(
-            //'database' => array('adapter' => 'Mysql')
-    );
+    public function getDefaultConfigValues()
+    {
+        return array(
+            'application' => array(
+                'controllersDir' => '/../app/controllers/',
+                'modelsDir' => '/../app/models/',
+                'viewsDir' => '/../app/views/',
+                'pluginsDir' => '/../app/helpers/',
+                'libraryDir' => '/../app/libs/',
+                'baseUri' => '/',
+                'i18n' => array(
+                    'default' => 'en_GB'
+                )
+            ),
+            'mailer' => array(
+                'username' => '',
+                'password' => ''
+            ),
+            'common' => array(
+            )
+        );
+    }
 
+    public function getForceConfigValues()
+    {
+        return array();
+    }
 }
 
+// Initialize Config
 return new Config();

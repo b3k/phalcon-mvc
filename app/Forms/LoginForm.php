@@ -1,69 +1,47 @@
 <?php
+
 namespace Vokuro\Forms;
 
 use Phalcon\Forms\Form;
-use Phalcon\Forms\Element\Text;
-use Phalcon\Forms\Element\Password;
-use Phalcon\Forms\Element\Submit;
-use Phalcon\Forms\Element\Check;
-use Phalcon\Forms\Element\Hidden;
-use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Email;
-use Phalcon\Validation\Validator\Identical;
+use Phalcon\Validation\Validator\StringLength;
 
 class LoginForm extends Form
 {
 
     public function initialize()
     {
-        // Email
-        $email = new Text('email', array(
-            'placeholder' => 'Email'
-        ));
 
-        $email->addValidators(array(
-            new PresenceOf(array(
-                'message' => 'The e-mail is required'
-            )),
-            new Email(array(
-                'message' => 'The e-mail is not valid'
-            ))
-        ));
+        $this
+                ->setTitle('Login')
+                ->setDescription('Use you email or username to login.')
+                ->setAttribute('class', 'form_login');
 
-        $this->add($email);
+        $content = $this->addContentFieldSet()
+                ->addText('login')
+                ->addPassword('password')
+                ->addCheckbox('remember', 'Remember me', 'Remember me for 7 days', 'yes', false);
 
-        // Password
-        $password = new Password('password', array(
-            'placeholder' => 'Password'
-        ));
-
-        $password->addValidator(new PresenceOf(array(
-            'message' => 'The password is required'
-        )));
-
-        $this->add($password);
-
-        // Remember
-        $remember = new Check('remember', array(
-            'value' => 'yes'
-        ));
-
-        $remember->setLabel('Remember me');
-
-        $this->add($remember);
-
-        // CSRF
-        $csrf = new Hidden('csrf');
-
-        $csrf->addValidator(new Identical(array(
-            'value' => $this->security->getSessionToken(),
-            'message' => 'CSRF validation failed'
-        )));
-
-        $this->add($csrf);
-
-        $this->add(new Submit('go', array(
-            'class' => 'btn btn-success'
-        )));
+        $this->addFooterFieldSet()
+                ->addButton('enter', 'Signin', true, null, null, ['class' => 'btn btn-success'])
+                ->addButtonLink('register', 'Register account', ['for' => 'homepage']);
+        
+        $this->_setValidation($content);
     }
+
+    protected function _setValidation($content)
+    {
+        $content->getValidation()
+                ->add('email', new Email())
+                ->add('password', new StringLength(['min' => 6]));
+
+        $content
+                ->setRequired('login')
+                ->setRequired('password');
+
+        $this
+                ->addFilter('email', self::FILTER_EMAIL)
+                ->addFilter('password', self::FILTER_STRING);
+    }
+
 }

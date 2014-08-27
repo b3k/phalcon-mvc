@@ -8,28 +8,33 @@ class Acl extends Component
 {
 
     const CACHE_KEY = 'application_acl_data';
+    const CACHE_TTL = 29600;
 
     /**
+     * ACL Object
      *
      * @var \Phalcon\Acl\Adapter\Memory
      */
     private $acl;
 
-    /**
-     * Determine to use APC
-     *  
-     * @var boolean
-     */
-    private $use_apc;
-
-    public function __construct()
+    public function getCacheKey()
     {
-        $this->use_apc = function_exists('apc_store') && function_exists('apc_fetch');
+        return APP_ENV . '_' . self::CACHE_KEY;
     }
 
     /**
-     * @TODO Refactor to use cache backend
-     * @param  array                       $list
+     * Get cache service
+     * 
+     * @return \Phalcon\Cache\Backend
+     */
+    public function getCache()
+    {
+        return $this->getDI()->getShared('cache');
+    }
+
+    /**
+     * @TODO Refactor code - stylistical etc
+     * @param  array $list
      * @return \Phalcon\Acl\Adapter\Memory
      */
     public function buildFromArray($list)
@@ -52,8 +57,6 @@ class Acl extends Component
                     $actions[] = substr(strtolower($method->getName()), 0, -6);
                 }
             }
-            //print_r($controller);
-            //print_r($actions);
             $this->acl->addResource(new \Phalcon\Acl\Resource(strtolower($controller)), $actions);
         }
 
@@ -62,12 +65,10 @@ class Acl extends Component
             if (is_array($actions)) {
                 foreach ($actions as $action => $roles) {
                     $action = strtolower($action);
-
                     // If we got wildmask '*' then allow all defined roles
                     if (!is_array($roles) && trim($roles) === '*') {
                         $roles = $list['roles'];
                     }
-
                     if (is_array($roles)) {
                         foreach ($roles as $role) {
                             $this->acl->allow(strtolower(trim($role)), $controller, $action);
@@ -79,11 +80,7 @@ class Acl extends Component
             }
         }
 
-        file_put_contents(APP_TMP_DIR . DS . self::CACHE_KEY, serialize($this->acl));
-
-        if ($this->use_apc) {
-            apc_store(APP_ENV . '_' . self::CACHE_KEY, $this->acl);
-        }
+        $this->getCache()->save($this->getCacheKey(), $this->acl, self::CACHE_TTL);
 
         return $this->acl;
     }
@@ -120,30 +117,24 @@ class Acl extends Component
      */
     public function getAcl()
     {
+        // Check current instance for existing ACL object
         if (is_object($this->acl)) {
             return $this->acl;
         }
-        // try from APC Cache
-        if ($this->use_apc) {
-            $acl = apc_fetch(APP_ENV . '_' . self::CACHE_KEY);
-            if (is_object($acl)) {
-                $this->acl = $acl;
-                return $acl;
+
+        // try to get from Cache
+        if ($cached_acl = $this->getCache()->get($this->getCacheKey())) {
+            if (is_object($cached_acl)) {
+                $this->acl = $cached_acl;
+                return $this->acl;
             }
         }
-        // Try from file Cache
-        if (file_exists(APP_TMP_DIR . DS . self::CACHE_KEY)) {
-            $data = file_get_contents(APP_TMP_DIR . DS . self::CACHE_KEY);
-            $this->acl = unserialize($data);
-            if ($this->use_apc) {
-                apc_store(APP_ENV . '_' . self::CACHE_KEY, $this->acl);
-            }
-        } else {
-            $AclList = \App\Library\Utilities\Utilities::array_merge_recursive_distinct(
-                            $this->app->getBaseAclList(), $this->config->acl->toArray()
-            );
-            $this->buildFromArray($AclList);
-        }
+
+        // Generate ACL list
+        $AclList = \App\Library\Utilities\Utilities::array_merge_recursive_distinct(
+                        $this->app->getBaseAclList(), $this->config->acl->toArray()
+        );
+        $this->buildFromArray($AclList);
 
         return $this->acl;
     }

@@ -1,47 +1,53 @@
-<div class="navbar">
-    <div class="navbar-inner">
-      <div class="container" style="width: auto;">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
-        {{ link_to(null, 'class': 'brand', 'Vökuró')}}
-        <div class="nav-collapse">
-          <ul class="nav">
+{% extends "layouts/base/html.volt" %}
 
-            {%- set menus = [
-              'Home': 'index',
-              'About': 'about'
-            ] -%}
+{% block header %}
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container" style="width: auto;">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                {{ link_to(null, 'class': 'brand', 'Vökuró')}}
+                <div class="nav-collapse">
+                    <ul class="nav">
 
-            {%- for key, value in menus %}
-              {% if value == dispatcher.getControllerName() %}
-              <li class="active">{{ link_to(value, key) }}</li>
-              {% else %}
-              <li>{{ link_to(value, key) }}</li>
-              {% endif %}
-            {%- endfor -%}
+                        {%- set menus = [
+                        'Home': 'index',
+                        'About': 'about'
+                        ] -%}
 
-          </ul>
+                        {%- for key, value in menus %}
+                        {% if value == dispatcher.getControllerName() %}
+                            <li class="active">{{ link_to(value, key) }}</li>
+                            {% else %}
+                            <li>{{ link_to(value, key) }}</li>
+                            {% endif %}
+                            {%- endfor -%}
 
-          <ul class="nav pull-right">
-            <li>{{ link_to('session/login', 'Login') }}</li>
-          </ul>
-        </div><!-- /.nav-collapse -->
-      </div>
-    </div><!-- /navbar-inner -->
-  </div>
-DEFAULT
-<div class="container main-container">
-  {{ content() }}
-</div>
+                    </ul>
 
-<footer>
-Made with love by the Phalcon Team
+                    <ul class="nav pull-right">
+                        <li>{{ link_to('session/login', 'Login') }}</li>
+                    </ul>
+                </div><!-- /.nav-collapse -->
+            </div>
+        </div><!-- /navbar-inner -->
+    </div>
+{% endblock %}
 
-    {{ link_to("privacy", "Privacy Policy") }}
-    {{ link_to("terms", "Terms") }}
+{% block content %}
 
-© 2013 Phalcon Team.
-</footer>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        Made with love by the Phalcon Team
+
+        {{ link_to("privacy", "Privacy Policy") }}
+        {{ link_to("terms", "Terms") }}
+
+        © 2013 Phalcon Team.
+    </footer>
+{% endblock %}

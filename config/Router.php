@@ -8,9 +8,24 @@ use Config\Initializer\Base\Router as BaseRouter;
 
 class Router extends BaseRouter
 {
+    /**
+     * Default controller: index
+     *
+     * @var string
+     */
     protected $default_controller = 'index';
+    
+    /**
+     * Default action: index
+     *
+     * @var string
+     */
     protected $default_action = 'index';
 
+    /**
+     * Create instance, load whole configuration and routes
+     * 
+     */
     public function __construct()
     {
         parent::__construct(FALSE);
@@ -20,4 +35,7 @@ class Router extends BaseRouter
 
 }
 
+/**
+ * Initialize Router
+ */
 return new Router;

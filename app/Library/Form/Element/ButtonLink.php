@@ -1,4 +1,5 @@
 <?php
+
 /*
   +------------------------------------------------------------------------+
   | PhalconEye CMS                                                         |
@@ -15,7 +16,7 @@
   | Author: Ivan Vorontsov <ivan.vorontsov@phalconeye.com>                 |
   | Author: Piotr Gasiorowski <p.gasiorowski@vipserv.org>                  |
   +------------------------------------------------------------------------+
-*/
+ */
 
 namespace App\Library\Form\Element;
 
@@ -36,6 +37,7 @@ use App\Library\Form\ElementInterface;
  */
 class ButtonLink extends AbstractElement implements ElementInterface
 {
+
     use TranslationBehaviour;
 
     /**
@@ -115,4 +117,5 @@ class ButtonLink extends AbstractElement implements ElementInterface
 
         return parent::render();
     }
+
 }

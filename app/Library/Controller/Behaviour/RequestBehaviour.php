@@ -152,6 +152,17 @@ trait RequestBehaviour
         }
     }
 
+    public function negotiateLanguage()
+    {
+        foreach ($this->getRequest()->getLanguages() as $lang) {
+            if ($this->getI18n()->hasSupport($lang['language'])) {
+                $this->getI18n()->setLanguage($lang['language']);
+                break;
+            }
+        }
+        return $this->getI18n()->getLanguage();
+    }
+
     public function setActiveRespondWith($type)
     {
         $this->response_with = $type;

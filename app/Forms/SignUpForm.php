@@ -33,11 +33,11 @@ class SignUpForm extends BaseForm
     protected function _setValidation($content)
     {
         $content->getValidation()
-                ->add('fullname',   new StringLength(['min' => 2]))
-                ->add('email',      new Email())
-                ->add('password',   new StringLength(['min' => 6]))
-                ->add('confirm_password', new StringLength(['min' => 6]))
-                ->add('confirm_password', new Confirmation(['message' => 'Password doesn\'t match confirmation', 'with' => 'password']));
+                ->add('fullname',           new StringLength(['min' => 2]))
+                ->add('email',              new Email())
+                ->add('password',           new StringLength(['min' => 6]))
+                ->add('confirm_password',   new StringLength(['min' => 6]))
+                ->add('confirm_password',   new Confirmation(['message' => 'Password doesn\'t match confirmation', 'with' => 'password']));
 
         $content
                 ->setRequired('fullname')

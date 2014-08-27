@@ -45,11 +45,8 @@ class SessionController extends ControllerBase
                                     'action' => 'index'
                         ));
                     }
-
-                    //$this->addError($Form->getMessages());
                 }
             }
-            
         } catch (\Exception $e) {
             $this->addError($e->getMessage());
         }

@@ -35,11 +35,17 @@ class BaseController extends Controller
 
     public function initialize()
     {
+        //$this->getView()->setMainView($this->main_view);
+
+        if ($this->layout) {
+            //$this->getView()->setLayout($this->layout);
+        }
+
         // override base uri
         if ($this->base_uri !== null) {
             $this->getUrlObject()->setBaseUri($this->base_uri);
         }
-        
+
         // override static base uri
         if ($this->static_base_uri !== null) {
             $this->getUrlObject()->setStaticBaseUri($this->static_base_uri);
@@ -52,7 +58,7 @@ class BaseController extends Controller
 
         // Chek client HTTP_ACCPT header to negotiate respond_to
         $this->negotiateResponseType($this->getDispatcher()->getParam('format'));
-        
+
         // Chek client HTTP_ACCPT_LANGUAGE header to negotiate I18n tranlsation
         $this->negotiateLanguage();
     }
@@ -66,7 +72,7 @@ class BaseController extends Controller
     {
         return $this->getDi()->get('auth')->getIdentity();
     }
-    
+
     /**
      * Get URL object
      * 
@@ -76,7 +82,7 @@ class BaseController extends Controller
     {
         return $this->getDi()->getShared('url');
     }
-    
+
     /**
      * Get URL object
      * 
@@ -96,7 +102,7 @@ class BaseController extends Controller
     {
         return $this->getDi()->getShared('session');
     }
-    
+
     /**
      * Get flash object
      * 
@@ -106,7 +112,7 @@ class BaseController extends Controller
     {
         return $this->getDi()->getShared('security');
     }
-    
+
     /**
      * Get flash object
      * 

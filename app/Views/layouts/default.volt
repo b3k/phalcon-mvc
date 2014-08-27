@@ -37,9 +37,7 @@
     </div>
 {% endblock %}
 
-{% block content %}
-
-{% endblock %}
+{% block content %}{% endblock %}
 
 {% block footer %}
     <footer>

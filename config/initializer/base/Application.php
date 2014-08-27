@@ -21,7 +21,6 @@ class Application extends \Phalcon\Mvc\Application
     const SERVICE_DISPATCHER = 'dispatcher';
     const SERVICE_VIEWS_CACHE = 'viewCache';
     const SERVICE_CACHE = 'cache';
-    const SERVICE_CACHE_MANAGER = 'cacheManager';
     const SERVICE_CRYPT = 'crypt';
     const SERVICE_ACL = 'acl';
     const SERVICE_AUTH = 'auth';
@@ -171,7 +170,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initI18n()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_I18N, function() use ($config) {
+        $this->di->setShared(self::SERVICE_I18N, function() use ($config) {
             $I18n = new I18n($config->application->i18n);
             return $I18n;
         });
@@ -192,7 +191,7 @@ class Application extends \Phalcon\Mvc\Application
 
     protected function initAcl()
     {
-        $this->di->set(self::SERVICE_ACL, function () {
+        $this->di->setShared(self::SERVICE_ACL, function () {
             $Acl = new \App\Library\User\Acl\Acl();
             return $Acl;
         });
@@ -201,7 +200,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initAuth()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_AUTH, function () use ($config) {
+        $this->di->setShared(self::SERVICE_AUTH, function () use ($config) {
             $Auth = new \App\Library\User\Auth\Auth();
             return $Auth;
         });
@@ -293,7 +292,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initSecurity()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_SECURITY, function () use ($config) {
+        $this->di->setShared(self::SERVICE_SECURITY, function () use ($config) {
             $Security = new \Phalcon\Security();
             $Security->setDefaultHash($config->application->security->key);
 
@@ -301,75 +300,24 @@ class Application extends \Phalcon\Mvc\Application
         });
     }
 
-    protected function initCacheManager()
-    {
-        $config = $this->config;
-        $this->di->set(self::SERVICE_CACHE_MANAGER, function () use ($config) {
-            $backends_config = $config->cache->backends;
-            $backends = array();
-            foreach ($backends_config as $backend) {
-                $frontCache = new Phalcon\Cache\Frontend\Data(array(
-                    "lifetime" => isset($backend['lifetime']) ? $backend['lifetime'] : 600
-                ));
-                $class_name = $backend['adapter'];
-                $BackendInstance = new $class_name($frontCache, array(
-                    $backend->options->toArray()
-                ));
-                $backends[] = $BackendInstance;
-            }
-            $CacheManager = new App\Library\Cache\Manager($backends);
-            return $CacheManager;
-        });
-    }
-
     protected function initCache()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_CACHE, function () use ($config) {
-            $frontCache = new Phalcon\Cache\Frontend\Data(array(
-                "lifetime" => 3600
-            ));
-
-            $Cache = new Phalcon\Cache\Backend\File($frontCache, array(
-                "cacheDir" => APP_TMP_DIR . DS
-            ));
-
-            return $Cache;
-        });
-    }
-
-    protected function initViewCache()
-    {
-        $config = $this->config;
         foreach (array(self::SERVICE_VIEWS_CACHE, self::SERVICE_CACHE) as $service) {
-            $this->di->set($service, function () use ($config, $service) {
+            $this->di->setShared($service, function () use ($config, $service) {
                 $frontendAdapter = $config->cache->{$service}->frontend_adapter;
                 $backendAdapter = $config->cache->{$service}->backend_adapter;
 
-                $FrontCache = new $frontendAdapter(array(
-                    $config->cache->{$service}->frontend_options->toArray()
-                ));
-                $BackendCache = new $backendAdapter($FrontCache, array(
-                    $config->cache->{$service}->backend_options->toArray()
-                        )
+                $FrontCache = new $frontendAdapter(
+                        $config->cache->{$service}->frontend_options->toArray()
+                );
+                $BackendCache = new $backendAdapter(
+                        $FrontCache, 
+                        $config->cache->{$service}->backend_options->toArray()
                 );
 
                 return $BackendCache;
             });
-        }
-    }
-
-    protected function generateClassMap()
-    {
-        $Finder = new \Symfony\Component\Finder\Finder();
-        $Finder->files()->in(APP_APPLICATION_DIR)->notPath(APP_VIEWS_DIR)->name('*.php');
-        $result = array();
-        foreach ($Finder as $file) {
-            $path = explode('/', $file->getRelativePathname());
-            $path = array_map(function ($path) {
-                return ucfirst(strtolower($path));
-            }, $path);
-            $result['App\\' . str_replace('.php', '', implode('\\', $path))] = $file->getRealpath();
         }
     }
 
@@ -392,7 +340,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initCrypt()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_CRYPT, function () use ($config) {
+        $this->di->setShared(self::SERVICE_CRYPT, function () use ($config) {
             $crypt = new \Phalcon\Crypt();
             $crypt->setKey($config->application->crypt->key);
             $crypt->setCipher($config->application->crypt->cipher);
@@ -406,7 +354,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initSession()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_SESSION, function () use ($config) {
+        $this->di->setShared(self::SERVICE_SESSION, function () use ($config) {
             $session = new \App\Library\Session\Adapter\Files($config->application->session->toArray());
             $session->start();
             return $session;
@@ -416,7 +364,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initFlash()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_FLASH, function () use ($config) {
+        $this->di->setShared(self::SERVICE_FLASH, function () use ($config) {
             $flash = new \Phalcon\Flash\Direct(array(
                 'warning' => 'alert alert-warning',
                 'notice' => 'alert alert-info',
@@ -432,7 +380,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initFlashSession()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_FLASH_SESSION, function () use ($config) {
+        $this->di->setShared(self::SERVICE_FLASH_SESSION, function () use ($config) {
             $flash = new \Phalcon\Flash\Session(array(
                 'warning' => 'alert alert-warning',
                 'notice' => 'alert alert-info',
@@ -448,7 +396,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initUrl()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_URL, function () use ($config) {
+        $this->di->setShared(self::SERVICE_URL, function () use ($config) {
             $url = new \Phalcon\Mvc\Url();
             $url->setBaseUri($config->application->baseUri);
             $url->setStaticBaseUri($config->application->staticBaseUri);
@@ -460,7 +408,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initCookies()
     {
         $config = $this->config;
-        $this->di->set(self::SERVICE_COOKIES, function () use ($config) {
+        $this->di->setShared(self::SERVICE_COOKIES, function () use ($config) {
             $Cookies = new \Phalcon\Http\Response\Cookies();
             $Cookies->useEncryption($config->application->cookies->encrypt);
 
@@ -471,7 +419,7 @@ class Application extends \Phalcon\Mvc\Application
     protected function initRouter()
     {
         $routing = $this->routing;
-        $this->di->set(self::SERVICE_ROUTER, function () use ($routing) {
+        $this->di->setShared(self::SERVICE_ROUTER, function () use ($routing) {
             return $routing;
         });
     }

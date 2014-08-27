@@ -45,7 +45,7 @@ class I18n
 
     public function setLanguage($language)
     {
-        $this->language = $language;
+        $this->language = (string) $language;
     }
 
     public function load($language)
@@ -54,12 +54,13 @@ class I18n
         if (!is_readable($translation_path)) {
             throw new \RuntimeException(sprintf('Not found translation file in %s', $translation_path));
         }
-        $Translator = new \Phalcon\Translate\Adapter\NativeArray(['content' => require_once($translation_path)]);
+        $translations = require($translation_path);
+        $Translator = new \Phalcon\Translate\Adapter\NativeArray(['content' => $translations]);
         $this->setTranslator($language, $Translator);
         return $Translator;
     }
 
-    function _($string, array $values = array())
+    public function _($string, $values = null)
     {
         if (!($Translator = $this->getTranslator($this->getLanguage()))) {
             $Translator = $this->load($this->getLanguage());
@@ -67,6 +68,11 @@ class I18n
 
         $string = $Translator->query($string, $values);
         return empty($values) ? $string : strtr($string, $values);
+    }
+
+    public function query($string, $values = null)
+    {
+        return $this->_($string, $values);
     }
 
 }

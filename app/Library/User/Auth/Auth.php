@@ -8,6 +8,7 @@ use App\Library\User\Auth\Exception\UnknownUserException;
 use App\Library\User\Auth\Exception\InactiveUserException;
 use App\Library\User\Auth\Exception\InvalidCredentialsException;
 use App\Library\User\Auth\Exception\UserExpiredException;
+use App\Library\User\Auth\UserInterface;
 use App\Model\UserLog;
 use App\Model\UserLogQuery;
 
@@ -22,7 +23,7 @@ class Auth extends Component
     const AUTH_REMEMBER_IDENT_COOKIE_KEY = 'auth_rmb_id';
     const AUTH_REMEMBER_TOKEN_COOKIE_KEY = 'auth_rmb_token';
 
-    protected $default = array(
+    protected $config_defaults = array(
         'repository_class' => '\App\Model\User',
         'login_column' => 'email',
         'throttling' => TRUE,
@@ -39,7 +40,7 @@ class Auth extends Component
      */
     public function __construct()
     {
-        $this->ConfigNode = array_merge($this->default, $this->config->application->users->toArray());
+        $this->ConfigNode = array_merge($this->config_defaults, $this->config->application->users->toArray());
         if (!class_exists($this->ConfigNode['repository_class'])) {
             throw new \RuntimeException(sprintf('Given repository class %s does not exists.', $this->ConfigNode['repository_class']));
         }
@@ -65,23 +66,54 @@ class Auth extends Component
     {
         return $this->UsersRepository = $UsersRepository;
     }
-    
-    public function getSession() {
-        return $this->session;
+
+    public function getSession()
+    {
+
+        return $this->getDI()->getShared('session');
     }
-    
-    public function getRequest() {
-        return $this->session;
+
+    public function getRequest()
+    {
+        return $this->getShared('request');
     }
 
     /**
      * Returns the current identity
      *
-     * @return User
+     * @return UserInterface
      */
     public function getIdentity()
     {
-        return $this->getSession()->get(self::AUTH_IDENT_SESSION_KEY, FALSE);
+        $id = $this->getSession()->get(self::AUTH_IDENT_SESSION_KEY, FALSE);
+        return $id !== FALSE && is_numeric($id) ? $this->getUsersRepository()->findOne($id) : FALSE;
+    }
+
+    /**
+     * Returns the current identity
+     *
+     * @params UserInterface
+     */
+    public function setIdentity(UserInterface $User)
+    {
+        $this->getSession()->set(self::AUTH_IDENT_SESSION_KEY, $User->getId());
+    }
+
+    /**
+     * Check credentials
+     * 
+     * @param array $credentials
+     * @return boolean
+     */
+    public function checkCredentials(Array $credentials)
+    {
+        $User = $this->getUsersRepository()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
+        if (!$User) {
+            return FALSE;
+        }
+        if (!$this->security->checkHash($credentials['password'], $User->getPassword())) {
+            return FALSE;
+        }
     }
 
     /**
@@ -118,7 +150,7 @@ class Auth extends Component
             $this->setRememberEnviroment($User);
         }
 
-        $this->getSession()->set(self::AUTH_IDENT_SESSION_KEY, $User);
+        $this->setIdentity($User);
 
         // regenerate session id
         session_regenerate_id();

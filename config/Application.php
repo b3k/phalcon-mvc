@@ -24,7 +24,6 @@ class Application extends BaseApplication
         self::SERVICE_DEBUG,
         self::SERVICE_PROPEL,
         self::SERVICE_CRYPT,
-        self::SERVICE_VIEWS_CACHE,
         self::SERVICE_VIEW,
         self::SERVICE_I18N,
         self::SERVICE_ROUTER,

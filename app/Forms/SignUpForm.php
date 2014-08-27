@@ -24,7 +24,7 @@ class SignUpForm extends BaseForm
 
         $this->addFooterFieldSet()
                 ->addButton('create')
-                ->addButtonLink('cancel', 'Cancel', ['for' => 'admin-users']);
+                ->addButtonLink('cancel', 'Cancel', ['for' => 'index']);
 
         $this->_setValidation($content);
     }

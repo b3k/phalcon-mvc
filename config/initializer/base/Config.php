@@ -24,7 +24,7 @@ class Config extends PhalconConfig
     private $base_path = null;
     private $loadable_config_groups = array(
         'propel', 'application', 'models',
-        'common', 'mailer', 'acl'
+        'common', 'mailer', 'acl', 'cache'
     );
     private $filesystem;
 

@@ -38,7 +38,7 @@ trait TranslationBehaviour
      *
      * @return string
      */
-    protected function _($msg, $args = null)
+    protected function _($msg, Array $args = null)
     {
         return $this->getDI()->get('i18n')->_($msg, $args);
     }

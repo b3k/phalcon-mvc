@@ -18,15 +18,20 @@ class SignUpForm extends BaseForm
                 ->setAttribute('autocomplete', 'off');
 
         $content = $this->addContentFieldSet()
-                ->addText('fullname',               'Fullname', null, null, [], ['autocomplete' => 'off', 'placeholder' => 'Your fullname'])
-                ->addText('email',                  'Email',    null, null, [], ['autocomplete' => 'off', 'placeholder' => 'Email'])
-                ->addPassword('password',           'Password', null, [], ['autocomplete' => 'off'])
+                ->addText('fullname',               'Fullname',         null, null, [], ['autocomplete' => 'off', 'placeholder' => 'Your fullname'])
+                ->addText('email',                  'Email',            null, null, [], ['autocomplete' => 'off', 'placeholder' => 'Email'])
+                ->addPassword('password',           'Password',         null,       [], ['autocomplete' => 'off'])
                 ->addPassword('confirm_password',   'Confirm password', null, [], ['autocomplete' => 'off']);
 
         $this->addFooterFieldSet()
                 ->addButton('create')
                 ->addButtonLink('cancel', 'Cancel', ['for' => 'index']);
 
+        $this
+                ->addFilter('email', self::FILTER_EMAIL)
+                ->addFilter('password', self::FILTER_STRING)
+                ->addFilter('confirm_password', self::FILTER_STRING);
+        
         $this->_setValidation($content);
     }
 
@@ -45,9 +50,5 @@ class SignUpForm extends BaseForm
                 ->setRequired('password')
                 ->setRequired('confirm_password');
 
-        $this
-                ->addFilter('email', self::FILTER_EMAIL)
-                ->addFilter('password', self::FILTER_STRING)
-                ->addFilter('confirm_password', self::FILTER_STRING);
     }
 }

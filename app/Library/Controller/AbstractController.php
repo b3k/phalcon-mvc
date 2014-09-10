@@ -6,7 +6,7 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Dispatcher;
 use App\Library\User\Auth\UserInterface;
 
-class BaseController extends Controller
+abstract class AbstractController extends Controller
 {
 
     /**
@@ -17,29 +17,69 @@ class BaseController extends Controller
      * - CookiesTrait
      * - FlashBehaviour
      */
-    use \App\Library\Controller\Behaviour\ResponseBehaviour,
-        \App\Library\Controller\Behaviour\RequestBehaviour,
-        \App\Library\Controller\Behaviour\FlashBehaviour,
-        \App\Library\Controller\Behaviour\CookiesBehaviour;
+    use \App\Library\Controller\Traits\Response,
+        \App\Library\Controller\Traits\Request,
+        \App\Library\Controller\Traits\Flash,
+        \App\Library\Controller\Traits\Asset,
+        \App\Library\Controller\Traits\Cookie;
 
+    /**
+     *
+     * @var string
+     */
     protected $main_view = 'layouts/base/html';
+    
+    /**
+     *
+     * @var string
+     */
     protected $template = 'default';
+    
+    /**
+     *
+     * @var string
+     */
     protected $layout = null;
+    
+    /**
+     *
+     * @var string
+     */
     protected $base_uri = null;
+    
+    /**
+     *
+     * @var bool
+     */
     protected $use_https = null;
+    
+    /**
+     *
+     * @var string
+     */
     protected $static_base_uri = null;
+    
+    /**
+     *
+     * @var array 
+     */
     protected $respond_to = array('html', 'xml', 'json');
+    
+    /**
+     *
+     * @var string
+     */
     protected $response_with = 'html';
+    
+    /**
+     *
+     * @var array
+     */
     protected $vars = array(
     );
 
     public function initialize()
     {
-        //$this->getView()->setMainView($this->main_view);
-
-        if ($this->layout) {
-            //$this->getView()->setLayout($this->layout);
-        }
 
         // override base uri
         if ($this->base_uri !== null) {
@@ -113,15 +153,6 @@ class BaseController extends Controller
         return $this->getDi()->getShared('security');
     }
 
-    /**
-     * Get flash object
-     * 
-     * @return type
-     */
-    public function getFlash()
-    {
-        return $this->getDi()->getShared('flash');
-    }
 
     /**
      * Returns ACL object
@@ -193,34 +224,6 @@ class BaseController extends Controller
         $this->getDispatcher()->forward($params);
     }
 
-    /**
-     * Get request
-     * 
-     * @return Request
-     */
-    public function getRequest()
-    {
-        return $this->getDi()->getShared('request');
-    }
-
-    /**
-     * 
-     * @return CookiesBag
-     */
-    public function getCookiesBag()
-    {
-        return $this->getRequest()->getCookies();
-    }
-
-    /**
-     * Get response object
-     * 
-     * @return Response
-     */
-    public function getResponse()
-    {
-        return $this->getDi()->getShared('response');
-    }
 
     /**
      * Check that given user has access to controller/action

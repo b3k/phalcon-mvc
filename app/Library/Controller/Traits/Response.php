@@ -1,9 +1,19 @@
 <?php
 
-namespace App\Library\Controller\Behaviour;
+namespace App\Library\Controller\Traits;
 
-trait ResponseBehaviour
+trait Response
 {
+
+    /**
+     * Get response object
+     * 
+     * @return Response
+     */
+    public function getResponse()
+    {
+        return $this->getDi()->getShared('response');
+    }
 
     public function isResponseSent()
     {

@@ -1,9 +1,19 @@
 <?php
 
-namespace App\Library\Controller\Behaviour;
+namespace App\Library\Controller\Traits;
 
-trait RequestBehaviour
+trait Request
 {
+
+    /**
+     * Get request
+     * 
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->getDi()->getShared('request');
+    }
 
     public function isPost()
     {

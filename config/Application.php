@@ -20,6 +20,7 @@ class Application extends BaseApplication
         self::SERVICE_COOKIES,
         self::SERVICE_SESSION,
         self::SERVICE_FLASH,
+        self::SERVICE_EVENTS_MANAGER,
         self::SERVICE_FLASH_SESSION,
         self::SERVICE_DEBUG,
         self::SERVICE_PROPEL,

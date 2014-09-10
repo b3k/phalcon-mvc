@@ -32,6 +32,8 @@ class SessionController extends ControllerBase
 
                 if ($Form->isValid($this->getPost()) != false) {
 
+                    // register New User:
+
                     $User = new User();
                     $User->setUserFirstname($this->getPost('name', '', 'striptags'));
                     $User->setUserEmail($this->getPost('email'));

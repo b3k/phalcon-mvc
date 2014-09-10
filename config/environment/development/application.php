@@ -24,7 +24,7 @@ return array(
         'padding' => \Phalcon\Crypt::PADDING_DEFAULT
     ),
     'users' => array(
-        'repository_class' => 'App\Model\UserQuery',
+        'manager' => 'App\Library\PropelConnector\User\Manager\Manager',
         'throttling' => TRUE,
         'login_column' => 'user_email',
     ),

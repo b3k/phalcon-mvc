@@ -55,7 +55,7 @@ class Extension extends DI\Injectable
                 return $code;
 
             case 'helper':
-                return '\Engine\Helper::getInstance(' . $arguments . ')';
+                return '\App\Library\Helper\Helper::getInstance(' . $arguments . ')';
 
             case 'classof':
                 return 'get_class(' . $arguments . ')';

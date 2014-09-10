@@ -11,6 +11,7 @@ use App\Library\User\Auth\Exception\UserExpiredException;
 use App\Library\User\Auth\UserInterface;
 use App\Model\UserLog;
 use App\Model\UserLogQuery;
+use App\Library\User\Manager\ManagerInterface as UserManagerInterface;
 
 /**
  * Vokuro\Auth\Auth
@@ -19,63 +20,120 @@ use App\Model\UserLogQuery;
 class Auth extends Component
 {
 
+    /**
+     * Auth token
+     */
     const AUTH_IDENT_SESSION_KEY = 'auth_ident';
+
+    /**
+     * Auth remember ident
+     */
     const AUTH_REMEMBER_IDENT_COOKIE_KEY = 'auth_rmb_id';
+
+    /**
+     * Auth remember token
+     */
     const AUTH_REMEMBER_TOKEN_COOKIE_KEY = 'auth_rmb_token';
 
+    /**
+     * Default Auth options
+     *
+     * @var array
+     */
     protected $config_defaults = array(
-        'repository_class' => '\App\Model\User',
+        'manager' => '\App\Library\PropelConnector\User\Manager\Manager',
         'login_column' => 'email',
         'throttling' => TRUE,
         'throttling_check_duration' => 3600,
         'remember_token_validity' => 604800
     );
-    protected $UsersRepository;
-    protected $ConfigNode;
+
+    /**
+     * User mnager
+     * 
+     * @var type 
+     */
+    protected $_UsersManager;
+
+    /**
+     * Configuration node
+     *
+     * @var array 
+     */
+    protected $_config;
+    
+    
     protected $SaveUser = FALSE;
 
     /**
+     * COntrscts this instance
      * 
      * @throws \RuntimeException
      */
     public function __construct()
     {
-        $this->ConfigNode = array_merge($this->config_defaults, $this->config->application->users->toArray());
-        if (!class_exists($this->ConfigNode['repository_class'])) {
-            throw new \RuntimeException(sprintf('Given repository class %s does not exists.', $this->ConfigNode['repository_class']));
+        $this->_config = array_merge($this->config_defaults, $this->config->application->users->toArray());
+        $managerClass = $this->ConfigNode['mnager'];
+        if (!class_exists($managerClass)) {
+            throw new \RuntimeException(sprintf('Given repository class %s does not exists.', $managerClass));
         }
-        $RepositoryClass = $this->ConfigNode['repository_class'];
-        $this->UsersRepository = new $RepositoryClass();
+        $this->UsersRepository = new $managerClass();
     }
 
     /**
+     * Get config value
      * 
-     * @return type
+     * @param   string|null $value
+     * @return  mixed
+     * @throws  \Exception
      */
-    public function getUsersRepository()
+    public function getConfig($value = null)
     {
-        return $this->UsersRepository;
+        if ($value && !isset($this->_config[$value])) {
+            throw new \Exception(sprintf('There is no config value %s', $value));
+        }
+        return $value ? $this->_config[$value] : $this->_config;
     }
 
     /**
+     * Get users manager
      * 
-     * @param type $UsersRepository
-     * @return type
+     * @return UserManagerInterface
      */
-    public function setUsersRepository($UsersRepository)
+    public function getUserManager()
     {
-        return $this->UsersRepository = $UsersRepository;
+        return $this->_UserManager;
+    }
+
+    /**
+     * Set usermanager object
+     * 
+     * @param   UserManagerInterface $UserManagerClass
+     * @return  UserManagerInterface
+     */
+    public function setUserManager(UserManagerInterface $UserManager)
+    {
+        return $this->_UsersManager = $UserManager;
     }
 
     public function getSession()
     {
-
         return $this->getDI()->getShared('session');
     }
 
     public function getRequest()
     {
         return $this->getShared('request');
+    }
+    
+    public function getSecurity()
+    {
+        return $this->getShared('security');
+    }
+    
+    public function getEventsManager()
+    {
+        return $this->getShared('eventsManager');
     }
 
     /**
@@ -86,7 +144,7 @@ class Auth extends Component
     public function getIdentity()
     {
         $id = $this->getSession()->get(self::AUTH_IDENT_SESSION_KEY, FALSE);
-        return $id !== FALSE && is_numeric($id) ? $this->getUsersRepository()->findOne($id) : FALSE;
+        return $id !== FALSE && is_numeric($id) ? $this->getUserManager()->find($id) : FALSE;
     }
 
     /**
@@ -103,15 +161,15 @@ class Auth extends Component
      * Check credentials
      * 
      * @param array $credentials
-     * @return boolean
+     * @return bool
      */
     public function checkCredentials(Array $credentials)
     {
-        $User = $this->getUsersRepository()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
+        $User = $this->getUserManager()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
         if (!$User) {
             return FALSE;
         }
-        if (!$this->security->checkHash($credentials['password'], $User->getPassword())) {
+        if (!$this->getSecurity()->checkHash($credentials['password'], $User->getPassword())) {
             return FALSE;
         }
     }
@@ -124,17 +182,22 @@ class Auth extends Component
      */
     public function login($credentials)
     {
+        // run events
+        $this->getEventsManager()->fire('auth:login:before');
         // check that given user exists
-        $User = $this->getUsersRepository()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
+        $User = $this->getUserManager()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
         if (!$User) {
-            $this->addLog('auth:login:fail', 0, $credentials, $this->request->getClientAddress(), $this->request->getUserAgent());
-            $this->checkUserThrottling(0);
+            // run events
+            $this->getEventsManager()->fire('auth:login:fail', $this, $credentials);
+            //$this->addLog('auth:login:fail', 0, $credentials, $this->request->getClientAddress(), $this->request->getUserAgent());
+            //$this->checkUserThrottling(0);
             throw new UnknownUserException('User with given identifier does not exist');
         }
 
         // check password
-        if (!$this->security->checkHash($credentials['password'], $User->getPassword())) {
-            $this->registerUserThrottling($User->getId());
+        if (!$this->getSecurity()->checkHash($credentials['password'], $User->getPassword())) {
+            //$this->registerUserThrottling($User->getId());
+            $this->getEventsManager()->fire('auth:login:fail', $this, $credentials);
             throw new InvalidCredentialsException('Wrong email/password combination');
         }
 
@@ -142,8 +205,8 @@ class Auth extends Component
         $this->checkUserFlags($User);
 
         // Obfuscate password before log
-        $credentials['password'] = str_repeat('*', strlen($credentials['password']));
-        $this->addLog('auth:login:success', $User->getId(), $credentials, $this->request->getClientAddress(), $this->request->getUserAgent());
+        //$credentials['password'] = str_repeat('*', strlen($credentials['password']));
+        //$this->addLog('auth:login:success', $User->getId(), $credentials, $this->request->getClientAddress(), $this->request->getUserAgent());
 
         // Check if the remember me was selected
         if (isset($credentials['remember'])) {
@@ -154,6 +217,9 @@ class Auth extends Component
 
         // regenerate session id
         session_regenerate_id();
+        
+        // run events
+        $this->getEventsManager()->fire('auth:login:after', $User);
     }
 
     protected function addLog($action, $userId = 0, $params = array(), $ip = FALSE, $ua = FALSE)

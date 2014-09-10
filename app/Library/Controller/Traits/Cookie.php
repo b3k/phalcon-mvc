@@ -1,9 +1,18 @@
 <?php
 
-namespace App\Library\Controller\Behaviour;
+namespace App\Library\Controller\Traits;
 
-trait CookiesBehaviour
+trait Cookie
 {
+
+    /**
+     * 
+     * @return CookiesBag
+     */
+    public function getCookiesBag()
+    {
+        return $this->getRequest()->getCookies();
+    }
 
     public function setCookie($name, $value, $expire = null, $path = '/', $secure = null, $domain = null, $httpOnly = false)
     {

@@ -27,8 +27,10 @@ class Application extends \Phalcon\Mvc\Application
     const SERVICE_CLI_APP = 'cli';
     const SERVICE_PROPEL = 'propel';
     const SERVICE_LOG = 'log';
+    const SERVICE_EVENTS_MANAGER = 'eventsManager';
     const SERVICE_I18N = 'i18n';
     const SERVICE_FILESYSTEM = 'filesystem';
+    const SERVICE_ASSETS = 'assets';
 
     protected $di;
     protected $config;
@@ -120,6 +122,18 @@ class Application extends \Phalcon\Mvc\Application
             }
 
             return $app;
+        });
+    }
+    
+    protected function initAssets() {
+        $this->di->set(self::SERVICE_ASSETS, function () {
+            return (new App\Library\Asset\Manager());
+        });
+    }
+    
+    protected function initEventsManager() {
+        $this->di->set(self::SERVICE_EVENTS_MANAGER, function () {
+            return (new Phalcon\Events\Manager());
         });
     }
 

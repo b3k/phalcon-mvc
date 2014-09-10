@@ -1,20 +1,30 @@
 <?php
 
-namespace App\Library\Controller\Behaviour;
+namespace App\Library\Controller\Traits;
 
-trait FlashBehaviour
+trait Flash
 {
+
+    /**
+     * Get flash object
+     * 
+     * @return type
+     */
+    public function getFlash()
+    {
+        return $this->getDi()->getShared('flash');
+    }
 
     public function addFlash($message, $type = 'notice')
     {
         switch ($type) {
-            case 'success': 
+            case 'success':
                 $this->getFlash()->success($message);
                 break;
-            case 'warning': 
+            case 'warning':
                 $this->getFlash()->warning($message);
                 break;
-            case 'error': 
+            case 'error':
                 $this->getFlash()->error($message);
                 break;
             case 'notice':

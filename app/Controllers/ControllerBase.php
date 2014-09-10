@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Library\Controller\BaseController as Controller;
+use App\Library\Controller\AbstractController as Controller;
 
 class ControllerBase extends Controller
 {

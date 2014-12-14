@@ -8,7 +8,6 @@ use App\Library\User\Auth\UserInterface;
 
 abstract class AbstractController extends Controller
 {
-
     /**
      * Use Traits to implement some alias\helpers methods
      * 
@@ -23,24 +22,6 @@ abstract class AbstractController extends Controller
         \App\Library\Controller\Traits\Asset,
         \App\Library\Controller\Traits\Cookie;
 
-    /**
-     *
-     * @var string
-     */
-    protected $main_view = 'layouts/base/html';
-    
-    /**
-     *
-     * @var string
-     */
-    protected $template = 'default';
-    
-    /**
-     *
-     * @var string
-     */
-    protected $layout = null;
-    
     /**
      *
      * @var string

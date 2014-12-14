@@ -124,16 +124,19 @@ class Application extends \Phalcon\Mvc\Application
             return $app;
         });
     }
-    
-    protected function initAssets() {
-        $this->di->set(self::SERVICE_ASSETS, function () {
-            return (new App\Library\Asset\Manager());
+
+    protected function initAssets()
+    {
+        $di = $this->di;
+        $this->di->set(self::SERVICE_ASSETS, function () use ($di) {
+            return (new \App\Library\Asset\Manager($di));
         });
     }
-    
-    protected function initEventsManager() {
+
+    protected function initEventsManager()
+    {
         $this->di->set(self::SERVICE_EVENTS_MANAGER, function () {
-            return (new Phalcon\Events\Manager());
+            return (new \Phalcon\Events\Manager());
         });
     }
 
@@ -234,10 +237,10 @@ class Application extends \Phalcon\Mvc\Application
                         exclude(APP_APPLICATION_DIR . DS . 'Views' . DS)->
                         in(APP_APPLICATION_DIR . DS);
 
+                // Copy templates structure
                 foreach ($Finder as $file) {
                     $Filesystem->mirror(
-                            $file->getRealPath(), APP_TMP_DIR . DS . 'Views', null, ['override' => true,
-                        'delete' => false]
+                            $file->getRealPath(), APP_TMP_DIR . DS . 'Views', null, ['override' => true, 'delete' => false]
                     );
                 }
 
@@ -257,254 +260,254 @@ class Application extends \Phalcon\Mvc\Application
             $view->registerEngines(
                     array(
                         '.volt' => function ($view, $di) {
-                    $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
-                    $compiledPath = APP_TMP_DIR . DS . 'volt' . DS;
-                    if (!file_exists($compiledPath)) {
-                        mkdir($compiledPath, 0777);
-                    }
-                    $volt->setOptions(array(
-                        "compiledPath" => $compiledPath,
-                        "compiledExtension" => ".compiled"
-                    ));
-                    $compiler = $volt->getCompiler();
-                    $compiler->addExtension(new \App\Library\View\Extension());
-                    return $volt;
-                },
-                        '.phtml' => 'Phalcon\Mvc\View\Engine\Php'
-                    )
-            );
-            return $view;
-        });
-    }
-
-    protected function initDispatcher()
-    {
-        $config = $this->config;
-        $this->di->set(self::SERVICE_DISPATCHER, function () use ($config) {
-            $EventsManager = new \Phalcon\Events\Manager();
-            $EventsManager->attach("dispatch", function ($event, $dispatcher, $exception) {
-                if ($event->getType() == 'beforeException') {
-                    switch ($exception->getCode()) {
-                        case \Phalcon\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
-                        case \Phalcon\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
-                            $dispatcher->forward(array(
-                                'controller' => 'error',
-                                'action' => 'error404'
+                            $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
+                            $compiledPath = APP_TMP_DIR . DS . 'volt' . DS;
+                            if (!file_exists($compiledPath)) {
+                                mkdir($compiledPath, 0777);
+                            }
+                            $volt->setOptions(array(
+                                "compiledPath" => $compiledPath,
+                                "compiledExtension" => ".compiled"
                             ));
-                            return FALSE;
-                    }
+                            $compiler = $volt->getCompiler();
+                            $compiler->addExtension(new \App\Library\View\Extension());
+                            return $volt;
+                        },
+                                '.phtml' => 'Phalcon\Mvc\View\Engine\Php'
+                            )
+                    );
+                    return $view;
+                });
+            }
+
+            protected function initDispatcher()
+            {
+                $config = $this->config;
+                $this->di->set(self::SERVICE_DISPATCHER, function () use ($config) {
+                    $EventsManager = new \Phalcon\Events\Manager();
+                    $EventsManager->attach("dispatch", function ($event, $dispatcher, $exception) {
+                        if ($event->getType() == 'beforeException') {
+                            switch ($exception->getCode()) {
+                                case \Phalcon\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
+                                case \Phalcon\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
+                                    $dispatcher->forward(array(
+                                        'controller' => 'error',
+                                        'action' => 'error404'
+                                    ));
+                                    return FALSE;
+                            }
+                        }
+                    });
+                    $Dispatcher = new \Phalcon\Mvc\Dispatcher();
+                    $Dispatcher->setDefaultNamespace('App\Controllers');
+                    $Dispatcher->setEventsManager($EventsManager);
+
+                    return $Dispatcher;
+                });
+            }
+
+            protected function initSecurity()
+            {
+                $config = $this->config;
+                $this->di->setShared(self::SERVICE_SECURITY, function () use ($config) {
+                    $Security = new \Phalcon\Security();
+                    $Security->setDefaultHash($config->application->security->key);
+
+                    return $Security;
+                });
+            }
+
+            protected function initCache()
+            {
+                $config = $this->config;
+                foreach (array(self::SERVICE_VIEWS_CACHE, self::SERVICE_CACHE) as $service) {
+                    $this->di->setShared($service, function () use ($config, $service) {
+                        $frontendAdapter = $config->cache->{$service}->frontend_adapter;
+                        $backendAdapter = $config->cache->{$service}->backend_adapter;
+
+                        $FrontCache = new $frontendAdapter(
+                                $config->cache->{$service}->frontend_options->toArray()
+                        );
+                        $BackendCache = new $backendAdapter(
+                                $FrontCache, $config->cache->{$service}->backend_options->toArray()
+                        );
+
+                        return $BackendCache;
+                    });
                 }
-            });
-            $Dispatcher = new \Phalcon\Mvc\Dispatcher();
-            $Dispatcher->setDefaultNamespace('App\Controllers');
-            $Dispatcher->setEventsManager($EventsManager);
-
-            return $Dispatcher;
-        });
-    }
-
-    protected function initSecurity()
-    {
-        $config = $this->config;
-        $this->di->setShared(self::SERVICE_SECURITY, function () use ($config) {
-            $Security = new \Phalcon\Security();
-            $Security->setDefaultHash($config->application->security->key);
-
-            return $Security;
-        });
-    }
-
-    protected function initCache()
-    {
-        $config = $this->config;
-        foreach (array(self::SERVICE_VIEWS_CACHE, self::SERVICE_CACHE) as $service) {
-            $this->di->setShared($service, function () use ($config, $service) {
-                $frontendAdapter = $config->cache->{$service}->frontend_adapter;
-                $backendAdapter = $config->cache->{$service}->backend_adapter;
-
-                $FrontCache = new $frontendAdapter(
-                        $config->cache->{$service}->frontend_options->toArray()
-                );
-                $BackendCache = new $backendAdapter(
-                        $FrontCache, 
-                        $config->cache->{$service}->backend_options->toArray()
-                );
-
-                return $BackendCache;
-            });
-        }
-    }
-
-    /**
-     * We use composer autoloader
-     */
-    protected function initLoader()
-    {
-        $loader = new \Phalcon\Loader();
-        $loader->registerNamespaces(array(
-            'App\Controllers' => APP_APPLICATION_DIR . DS . 'controllers' . DS,
-            'App\Models' => APP_APPLICATION_DIR . DS . 'models' . DS,
-            'App\Forms' => APP_APPLICATION_DIR . DS . 'forms' . DS,
-            'App\Library' => APP_APPLICATION_DIR . DS . 'library' . DS,
-            'App\Tasks' => APP_APPLICATION_DIR . DS . 'tasks' . DS,
-            'App\Config' => APP_APPLICATION_DIR . DS . 'config' . DS,
-        ))->register();
-    }
-
-    protected function initCrypt()
-    {
-        $config = $this->config;
-        $this->di->setShared(self::SERVICE_CRYPT, function () use ($config) {
-            $crypt = new \Phalcon\Crypt();
-            $crypt->setKey($config->application->crypt->key);
-            $crypt->setCipher($config->application->crypt->cipher);
-            $crypt->setMode($config->application->crypt->mode);
-            $crypt->setPadding($config->application->crypt->mode);
-
-            return $crypt;
-        });
-    }
-
-    protected function initSession()
-    {
-        $config = $this->config;
-        $this->di->setShared(self::SERVICE_SESSION, function () use ($config) {
-            $session = new \App\Library\Session\Adapter\Files($config->application->session->toArray());
-            $session->start();
-            return $session;
-        });
-    }
-
-    protected function initFlash()
-    {
-        $config = $this->config;
-        $this->di->setShared(self::SERVICE_FLASH, function () use ($config) {
-            $flash = new \Phalcon\Flash\Direct(array(
-                'warning' => 'alert alert-warning',
-                'notice' => 'alert alert-info',
-                'success' => 'alert alert-success',
-                'error' => 'alert alert-danger',
-                'dismissable' => 'alert alert-dismissable',
-            ));
-
-            return $flash;
-        });
-    }
-
-    protected function initFlashSession()
-    {
-        $config = $this->config;
-        $this->di->setShared(self::SERVICE_FLASH_SESSION, function () use ($config) {
-            $flash = new \Phalcon\Flash\Session(array(
-                'warning' => 'alert alert-warning',
-                'notice' => 'alert alert-info',
-                'success' => 'alert alert-success',
-                'error' => 'alert alert-danger',
-                'dismissable' => 'alert alert-dismissable',
-            ));
-
-            return $flash;
-        });
-    }
-
-    protected function initUrl()
-    {
-        $config = $this->config;
-        $this->di->setShared(self::SERVICE_URL, function () use ($config) {
-            $url = new \Phalcon\Mvc\Url();
-            $url->setBaseUri($config->application->baseUri);
-            $url->setStaticBaseUri($config->application->staticBaseUri);
-
-            return $url;
-        });
-    }
-
-    protected function initCookies()
-    {
-        $config = $this->config;
-        $this->di->setShared(self::SERVICE_COOKIES, function () use ($config) {
-            $Cookies = new \Phalcon\Http\Response\Cookies();
-            $Cookies->useEncryption($config->application->cookies->encrypt);
-
-            return $Cookies;
-        });
-    }
-
-    protected function initRouter()
-    {
-        $routing = $this->routing;
-        $this->di->setShared(self::SERVICE_ROUTER, function () use ($routing) {
-            return $routing;
-        });
-    }
-
-    protected function initErrorHandler()
-    {
-        set_error_handler(function ($err_severity, $err_msg, $err_file, $err_line, array $err_context) {
-            if (0 === error_reporting()) {
-                return false;
             }
-            switch ($err_severity) {
-                case \E_ERROR: throw new \ErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_WARNING: throw new \WarningException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_PARSE: throw new \ParseException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_NOTICE: throw new \NoticeException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_CORE_ERROR: throw new \CoreErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_CORE_WARNING: throw new \CoreWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_COMPILE_ERROR: throw new \CompileErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_COMPILE_WARNING: throw new \CoreWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_USER_ERROR: throw new \UserErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_USER_WARNING: throw new \UserWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_USER_NOTICE: throw new \UserNoticeException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_STRICT: throw new \StrictException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_RECOVERABLE_ERROR: throw new \RecoverableErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_DEPRECATED: throw new \DeprecatedException($err_msg, 0, $err_severity, $err_file, $err_line);
-                case \E_USER_DEPRECATED: throw new \UserDeprecatedException($err_msg, 0, $err_severity, $err_file, $err_line);
+
+            /**
+             * We use composer autoloader
+             */
+            protected function initLoader()
+            {
+                $loader = new \Phalcon\Loader();
+                $loader->registerNamespaces(array(
+                    'App\Controllers' => APP_APPLICATION_DIR . DS . 'controllers' . DS,
+                    'App\Models' => APP_APPLICATION_DIR . DS . 'models' . DS,
+                    'App\Forms' => APP_APPLICATION_DIR . DS . 'forms' . DS,
+                    'App\Library' => APP_APPLICATION_DIR . DS . 'library' . DS,
+                    'App\Tasks' => APP_APPLICATION_DIR . DS . 'tasks' . DS,
+                    'App\Config' => APP_APPLICATION_DIR . DS . 'config' . DS,
+                ))->register();
             }
-        });
-    }
 
-    protected function initExceptionHandler()
-    {
-        set_exception_handler(function ($exception) {
-            echo 'Exception throwed: ' . $exception->getMessage();
-        });
-    }
+            protected function initCrypt()
+            {
+                $config = $this->config;
+                $this->di->setShared(self::SERVICE_CRYPT, function () use ($config) {
+                    $crypt = new \Phalcon\Crypt();
+                    $crypt->setKey($config->application->crypt->key);
+                    $crypt->setCipher($config->application->crypt->cipher);
+                    $crypt->setMode($config->application->crypt->mode);
+                    $crypt->setPadding($config->application->crypt->mode);
 
-    public function request($location, $data = null)
-    {
-        $dispatcher = clone $this->getDI()->get('dispatcher');
-
-        if (isset($location['controller'])) {
-            $dispatcher->setControllerName($location['controller']);
-        } else {
-            $dispatcher->setControllerName('index');
-        }
-
-        if (isset($location['action'])) {
-            $dispatcher->setActionName($location['action']);
-        } else {
-            $dispatcher->setActionName('index');
-        }
-
-        if (isset($location['params'])) {
-            if (is_array($location['params'])) {
-                $dispatcher->setParams($location['params']);
-            } else {
-                $dispatcher->setParams((array) $location['params']);
+                    return $crypt;
+                });
             }
-        } else {
-            $dispatcher->setParams(array());
+
+            protected function initSession()
+            {
+                $config = $this->config;
+                $this->di->setShared(self::SERVICE_SESSION, function () use ($config) {
+                    $session = new \App\Library\Session\Adapter\Files($config->application->session->toArray());
+                    $session->start();
+                    return $session;
+                });
+            }
+
+            protected function initFlash()
+            {
+                $config = $this->config;
+                $this->di->setShared(self::SERVICE_FLASH, function () use ($config) {
+                    $flash = new \Phalcon\Flash\Direct(array(
+                        'warning' => 'alert alert-warning',
+                        'notice' => 'alert alert-info',
+                        'success' => 'alert alert-success',
+                        'error' => 'alert alert-danger',
+                        'dismissable' => 'alert alert-dismissable',
+                    ));
+
+                    return $flash;
+                });
+            }
+
+            protected function initFlashSession()
+            {
+                $config = $this->config;
+                $this->di->setShared(self::SERVICE_FLASH_SESSION, function () use ($config) {
+                    $flash = new \Phalcon\Flash\Session(array(
+                        'warning' => 'alert alert-warning',
+                        'notice' => 'alert alert-info',
+                        'success' => 'alert alert-success',
+                        'error' => 'alert alert-danger',
+                        'dismissable' => 'alert alert-dismissable',
+                    ));
+
+                    return $flash;
+                });
+            }
+
+            protected function initUrl()
+            {
+                $config = $this->config;
+                $this->di->setShared(self::SERVICE_URL, function () use ($config) {
+                    $url = new \Phalcon\Mvc\Url();
+                    $url->setBaseUri($config->application->baseUri);
+                    $url->setStaticBaseUri($config->application->staticBaseUri);
+
+                    return $url;
+                });
+            }
+
+            protected function initCookies()
+            {
+                $config = $this->config;
+                $this->di->setShared(self::SERVICE_COOKIES, function () use ($config) {
+                    $Cookies = new \Phalcon\Http\Response\Cookies();
+                    $Cookies->useEncryption($config->application->cookies->encrypt);
+
+                    return $Cookies;
+                });
+            }
+
+            protected function initRouter()
+            {
+                $routing = $this->routing;
+                $this->di->setShared(self::SERVICE_ROUTER, function () use ($routing) {
+                    return $routing;
+                });
+            }
+
+            protected function initErrorHandler()
+            {
+                set_error_handler(function ($err_severity, $err_msg, $err_file, $err_line, array $err_context) {
+                    if (0 === error_reporting()) {
+                        return false;
+                    }
+                    switch ($err_severity) {
+                        case \E_ERROR: throw new \ErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_WARNING: throw new \WarningException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_PARSE: throw new \ParseException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_NOTICE: throw new \NoticeException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_CORE_ERROR: throw new \CoreErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_CORE_WARNING: throw new \CoreWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_COMPILE_ERROR: throw new \CompileErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_COMPILE_WARNING: throw new \CoreWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_USER_ERROR: throw new \UserErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_USER_WARNING: throw new \UserWarningException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_USER_NOTICE: throw new \UserNoticeException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_STRICT: throw new \StrictException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_RECOVERABLE_ERROR: throw new \RecoverableErrorException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_DEPRECATED: throw new \DeprecatedException($err_msg, 0, $err_severity, $err_file, $err_line);
+                        case \E_USER_DEPRECATED: throw new \UserDeprecatedException($err_msg, 0, $err_severity, $err_file, $err_line);
+                    }
+                });
+            }
+
+            protected function initExceptionHandler()
+            {
+                set_exception_handler(function ($exception) {
+                    echo 'Exception throwed: ' . $exception->getMessage();
+                });
+            }
+
+            public function request($location, $data = null)
+            {
+                $dispatcher = clone $this->getDI()->get('dispatcher');
+
+                if (isset($location['controller'])) {
+                    $dispatcher->setControllerName($location['controller']);
+                } else {
+                    $dispatcher->setControllerName('index');
+                }
+
+                if (isset($location['action'])) {
+                    $dispatcher->setActionName($location['action']);
+                } else {
+                    $dispatcher->setActionName('index');
+                }
+
+                if (isset($location['params'])) {
+                    if (is_array($location['params'])) {
+                        $dispatcher->setParams($location['params']);
+                    } else {
+                        $dispatcher->setParams((array) $location['params']);
+                    }
+                } else {
+                    $dispatcher->setParams(array());
+                }
+
+                $dispatcher->dispatch();
+
+                $response = $dispatcher->getReturnedValue();
+                if ($response instanceof ResponseInterface) {
+                    return $response->getContent();
+                }
+
+                return $response;
+            }
+
         }
-
-        $dispatcher->dispatch();
-
-        $response = $dispatcher->getReturnedValue();
-        if ($response instanceof ResponseInterface) {
-            return $response->getContent();
-        }
-
-        return $response;
-    }
-
-}
+        

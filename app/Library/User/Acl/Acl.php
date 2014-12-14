@@ -131,7 +131,7 @@ class Acl extends Component
         }
 
         // Generate ACL list
-        $AclList = \App\Library\Utilities\Utilities::array_merge_recursive_distinct(
+        $AclList = \App\Library\Utilities\ArrayUtils::array_merge_recursive_distinct(
                         $this->app->getBaseAclList(), $this->config->acl->toArray()
         );
         $this->buildFromArray($AclList);

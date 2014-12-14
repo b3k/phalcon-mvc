@@ -2,7 +2,7 @@
 
 namespace App\Library\Utilities;
 
-class Utilities
+class ArrayUtils
 {
     public static function array_merge_recursive_distinct(array $array1, array $array2)
     {

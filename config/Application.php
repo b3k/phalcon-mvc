@@ -30,6 +30,7 @@ class Application extends BaseApplication
         self::SERVICE_ROUTER,
         self::SERVICE_ACL,
         self::SERVICE_AUTH,
+        self::SERVICE_ASSETS
     );
 
     public function __construct()

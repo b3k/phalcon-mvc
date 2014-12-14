@@ -8,15 +8,6 @@ namespace App\Controllers;
 class ErrorController extends ControllerBase
 {
 
-    protected $use_https = true;
-    protected $vars = array(
-        'title' => 'My default title',
-        'breadcrumb' => array('About')
-    );
-    protected $respond_to = array(
-        'html', 'xml'
-    );
-
     public function error403Action()
     {
         

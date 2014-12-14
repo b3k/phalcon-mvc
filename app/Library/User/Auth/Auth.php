@@ -9,14 +9,8 @@ use App\Library\User\Auth\Exception\InactiveUserException;
 use App\Library\User\Auth\Exception\InvalidCredentialsException;
 use App\Library\User\Auth\Exception\UserExpiredException;
 use App\Library\User\Auth\UserInterface;
-use App\Model\UserLog;
-use App\Model\UserLogQuery;
 use App\Library\User\Manager\ManagerInterface as UserManagerInterface;
 
-/**
- * Vokuro\Auth\Auth
- * Manages Authentication/Identity Management in Vokuro
- */
 class Auth extends Component
 {
 
@@ -53,7 +47,7 @@ class Auth extends Component
      * 
      * @var type 
      */
-    protected $_UsersManager;
+    protected $UsersManager;
 
     /**
      * Configuration node
@@ -61,9 +55,6 @@ class Auth extends Component
      * @var array 
      */
     protected $_config;
-    
-    
-    protected $SaveUser = FALSE;
 
     /**
      * COntrscts this instance
@@ -73,11 +64,11 @@ class Auth extends Component
     public function __construct()
     {
         $this->_config = array_merge($this->config_defaults, $this->config->application->users->toArray());
-        $managerClass = $this->ConfigNode['mnager'];
+        $managerClass = $this->_config['manager'];
         if (!class_exists($managerClass)) {
             throw new \RuntimeException(sprintf('Given repository class %s does not exists.', $managerClass));
         }
-        $this->UsersRepository = new $managerClass();
+        $this->setUsersManager(new $managerClass());
     }
 
     /**
@@ -100,9 +91,9 @@ class Auth extends Component
      * 
      * @return UserManagerInterface
      */
-    public function getUserManager()
+    public function getUsersManager()
     {
-        return $this->_UserManager;
+        return $this->UsersManager;
     }
 
     /**
@@ -111,9 +102,9 @@ class Auth extends Component
      * @param   UserManagerInterface $UserManagerClass
      * @return  UserManagerInterface
      */
-    public function setUserManager(UserManagerInterface $UserManager)
+    public function setUsersManager(UserManagerInterface $UserManager)
     {
-        return $this->_UsersManager = $UserManager;
+        return $this->UsersManager = $UserManager;
     }
 
     public function getSession()
@@ -125,12 +116,12 @@ class Auth extends Component
     {
         return $this->getShared('request');
     }
-    
+
     public function getSecurity()
     {
         return $this->getShared('security');
     }
-    
+
     public function getEventsManager()
     {
         return $this->getShared('eventsManager');
@@ -144,7 +135,7 @@ class Auth extends Component
     public function getIdentity()
     {
         $id = $this->getSession()->get(self::AUTH_IDENT_SESSION_KEY, FALSE);
-        return $id !== FALSE && is_numeric($id) ? $this->getUserManager()->find($id) : FALSE;
+        return $id !== FALSE ? $this->getUsersManager()->find($id) : FALSE;
     }
 
     /**
@@ -165,7 +156,7 @@ class Auth extends Component
      */
     public function checkCredentials(Array $credentials)
     {
-        $User = $this->getUserManager()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
+        $User = $this->getUsersManager()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
         if (!$User) {
             return FALSE;
         }
@@ -185,18 +176,15 @@ class Auth extends Component
         // run events
         $this->getEventsManager()->fire('auth:login:before');
         // check that given user exists
-        $User = $this->getUserManager()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
+        $User = $this->getUsersManager()->findOneBy($this->ConfigNode['login_column'], $credentials['ident']);
         if (!$User) {
             // run events
             $this->getEventsManager()->fire('auth:login:fail', $this, $credentials);
-            //$this->addLog('auth:login:fail', 0, $credentials, $this->request->getClientAddress(), $this->request->getUserAgent());
-            //$this->checkUserThrottling(0);
             throw new UnknownUserException('User with given identifier does not exist');
         }
 
         // check password
         if (!$this->getSecurity()->checkHash($credentials['password'], $User->getPassword())) {
-            //$this->registerUserThrottling($User->getId());
             $this->getEventsManager()->fire('auth:login:fail', $this, $credentials);
             throw new InvalidCredentialsException('Wrong email/password combination');
         }
@@ -204,72 +192,21 @@ class Auth extends Component
         // Check if the user was flagged
         $this->checkUserFlags($User);
 
-        // Obfuscate password before log
-        //$credentials['password'] = str_repeat('*', strlen($credentials['password']));
-        //$this->addLog('auth:login:success', $User->getId(), $credentials, $this->request->getClientAddress(), $this->request->getUserAgent());
-
         // Check if the remember me was selected
         if (isset($credentials['remember'])) {
             $this->setRememberEnviroment($User);
         }
 
+        // Set User object
         $this->setIdentity($User);
 
         // regenerate session id
         session_regenerate_id();
-        
+
         // run events
         $this->getEventsManager()->fire('auth:login:after', $User);
     }
 
-    protected function addLog($action, $userId = 0, $params = array(), $ip = FALSE, $ua = FALSE)
-    {
-        $UserLog = new UserLog();
-        $UserLog->setAction($action);
-        $UserLog->setParams(json_encode($params));
-        $UserLog->setUserId($userId);
-        $UserLog->setIp($ip ? $ip : $this->getRequest()->getClientAddress());
-        $UserLog->setUserAgent($ua ? $ua : $this->getRequest()->getUserAgent());
-        $UserLog->save();
-    }
-
-    /**
-     * Implements login throttling
-     * Reduces the efectiveness of brute force attacks
-     *
-     * @param int $userId
-     */
-    public function checkUserThrottling()
-    {
-        if (!$this->ConfigNode['throttling']) {
-            return;
-        }
-        $count = UserLogQuery::countActions('auth:login:fail', array(
-                    'ip' => $this->getRequest()->getClientAddress(),
-                    'date_from' => new \DateTime(time() - $this->ConfigNode['throttling_check_duration'])
-                        )
-        );
-
-        switch ($count) {
-            case 1:
-            case 2:
-                // no delay
-                break;
-            case 3:
-            case 4:
-                sleep(2);
-                break;
-            default:
-                sleep(4);
-                break;
-        }
-    }
-
-    /**
-     * Creates the remember me environment settings the related cookies and generating tokens
-     *
-     * @param Vokuro\Models\Users $user
-     */
     public function setRememberEnviroment($User)
     {
         $User->setRememberToken(sha1($User->getId() . $this->config->security->getRandomBytes()));
@@ -295,58 +232,9 @@ class Auth extends Component
      */
     public function loginWithRememberMe()
     {
-        $userId = $this->cookies->get(self::AUTH_REMEMBER_IDENT_COOKIE_KEY)->getValue();
-        $cookieToken = $this->cookies->get(self::AUTH_REMEMBER_TOKEN_COOKIE_KEY)->getValue();
-
-        $user = UserQuery::findOneBy($this->ConfigNode['login_column'], $userId);
-        if ($user) {
-            $userAgent = $this->request->getUserAgent();
-            $token = md5($user->email . $user->password . $userAgent);
-            if ($cookieToken == $token) {
-                $remember = RememberTokens::findFirst(array(
-                            'usersId = ?0 AND token = ?1',
-                            'bind' => array(
-                                $user->id,
-                                $token
-                            )
-                ));
-                if ($remember) {
-
-                    // Check if the cookie has not expired
-                    if ((time() - (86400 * 8)) < $remember->createdAt) {
-
-                        // Check if the user was flagged
-                        $this->checkUserFlags($user);
-
-                        // Register identity
-                        $this->session->set(self::AUTH_IDENT_SESSION_KEY, array(
-                            'id' => $user->id,
-                            'name' => $user->name,
-                            'profile' => $user->profile->name
-                        ));
-
-                        // Register the successful login
-                        $this->saveSuccessLogin($user);
-
-                        session_regenerate_id();
-
-                        return $this->response->redirect('users');
-                    }
-                }
-            }
-        }
-
-        $this->cookies->get(self::AUTH_REMEMBER_IDENT_COOKIE_KEY)->delete();
-        $this->cookies->get(self::AUTH_REMEMBER_TOKEN_COOKIE_KEY)->delete();
-
-        return $this->response->redirect('session/login');
+        return NULL;
     }
 
-    /**
-     * Checks if the user is banned/inactive/suspended
-     *
-     * @param Vokuro\Models\Users $user
-     */
     public function checkUserFlags($User)
     {
         if (!$User->getActive()) {
@@ -356,57 +244,6 @@ class Auth extends Component
         if ($User->getExpired()) {
             throw new UserExpiredException('The user account is expired');
         }
-    }
-
-    /**
-     * Removes the user identity information from session
-     */
-    public function remove()
-    {
-        if ($this->cookies->has('RMU')) {
-            $this->cookies->get('RMU')->delete();
-        }
-        if ($this->cookies->has('RMT')) {
-            $this->cookies->get('RMT')->delete();
-        }
-
-        $this->session->remove(self::AUTH_IDENT_SESSION_KEY);
-    }
-
-    /**
-     * Auths the user by his/her id
-     *
-     * @param int $id
-     */
-    public function authUserById($id)
-    {
-        $user = Users::findFirstById($id);
-        if ($user == false) {
-            throw new Exception('The user does not exist');
-        }
-
-        $this->checkUserFlags($user);
-
-        $this->session->set(self::AUTH_IDENT_SESSION_KEY, array(
-            'id' => $user->id,
-            'name' => $user->name,
-            'profile' => $user->profile->name
-        ));
-    }
-
-    public function getUser()
-    {
-        $identity = $this->session->get(self::AUTH_IDENT_SESSION_KEY);
-        if (isset($identity['id'])) {
-            $user = Users::findFirstById($identity['id']);
-            if ($user == false) {
-                throw new Exception('The user does not exist');
-            }
-
-            return $user;
-        }
-
-        return false;
     }
 
 }

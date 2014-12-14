@@ -21,13 +21,13 @@ return array(
         'padding' => \Phalcon\Crypt::PADDING_DEFAULT
     ),
     'users' => array(
-        'manager' => 'App\Library\PropelConnector\User\Manager\Manager',
+        'manager' => 'App\Library\PropelConnector\User\Manager',
         'throttling' => TRUE,
         'login_column' => 'user_email',
     ),
     'session' => array(
         'name' => 'FSID',
-        'cookie' => array(        
+        'cookie' => array(
             'lifetime' => 345600,
             'path' => '/',
             'secure' => '0',
@@ -35,6 +35,9 @@ return array(
         ),
         'uniqueId' => 'falconidae',
         'hash' => 'sha1'
+    ),
+    'assets' => array(
+        'join' => TRUE
     ),
     'cookies' => array(
         'encrypt' => TRUE

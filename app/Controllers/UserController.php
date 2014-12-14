@@ -6,11 +6,6 @@ use Phalcon\Tag;
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
-/* use Vokuro\Forms\ChangePasswordForm;
-  use Vokuro\Forms\UsersForm;
-  use Vokuro\Models\Users;
-  use Vokuro\Models\PasswordChanges; */
-
 /**
  * Vokuro\Controllers\UsersController
  * CRUD to manage users

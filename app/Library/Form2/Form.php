@@ -4,18 +4,18 @@ namespace App\Library\Form2;
 
 use Phalcon\Forms\Form as BaseForm;
 use App\Library\Form2\Element\AbstractElement;
-use App\Library\Form2\Element\Checkbox as CheckboxElement;
-use App\Library\Form2\Element\Date as DateElement;
-use App\Library\Form2\Element\Email as EmailElement;
-use App\Library\Form2\Element\File as FileElement;
-use App\Library\Form2\Element\Hidden as HiddenElement;
-use App\Library\Form2\Element\Numeric as NumericElement;
-use App\Library\Form2\Element\Password as PasswordElement;
-use App\Library\Form2\Element\Radio as RadioElement;
-use App\Library\Form2\Element\Select as SelectElement;
-use App\Library\Form2\Element\Button as ButtonElement;
-use App\Library\Form2\Element\Text as TextElement;
-use App\Library\Form2\Element\Textarea as TextareaElement;
+use App\Library\Form2\Element\Checkbox  as CheckboxElement;
+use App\Library\Form2\Element\Date      as DateElement;
+use App\Library\Form2\Element\Email     as EmailElement;
+use App\Library\Form2\Element\File      as FileElement;
+use App\Library\Form2\Element\Hidden    as HiddenElement;
+use App\Library\Form2\Element\Numeric   as NumericElement;
+use App\Library\Form2\Element\Password  as PasswordElement;
+use App\Library\Form2\Element\Radio     as RadioElement;
+use App\Library\Form2\Element\Select    as SelectElement;
+use App\Library\Form2\Element\Button    as ButtonElement;
+use App\Library\Form2\Element\Text      as TextElement;
+use App\Library\Form2\Element\Textarea  as TextareaElement;
 
 abstract class Form extends BaseForm
 {

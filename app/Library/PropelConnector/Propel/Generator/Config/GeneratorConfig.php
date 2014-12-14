@@ -80,7 +80,7 @@ class GeneratorConfig extends ConfigurationManager implements GeneratorConfigInt
      * @throws Propel\Generator\Exception\ClassNotFoundException if the class doesn't exists
      * @throws Propel\Generator\Exception\BuildException         if the class isn't an implementation of SchemaParserInterface
      */
-    public function getConfiguredSchemaParser(ConnectionInterface $con = null)
+    public function getConfiguredSchemaParser(ConnectionInterface $con = null, $database = null)
     {
         $clazz = $this->get()['migrations']['parserClass'];
 

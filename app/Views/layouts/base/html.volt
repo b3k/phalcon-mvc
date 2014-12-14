@@ -4,6 +4,7 @@
 		<title>{% block title %}{% endblock %}</title>
 		<link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/united/bootstrap.min.css" rel="stylesheet">
 		{{ stylesheet_link('css/style.css') }}
+                {{ assets.outputCss() }}
 	</head>
 	<body>
                 <!-- header begin -->

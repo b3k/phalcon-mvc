@@ -10,7 +10,7 @@ namespace Config\Initializer\Base;
 
 use \Phalcon\Config as PhalconConfig;
 use Symfony\Component\Filesystem\Filesystem;
-use \App\Library\Utilities\Utilities;
+use App\Library\Utilities\ArrayUtils;
 
 /**
  * Description of Config
@@ -94,7 +94,7 @@ class Config extends PhalconConfig
         // get the config
         foreach ($this->getLoadableConfigGroups() as $group) {
             if (is_readable($this->getBasePath() . $group . '.php')) {
-                $config = Utilities::array_merge_recursive_distinct(
+                $config = ArrayUtils::array_merge_recursive_distinct(
                                 // default values
                                 $config,
                                 // set values
@@ -104,7 +104,7 @@ class Config extends PhalconConfig
         }
         $forced_values = $this->getForceConfigValues();
         if ($forced_values && count($forced_values) > 0) {
-            $config = Utilities::array_merge_recursive_distinct(
+            $config = ArrayUtils::array_merge_recursive_distinct(
                             $config,
                             // force config values
                             $forced_values

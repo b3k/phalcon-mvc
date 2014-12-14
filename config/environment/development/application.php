@@ -39,6 +39,10 @@ return array(
         'uniqueId' => 'falconidae',
         'hash' => 'sha1'
     ),
+    'assets' => array(
+        'join' => TRUE,
+        'lifetime' => 60
+    ),
     'cookies' => array(
         'encrypt' => TRUE
     ),

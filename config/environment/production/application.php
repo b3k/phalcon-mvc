@@ -1,49 +1,59 @@
 <?php
 
 return array(
-    'baseUri' => '/',
-    'staticBaseUri' => '/',
-    'timezone' => 'Europe/Warsaw',
-    'publicUrl' => 'upcheck.net',
-    'log' => array(
-        'adapter' => 'Phalcon\Logger\Adapter\File',
-        'formatter' => 'Phalcon\Logger\Formatter\Line',
-        'format' => '[%date%][%type%] %message%',
-        'path' => APP_LOG_DIR . DS . APP_ENV . '.log'
+  'baseUri' => '/',
+  'staticBaseUri' => '/',
+  'timezone' => 'Europe/Warsaw',
+  'publicUrl' => 'upcheck.net',
+  'log' => array(
+    'adapter' => 'Phalcon\Logger\Adapter\File',
+    'formatter' => 'Phalcon\Logger\Formatter\Line',
+    'format' => '[%date%][%type%] %message%',
+    'path' => APP_LOG_DIR . DS . APP_ENV . '.log'
+  ),
+  'security' => array(
+    'key' => 'IOjscifo9e080123nsdkk'
+  ),
+  'crypt' => array(
+    'key' => 'UKneuif8923jhsnkKHal-__sdsdad',
+    'cipher' => 'tripledes',
+    'mode' => 'cbc',
+    'padding' => \Phalcon\Crypt::PADDING_DEFAULT
+  ),
+  'users' => array(
+    'manager' => 'App\Library\PropelConnector\User\Manager',
+    'throttling' => TRUE,
+    'login_column' => 'user_email',
+  ),
+  'session' => array(
+    'name' => 'FSID',
+    'cookie' => array(
+      'lifetime' => 345600,
+      'path' => '/',
+      'secure' => '0',
+      'httponly' => '1'
     ),
-    'security' => array(
-        'key' => 'IOjscifo9e080123nsdkk'
+    'uniqueId' => 'falconidae',
+    'hash' => 'sha1'
+  ),
+  'assets' => array(
+    'join' => TRUE,
+    'css' => array(
+      'builders' => array(
+        array('extensions' => array('less'), 'class' => 'App\Library\Assets\Builder\Css\Less', 'adapter' => 'NodeLess', 'priority' => 100),
+        array('extensions' => array('scss'), 'class' => 'App\Library\Assets\Builder\Css\Scss', 'adapter' => 'NodeScss', 'priority' => 100)
+      ),
+      'filters' => array(
+        array('class' => '\Phalcon\Assets\Filter\Cssmin'),
+        array('class' => '\App\Library\Assets\Builder\Css\Compress')
+      )
     ),
-    'crypt' => array(
-        'key' => 'UKneuif8923jhsnkKHal-__sdsdad',
-        'cipher' => 'tripledes',
-        'mode' => 'cbc',
-        'padding' => \Phalcon\Crypt::PADDING_DEFAULT
-    ),
-    'users' => array(
-        'manager' => 'App\Library\PropelConnector\User\Manager',
-        'throttling' => TRUE,
-        'login_column' => 'user_email',
-    ),
-    'session' => array(
-        'name' => 'FSID',
-        'cookie' => array(
-            'lifetime' => 345600,
-            'path' => '/',
-            'secure' => '0',
-            'httponly' => '1'
-        ),
-        'uniqueId' => 'falconidae',
-        'hash' => 'sha1'
-    ),
-    'assets' => array(
-        'join' => TRUE
-    ),
-    'cookies' => array(
-        'encrypt' => TRUE
-    ),
-    'amazon' => array(
-        'AWSAccessKeyId' => '',
-        'AWSSecretKey' => ''
-    )
+  ),
+  'cookies' => array(
+    'encrypt' => TRUE
+  ),
+  'amazon' => array(
+    'AWSAccessKeyId' => '',
+    'AWSSecretKey' => ''
+  )
 );

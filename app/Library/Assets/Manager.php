@@ -13,8 +13,6 @@ use Phalcon\Assets\Filters\Jsmin;
 class Manager extends AssetManager
 {
 
-    private $supported_extensions = array();
-
     use DIBehaviour {
         DIBehaviour::__construct as protected __DIConstruct;
     }
@@ -25,7 +23,11 @@ class Manager extends AssetManager
     const
         DEFAULT_COLLECTION_JS = 'js',
         DEFAULT_COLLECTION_CSS = 'css';
-    const GENERATED_STORAGE_PATH = 'assets/gen/';
+    const 
+        COMPILED_STORAGE_PATH = 'assets/comp/',
+        GENERATED_STORAGE_PATH = 'assets/gen/',
+        ASSETS_CSS_PATH = 'Assets/Css',
+        ASSETS_JS_PATH = 'Assets/Js';
 
     private $_config = array(
       'lifetime' => 3600,
@@ -57,14 +59,27 @@ class Manager extends AssetManager
      *      assets/
      *          gen/
      *              css/
-     *                  file.css
-     *                  file2.css
+     *                  index/
+     *                      file.css
+     *                      file2.css
      *              js/
-     *                  file.js
-     *                  file2.js
+     *                  index/ 
+     *                      file.js
+     *                      file2.js
      * 
      * 
-     * $Assetmaneger->compileCss()->getBuilder('less')->setInput('assets/css/index/file.less')->
+     * try {
+     *  $Assetmaneger->compileCss()->
+     *                  getBuilder('less')->
+     *                  setInputFile('assets/css/index/file.less')->
+     *                  setOutputFile('tmp/assets/css/index/file2.css')->
+     *                  build();
+     * } catch () {
+     *  
+     * }
+     * 
+     * 
+     * 
      * 
      */
     public function __construct($di)
@@ -98,14 +113,67 @@ class Manager extends AssetManager
                 ->addFilter(new Jsmin())
                 ->join($this->getConfig('join'));
     }
+    
+    public function createBuilder($type) {
+        
+    }
 
     /**
      * COmpioles all project CSS, less
+     * 
+     * 1. We need to get all file extensions that we should care about
+     * 2. 
+     * 
      */
-    public function compileCss()
+    public function compileCss($source = null, $target = null)
     {
-        $finder = new \Symfony\Component\Finder\Finder();
-        $finder->files()->name('*Command.php')->path('Command' . DS)->in(APP_APPLICATION_DIR . DS);
+        $source = $source ?: APP_APPLICATION_DIR . DS . self::ASSETS_CSS_PATH . DS;
+        $target = $target ?: APP_TMP_DIR . DS . self::COMPILED_STORAGE_PATH . DS;
+        
+        // Get all supported extensions
+        $exts = implode('|', $this->getCssBuilderExtensions());
+        
+        // Get all files we are interested
+        $Finder = new \Symfony\Component\Finder\Finder();
+        $Finder->files()->name('/.*\.('.$exts.')/i')->in($source);
+        
+        foreach ($Finder as $result) {
+            try {
+                $this->createBuilder($result->getExtension())
+                    ->setInputFile($result->openFile("r"))
+                    ->setOutputFile($target)
+                    ->build();
+            } catch (\Exception $e) {
+                
+            }
+        }
+        
+        
+    }
+    
+    public function getBuilderForExtension() {
+        
+    }
+
+    public function getCssBuilderExtensions()
+    {
+        return $this->getBuilderExtensions('css');
+    }
+
+    public function getJsBuilderExtensions()
+    {
+        return $this->getBuilderExtensions('js');
+    }
+
+    public function getBuilderExtensions($type)
+    {
+        $cssBuilderConf = $this->getConfig('css');
+        $compileExts = [];
+        foreach ($cssBuilderConf['builders'] as $builderConf) {
+            $compileExts[] = array_merge($compileExts,
+                $builderConf['extensions']);
+        }
+        return array_unique($compileExts);
     }
 
     /**

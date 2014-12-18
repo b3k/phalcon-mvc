@@ -2,37 +2,51 @@
 
 namespace App\Library\Assets\Builder\Css;
 
+/**
+ * Abstract builder
+ * 
+ */
 abstract class AbstractBuilder
 {
 
     protected $_input;
     protected $_output;
-    protected $_adapter = '\App\Library\Assets\Builder\Css\Adapater\AbstractAdapter';
-    protected $_adapterInstance;
 
-    public function getAdapter()
+    /**
+     * Set input
+     * 
+     * @param string|\SplFileObject $input
+     * @throws \Exception
+     */
+    public function setInput($input)
     {
-        return $this->_adapter;
+        if ($input instanceof \SplFileObject) {
+            $this->setInputFile($input);
+        } elseif (is_string($input)) {
+            $this->setInputString($input);
+        } else {
+            throw new \Exception('Not supported input.');
+        }
+        return $this;
     }
 
-    public function getAdapterInstance()
+    /**
+     * Set the output file
+     * 
+     * @param string|\SplFileObject $output
+     * @return \App\Library\Assets\Builder\Css\AbstractBuilder
+     * @throws \Exception
+     */
+    public function setOutput($output)
     {
-        // if we already have instance, just give it
-        if ($this->_adapterInstance instanceof AdapterAbstract) {
-            return $this->_adapterInstance;
-        } elseif (is_object($this->_adapterInstance) && !$this->_adapterInstance instanceof AdapterAbstract) {
-            // if we have object but not AdapeterAbstract - put error
-            throw new \RuntimeException(sprintf("Adapter class %s should be instance of %s.",
-                $this->getAdapter(), 'AdapterAbstract'));
+        if ($output instanceof \SplFileObject) {
+            $this->_output = $output;
+        } elseif (is_string($output)) {
+            $this->_output = new \SplFileObject((string) $output, 'w+');
+        } else {
+            throw new \Exception('Not supported output.');
         }
-        // if given adapeter class dosent exists
-        if (!class_exists($this->getAdapter())) {
-            throw new \RuntimeException(sprintf("Adapeter %s does not exists.",
-                $this->getAdapter()));
-        }
-
-        $this->_adapterInstance = new $this->getAdapter();
-        return $this->_adapterInstance;
+        return $this;
     }
 
     public function setInputFile(\SplFileObject $input)
@@ -50,14 +64,7 @@ abstract class AbstractBuilder
         return $this->_input;
     }
 
-    public function build()
-    {
-        if (empty($this->_input)) {
-            throw new \RuntimeException(sprintf("Input is empty."));
-        }
-        
-        $this->_output = (string) $this->getAdapterInstance()->build($this->getInput());
-    }
+    abstract public function build();
 
     public function writeOutputToFile(\SplFileObject $output)
     {

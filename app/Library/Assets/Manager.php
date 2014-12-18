@@ -23,7 +23,7 @@ class Manager extends AssetManager
     const
         DEFAULT_COLLECTION_JS = 'js',
         DEFAULT_COLLECTION_CSS = 'css';
-    const 
+    const
         COMPILED_STORAGE_PATH = 'assets/comp/',
         GENERATED_STORAGE_PATH = 'assets/gen/',
         ASSETS_CSS_PATH = 'Assets/Css',
@@ -34,12 +34,14 @@ class Manager extends AssetManager
       'join' => true,
       'css' => array(
         'builders' => array(
-          array('extensions' => array('less'), 'builder' => 'App\Library\Assets\Builder\Css\Less', 'adapter' => 'NodeLess'),
-          array('extensions' => array('scss'), 'builder' => 'App\Library\Assets\Builder\Css\Scss', 'adapter' => 'NodeScss')
+          array('extensions' => array('less'), 'class' => 'App\Library\Assets\Builder\Css\Less'),
+          array('extensions' => array('scss'), 'class' => 'App\Library\Assets\Builder\Css\Scss')
         )
       ),
       'js' => array(
-        array('extensions' => array('coffe'), 'builder' => 'App\Library\Assets\Builder\Js\CoffeScript'),
+        'builders' => array(
+          array('extensions' => array('coffe'), 'class' => 'App\Library\Assets\Builder\Js\CoffeScript'),
+        )
       )
     );
 
@@ -77,10 +79,6 @@ class Manager extends AssetManager
      * } catch () {
      *  
      * }
-     * 
-     * 
-     * 
-     * 
      */
     public function __construct($di)
     {
@@ -100,7 +98,7 @@ class Manager extends AssetManager
     {
         $collection = new Collection();
         return $collection
-                ->setSourcePath(APP_APPLICATION_DIR . DS . 'Assets' . DS . 'Stylesheets' . DS)
+                ->setSourcePath(APP_APPLICATION_DIR . DS . self::ASSETS_CSS_PATH . DS)
                 ->addFilter(new Cssmin())
                 ->join($this->getConfig('join'));
     }
@@ -109,13 +107,9 @@ class Manager extends AssetManager
     {
         $collection = new Collection();
         return $collection
-                ->setSourcePath(APP_APPLICATION_DIR . DS . 'Assets' . DS . 'Javascripts' . DS)
+                ->setSourcePath(APP_APPLICATION_DIR . DS . self::ASSETS_CSS_PATH . DS)
                 ->addFilter(new Jsmin())
                 ->join($this->getConfig('join'));
-    }
-    
-    public function createBuilder($type) {
-        
     }
 
     /**
@@ -127,45 +121,69 @@ class Manager extends AssetManager
      */
     public function compileCss($source = null, $target = null)
     {
-        $source = $source ?: APP_APPLICATION_DIR . DS . self::ASSETS_CSS_PATH . DS;
-        $target = $target ?: APP_TMP_DIR . DS . self::COMPILED_STORAGE_PATH . DS;
-        
+        $source = $source ? : APP_APPLICATION_DIR . DS . self::ASSETS_CSS_PATH . DS;
+        $target = $target ? : APP_TMP_DIR . DS . self::COMPILED_STORAGE_PATH . DS;
+
         // Get all supported extensions
-        $exts = implode('|', $this->getCssBuilderExtensions());
-        
+        $exts = implode('|', $this->getCssBuildersExtensions());
+
         // Get all files we are interested
         $Finder = new \Symfony\Component\Finder\Finder();
-        $Finder->files()->name('/.*\.('.$exts.')/i')->in($source);
-        
-        foreach ($Finder as $result) {
+        $Finder->files()->name('/.*\.(' . $exts . ')/i')->in($source);
+
+        // For each file we build it
+        foreach ($Finder as $file) {
             try {
-                $this->createBuilder($result->getExtension())
-                    ->setInputFile($result->openFile("r"))
+                $this->createBuilder($file->getExtension())
+                    ->setInputFile($file->openFile("r"))
                     ->setOutputFile($target)
                     ->build();
             } catch (\Exception $e) {
                 
             }
         }
-        
-        
-    }
-    
-    public function getBuilderForExtension() {
-        
     }
 
-    public function getCssBuilderExtensions()
+    public function createBuilder($extension)
+    {
+        $builderConf = $this->getBuilderConfigForExtension($extension);
+        if (!isset($builderConf['class'])) {
+            throw new \RuntimeException('Class config parameter is not defined.');
+        }
+        $class = $builderConf['class'];
+        if (!class_exists($class)) {
+            throw new \RuntimeException(sprintf('Class %s config parameter is not defined.',
+                $class));
+        }
+        return new $class();
+    }
+
+    public function getBuilderConfigForExtension($extension)
+    {
+        $config = array_merge($this->getConfig('css')['builders'],
+            $this->getConfig('js')['builders']);
+        if (!isset($config['builders'])) {
+            throw new \RuntimeException("No builders defined.");
+        }
+
+        foreach ($config['builders'] as $builder) {
+            if (in_array($extension, $builder['extensions'])) {
+                return $builder;
+            }
+        }
+    }
+
+    public function getCssBuildersExtensions()
     {
         return $this->getBuilderExtensions('css');
     }
 
-    public function getJsBuilderExtensions()
+    public function getJsBuildersExtensions()
     {
         return $this->getBuilderExtensions('js');
     }
 
-    public function getBuilderExtensions($type)
+    public function getBuildersExtensions($type)
     {
         $cssBuilderConf = $this->getConfig('css');
         $compileExts = [];

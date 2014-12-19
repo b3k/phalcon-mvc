@@ -80,6 +80,13 @@ class Manager extends AssetManager
      *  
      * }
      */
+    
+    
+    /**
+     * Creates AssetManager
+     * 
+     * @param \Phalcon\DI $di
+     */
     public function __construct($di)
     {
         $this->__DIConstruct($di);
@@ -88,8 +95,14 @@ class Manager extends AssetManager
         $this->initializeCollections();
     }
 
-    public function initializeCollections()
+    public function initializeCollections($recompile = false)
     {
+        
+        if ($recompile) {
+            $this->compileCss();
+            $this->compileJs();
+        }
+        
         $this->set(self::DEFAULT_COLLECTION_CSS, $this->getNewCssCollection());
         $this->set(self::DEFAULT_COLLECTION_JS, $this->getNewJsCollection());
     }
@@ -138,12 +151,22 @@ class Manager extends AssetManager
                     ->setInputFile($file->openFile("r"))
                     ->setOutputFile($target)
                     ->build();
-            } catch (\Exception $e) {
                 
+            } catch (\Exception $e) {
+                throw new \RuntimeException('Runtime exception.');
             }
         }
+        
+        return $this;
     }
 
+    /**
+     * CReate builder
+     * 
+     * @param string $extension
+     * @return \App\Library\Asset\class
+     * @throws \RuntimeException
+     */
     public function createBuilder($extension)
     {
         $builderConf = $this->getBuilderConfigForExtension($extension);
@@ -158,6 +181,13 @@ class Manager extends AssetManager
         return new $class();
     }
 
+    /**
+     * Get builder config
+     * 
+     * @param string $extension
+     * @return array
+     * @throws \RuntimeException
+     */
     public function getBuilderConfigForExtension($extension)
     {
         $config = array_merge($this->getConfig('css')['builders'],
@@ -173,16 +203,29 @@ class Manager extends AssetManager
         }
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function getCssBuildersExtensions()
     {
         return $this->getBuilderExtensions('css');
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function getJsBuildersExtensions()
     {
         return $this->getBuilderExtensions('js');
     }
 
+    /**
+     * 
+     * @param string $type
+     * @return array
+     */
     public function getBuildersExtensions($type)
     {
         $cssBuilderConf = $this->getConfig('css');
@@ -204,12 +247,19 @@ class Manager extends AssetManager
         
     }
 
+    /**
+     * Output CSS code
+     * 
+     * @param string $collectionName
+     * @return string
+     */
     public function outputCss($collectionName = self::DEFAULT_COLLECTION_CSS)
     {
         $collection = $this->collection($collectionName);
         if ($collection->getJoin()) {
             $lifetime = $this->getConfig('lifetime');
-            $filepath = self::GENERATED_STORAGE_PATH . $filename = $filename = $this->getCollectionFileName($collection,
+            $filepath = self::GENERATED_STORAGE_PATH . $filename = $filename 
+                = $this->getCollectionFileName($collection,
                 self::FILENAME_PATTERN_CSS);
             $collection
                 ->setTargetPath($filepath)
@@ -228,8 +278,15 @@ class Manager extends AssetManager
         return parent::outputCss($collectionName);
     }
 
+    /**
+     * Output JS code
+     * 
+     * @param string $collectionName
+     * @return string
+     */
     public function outputJs($collectionName = self::DEFAULT_COLLECTION_JS)
     {
+        
         $collection = $this->collection($collectionName);
         if ($collection->getJoin()) {
             $lifetime = $this->getConfig('lifetime');

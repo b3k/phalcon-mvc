@@ -11,6 +11,18 @@ abstract class AbstractBuilder
 
     protected $_input;
     protected $_output;
+    protected $_config;
+
+    public function getConfig()
+    {
+        return $this->_config;
+    }
+
+    public function setConfig($config)
+    {
+        $this->_config = $config;
+        return $this;
+    }
 
     /**
      * Set input
@@ -51,20 +63,22 @@ abstract class AbstractBuilder
 
     public function setInputFile(\SplFileObject $input)
     {
-        $this->_input = (string) $input->fread($input->getSize());
+        $this->_input = $input;
+        return $this;
     }
 
     public function setInputString($input)
     {
-        $this->_input = (string) $input;
+        $filepath = tempnam(APP_TMP_DIR);
+        file_put_contents($filepath, (string) $input);
+        $this->setInputFile(new \SplFileObject($filepath, 'r'));
+        return $this;
     }
 
     public function getInput()
     {
         return $this->_input;
     }
-
-    abstract public function build();
 
     public function writeOutputToFile(\SplFileObject $output)
     {
@@ -76,4 +90,5 @@ abstract class AbstractBuilder
         return $this->_output;
     }
 
+    abstract public function build();
 }
